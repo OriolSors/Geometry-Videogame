@@ -13,6 +13,6 @@ public class Cube
 
     public Cube()
     {
-        this.edge = Random.Range(5f, 10f);
+        this.edge = Random.Range(0.5f, 1f);
     }
 }
