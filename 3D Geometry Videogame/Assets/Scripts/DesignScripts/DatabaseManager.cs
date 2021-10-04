@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class DatabaseManager : MonoBehaviour
 {
+    /*
     public Slider scaleSlider;
     private float edge;
     public GameObject cubeModel;
@@ -45,4 +46,6 @@ public class DatabaseManager : MonoBehaviour
 
         SceneManager.LoadScene(1);
     }
+
+    */
 }
