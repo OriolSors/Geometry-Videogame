@@ -53,8 +53,8 @@ public class AvailableFaceController : MonoBehaviour
 
         }
 
-        scriptCamera.currentVRP = newCube.transform.position;
-        scriptCamera.transform.Translate(0, 0, -0.5f);
+        scriptCamera.currentVRP = newCube.transform.position; //TODO: assignar a una llista de CurrentVRP segons l'eix
+        scriptCamera.transform.Translate(0, 0, -0.5f); //TODO: actualitzar més acuradament la posició de la càmera
         Debug.Log(scriptCamera.currentVRP);
 
 
