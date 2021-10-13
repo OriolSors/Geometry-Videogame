@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -54,9 +55,26 @@ public class AvailableFaceController : MonoBehaviour
         }
 
         scriptCamera.currentVRP = newCube.transform.position; //TODO: assignar a una llista de CurrentVRP segons l'eix
-        scriptCamera.transform.Translate(0, 0, -0.5f); //TODO: actualitzar més acuradament la posició de la càmera
-        Debug.Log(scriptCamera.currentVRP);
+        //Vector3 translation = NewCameraPosition(scriptCamera, newCube);
+        scriptCamera.transform.Translate(-cameraDir*0.5f, Space.World); //TODO: actualitzar acuradament la posicio de la camera ??
 
 
+    }
+
+    private Vector3 NewCameraPosition(CameraController scriptCamera, GameObject newCube)
+    {
+        Vector3 cameraPos = scriptCamera.transform.localPosition;
+        Vector3 cubePos = newCube.transform.localPosition;
+        if (Vector3.Distance(cameraPos,cubePos) < 3)
+        {
+            if (cameraPos.z - cubePos.z > 0)
+            {
+                return new Vector3(0, 0, 3 + cubePos.z - cameraPos.z);
+            }else if (cameraPos.z - cubePos.z < 0)
+            {
+                return new Vector3(0, 0, -3 + cubePos.z - cameraPos.z);
+            }
+        }
+        return Vector3.zero;
     }
 }

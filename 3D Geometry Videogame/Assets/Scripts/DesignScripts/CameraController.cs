@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         cameraDir = transform.forward;
-        currentVRP = new Vector3(0, 0, 0); //TODO: llista amb els valors mes alts a UP, -UP, RIGHT, -RIGHT, FORWARD, -FORWARD i en els mètodes de Rotate seleccionar el VRP més adequat
+        currentVRP = new Vector3(0, 0, 0); //TODO: llista amb els valors mes alts a UP, -UP, RIGHT, -RIGHT, FORWARD, -FORWARD i en els m?todes de Rotate seleccionar el VRP m?s adequat
     }
 
     private void Update()
@@ -34,7 +34,7 @@ public class CameraController : MonoBehaviour
         directionToFace = currentVRP - transform.position;
         rotationAngle = Vector3.Angle(initialDirection, directionToFace);
 
-        if (activeUp) RotateUp(rotationAngle);
+        if (activeUp) RotateUp();
         if (activeDown) RotateDown();
         if (activeRight) RotateRight();
         if (activeLeft) RotateLeft();
@@ -50,7 +50,7 @@ public class CameraController : MonoBehaviour
 
     }
 
-    public void RotateUp(float rotationAngle)
+    public void RotateUp()
     {
         /*
         Vector3 crossProduct = Vector3.Cross(directionToFace, Vector3.up);
