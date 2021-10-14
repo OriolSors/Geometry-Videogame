@@ -8,6 +8,9 @@ public class AvailableFaceController : MonoBehaviour
     public GameObject cubePrefab;
     private Vector3 cameraDir;
     private CameraController scriptCamera;
+
+    private Vector3 currentVRP;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,44 +24,99 @@ public class AvailableFaceController : MonoBehaviour
         cameraDir = scriptCamera.cameraDir;
     }
 
-    private void OnMouseDown()
+    private void OnMouseOver()
     {
-        GameObject newCube;
-
-        if (-cameraDir == transform.up)
+        if (Input.GetMouseButtonDown(0))
         {
-            newCube = Instantiate(cubePrefab, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), Quaternion.identity) as GameObject;
+            GameObject newCube;  //TODO: Evitar inserir un cub a sobre un altre
+
+
+            if (-cameraDir == transform.up)
+            {
+                newCube = Instantiate(cubePrefab, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), Quaternion.identity) as GameObject;
+
+            }
+            else if (-cameraDir == -transform.up)
+            {
+                newCube = Instantiate(cubePrefab, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity) as GameObject;
+
+            }
+            else if (-cameraDir == transform.right)
+            {
+                newCube = Instantiate(cubePrefab, new Vector3(transform.position.x + 0.5f, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
+
+            }
+            else if (-cameraDir == -transform.right)
+            {
+                newCube = Instantiate(cubePrefab, new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
+
+            }
+            else if (-cameraDir == transform.forward)
+            {
+                newCube = Instantiate(cubePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.5f), Quaternion.identity) as GameObject;
+
+            }
+            else //if (-cameraDir == -transform.forward)
+            {
+                newCube = Instantiate(cubePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), Quaternion.identity) as GameObject;
+
+            }
+
+            currentVRP = newCube.transform.position;
+
+            UpdateVRP(currentVRP);
+
+            //Vector3 translation = NewCameraPosition(scriptCamera, newCube);
+            if (Vector3.Distance(scriptCamera.transform.position, currentVRP) <= 2.5)
+            {
+                scriptCamera.transform.Translate(-cameraDir * 0.5f, Space.World); //TODO: actualitzar acuradament la posicio de la camera ??
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            Destroy(gameObject);
+        }
+        
             
-        }else if (-cameraDir == -transform.up)
-        {
-            newCube = Instantiate(cubePrefab, new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), Quaternion.identity) as GameObject;
 
-        }else if (-cameraDir == transform.right)
-        {
-            newCube = Instantiate(cubePrefab, new Vector3(transform.position.x + 0.5f, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
 
+    }
+
+
+    private void UpdateVRP(Vector3 currentVRP)
+    {
+        Vector3 upVRP = scriptCamera.upVRP;
+        Vector3 downVRP = scriptCamera.downVRP;
+        Vector3 rightVRP = scriptCamera.rightVRP;
+        Vector3 leftVRP = scriptCamera.leftVRP;
+        Vector3 forwardVRP = scriptCamera.forwardVRP;
+        Vector3 backVRP = scriptCamera.backVRP;
+
+        if (currentVRP.y > upVRP.y)
+        {
+            scriptCamera.upVRP = currentVRP;
         }
-        else if (-cameraDir == -transform.right)
+        if (currentVRP.y < downVRP.y)
         {
-            newCube = Instantiate(cubePrefab, new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
-
+            scriptCamera.downVRP = currentVRP;
         }
-        else if (-cameraDir == transform.forward)
+        if (currentVRP.x > rightVRP.x)
         {
-            newCube = Instantiate(cubePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.5f), Quaternion.identity) as GameObject;
-
+            scriptCamera.rightVRP = currentVRP;
         }
-        else //if (-cameraDir == -transform.forward)
+        if (currentVRP.x < leftVRP.x)
         {
-            newCube = Instantiate(cubePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), Quaternion.identity) as GameObject;
-
+            scriptCamera.leftVRP = currentVRP;
         }
-
-        scriptCamera.currentVRP = newCube.transform.position; //TODO: assignar a una llista de CurrentVRP segons l'eix
-        //Vector3 translation = NewCameraPosition(scriptCamera, newCube);
-        scriptCamera.transform.Translate(-cameraDir*0.5f, Space.World); //TODO: actualitzar acuradament la posicio de la camera ??
-
-
+        if (currentVRP.z > forwardVRP.z)
+        {
+            scriptCamera.forwardVRP = currentVRP;
+        }
+        if (currentVRP.z < backVRP.z)
+        {
+            scriptCamera.backVRP = currentVRP;
+        }
     }
 
     private Vector3 NewCameraPosition(CameraController scriptCamera, GameObject newCube)

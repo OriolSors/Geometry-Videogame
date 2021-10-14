@@ -11,7 +11,16 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     public Vector3 cameraDir { get; private set; }
 
-    public Vector3 currentVRP;  //TODO: passar tot el objecte CUBE seria millor per tal de poder obtenir les coordenades locals ????
+    public Vector3 currentVRP;
+
+    public Vector3 upVRP;
+    public Vector3 downVRP;
+    public Vector3 rightVRP;
+    public Vector3 leftVRP;
+    public Vector3 forwardVRP;
+    public Vector3 backVRP;
+
+
 
     private Vector3 directionToFace;
     private Vector3 initialDirection;
@@ -27,17 +36,17 @@ public class CameraController : MonoBehaviour
     {
         cameraDir = transform.forward;
         currentVRP = new Vector3(0, 0, 0); //TODO: llista amb els valors mes alts a UP, -UP, RIGHT, -RIGHT, FORWARD, -FORWARD i en els m?todes de Rotate seleccionar el VRP m?s adequat
+        upVRP = new Vector3(0, 0, 0);
+        downVRP = new Vector3(0, 0, 0);
+        rightVRP = new Vector3(0, 0, 0);
+        leftVRP = new Vector3(0, 0, 0);
+        forwardVRP = new Vector3(0, 0, 0);
+        backVRP = new Vector3(0, 0, 0);
     }
 
     private void Update()
     {
-        directionToFace = currentVRP - transform.position;
-        rotationAngle = Vector3.Angle(initialDirection, directionToFace);
-
-        if (activeUp) RotateUp();
-        if (activeDown) RotateDown();
-        if (activeRight) RotateRight();
-        if (activeLeft) RotateLeft();
+        
     }
 
     void FixedUpdate()
@@ -47,6 +56,35 @@ public class CameraController : MonoBehaviour
 
         transform.Translate(transform.right * speed * horizontalInput * Time.fixedDeltaTime, Space.World);
         transform.Translate(transform.up * speed * verticalInput * Time.fixedDeltaTime, Space.World);
+
+        if (activeUp)
+        {
+            directionToFace = currentVRP - transform.position;
+            rotationAngle = Vector3.Angle(initialDirection, directionToFace);
+            
+            RotateUp();
+        }
+        if (activeDown)
+        {
+            directionToFace = currentVRP - transform.position;
+            rotationAngle = Vector3.Angle(initialDirection, directionToFace);
+            
+            RotateDown();
+        }
+        if (activeRight)
+        {
+            directionToFace = currentVRP - transform.position;
+            rotationAngle = Vector3.Angle(initialDirection, directionToFace);
+            
+            RotateRight();
+        }
+        if (activeLeft)
+        {
+            directionToFace = currentVRP - transform.position;
+            rotationAngle = Vector3.Angle(initialDirection, directionToFace);
+            
+            RotateLeft();
+        }
 
     }
 
@@ -73,16 +111,21 @@ public class CameraController : MonoBehaviour
         if(rotationAngle >= 90)
         {
             activeUp = false;
+            
+        }
+        else
+        {
+            transform.RotateAround(currentVRP, transform.right, 90 * Time.deltaTime);
+
+            cameraDir = Vector3Int.RoundToInt(transform.forward);
         }
 
-        transform.RotateAround(currentVRP, transform.right, 100 * Time.deltaTime);
+        
 
-        cameraDir = Vector3Int.RoundToInt(transform.forward);
-
-
-
+        
 
     }
+
 
     public void RotateDown()
     {
@@ -90,11 +133,16 @@ public class CameraController : MonoBehaviour
         if (rotationAngle >= 90)
         {
             activeDown = false;
+            
+        }
+        else
+        {
+            transform.RotateAround(currentVRP, -transform.right, 90 * Time.deltaTime);
+
+            cameraDir = Vector3Int.RoundToInt(transform.forward);
         }
 
-        transform.RotateAround(currentVRP, -transform.right, 100 * Time.deltaTime);
-
-        cameraDir = Vector3Int.RoundToInt(transform.forward);
+        
 
     }
 
@@ -122,11 +170,16 @@ public class CameraController : MonoBehaviour
         if (rotationAngle >= 90)
         {
             activeRight = false;
+            
+        }
+        else
+        {
+            transform.RotateAround(currentVRP, -transform.up, 90 * Time.deltaTime);
+
+            cameraDir = Vector3Int.RoundToInt(transform.forward);
         }
 
-        transform.RotateAround(currentVRP, -transform.up, 100 * Time.deltaTime);
-
-        cameraDir = Vector3Int.RoundToInt(transform.forward);
+        
 
     }
 
@@ -135,33 +188,73 @@ public class CameraController : MonoBehaviour
         if (rotationAngle >= 90)
         {
             activeLeft = false;
+            
+        }
+        else
+        {
+            transform.RotateAround(currentVRP, transform.up, 90 * Time.deltaTime);
+
+            cameraDir = Vector3Int.RoundToInt(transform.forward);
         }
 
-        transform.RotateAround(currentVRP, transform.up, 100 * Time.deltaTime);
-
-        cameraDir = Vector3Int.RoundToInt(transform.forward);
+        
     }
+
+
+
+    private Vector3 GetCorrectVRP(Vector3 dir)
+    {
+        if (dir == Vector3.up)
+        {
+            currentVRP = upVRP;
+        }
+        else if (dir == -Vector3.up)
+        {
+            currentVRP = downVRP;
+        }
+        else if (dir == Vector3.forward)
+        {
+            currentVRP = forwardVRP;
+        }
+        else if (dir == -Vector3.forward)
+        {
+            currentVRP = backVRP;
+        }
+        else if (dir == Vector3.right)
+        {
+            currentVRP = rightVRP;
+        }
+        else //if (dir == -Vector3.right)
+        {
+            currentVRP = leftVRP;
+        }
+
+        return currentVRP;
+    }
+
+
     public void ActiveRotateUp()
     {
         activeUp = true;
-        initialDirection = currentVRP - transform.position;
+        initialDirection = GetCorrectVRP(transform.up) - transform.position;
     }
 
     public void ActiveRotateDown()
     {
         activeDown = true;
-        initialDirection = currentVRP - transform.position;
+        initialDirection = GetCorrectVRP(-transform.up) - transform.position;
     }
 
     public void ActiveRotateRight()
     {
         activeRight = true;
-        initialDirection = currentVRP - transform.position;
+        initialDirection = GetCorrectVRP(transform.right) - transform.position;
     }
 
     public void ActiveRotateLeft()
     {
         activeLeft = true;
-        initialDirection = currentVRP - transform.position;
+        initialDirection = GetCorrectVRP(-transform.right) - transform.position;
     }
+
 }
