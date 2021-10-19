@@ -8,12 +8,14 @@ public class AvailableFaceController : MonoBehaviour
     public GameObject cubePrefab;
     public GameObject boundaryBox;
     private CameraController scriptCamera;
+    private List<Vector3> cubePositions;
 
 
     // Start is called before the first frame update
     void Start()
     {
         scriptCamera = GameObject.Find("Main Camera").GetComponent<CameraController>();
+        cubePositions = new List<Vector3>();
     }
 
     // Update is called once per frame
@@ -39,14 +41,21 @@ public class AvailableFaceController : MonoBehaviour
                 if (hit.collider != null)
                 {
                     newCube = Instantiate(cubePrefab, hit.transform.position + 0.5f*hit.normal, Quaternion.identity) as GameObject; //TODO: crear metodes alternatius per a la resta de solids platonics -> segons l'escala de cadascun
-                    newCube.transform.parent = boundaryBox.transform;
-                    Bounds bounds = GetBounds(boundaryBox);
-                    scriptCamera.currentVRP = bounds.center;
-                    scriptCamera.boxBounds = bounds;
+                    if (!cubePositions.Contains(newCube.transform.position))
+                    {
+                        cubePositions.Add(newCube.transform.position);
+                        newCube.transform.parent = boundaryBox.transform;
+                        Bounds bounds = GetBounds(boundaryBox);
+                        scriptCamera.currentVRP = bounds.center;
+                        scriptCamera.boxBounds = bounds;
+                    }
+                    else
+                    {
+                        Destroy(newCube);
+                    }
                     
                 }
             }
-
 
         }
 
@@ -56,7 +65,6 @@ public class AvailableFaceController : MonoBehaviour
             Bounds bounds = GetBounds(boundaryBox);
             scriptCamera.currentVRP = bounds.center;
             scriptCamera.boxBounds = bounds;
-            
         }
         
 
