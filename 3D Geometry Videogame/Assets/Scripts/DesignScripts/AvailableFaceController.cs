@@ -15,7 +15,7 @@ public class AvailableFaceController : MonoBehaviour
 
     private CameraController scriptCamera; //The Main Camera script
 
-    private List<Vector3> cubePositions; //List of Cube prefab positions
+    private ConstructionController scriptConstruction; //The Construction script
 
 
     // ------------------------------------------------ INITIALIZATIONS ------------------------------------------------
@@ -25,7 +25,7 @@ public class AvailableFaceController : MonoBehaviour
     {
 
         scriptCamera = GameObject.Find("Main Camera").GetComponent<CameraController>();
-        cubePositions = new List<Vector3>();
+        scriptConstruction = GameObject.Find("Boundary Box").GetComponent<ConstructionController>();
 
     }
 
@@ -52,12 +52,12 @@ public class AvailableFaceController : MonoBehaviour
                     GameObject newCube = Instantiate(cubePrefab, hit.transform.position + 0.5f*hit.normal, Quaternion.identity) as GameObject; //TODO: for all the other Platonic Solids, create new methods to scale and position the object
                     Vector3 newCubePosition = newCube.transform.position;
 
-                    if (!cubePositions.Contains(newCubePosition)) 
+                    if (!scriptConstruction.cubePositions.Contains(newCubePosition)) 
                     {
 
                         //If there is not an object at the new position, we add it
 
-                        cubePositions.Add(newCubePosition);
+                        scriptConstruction.cubePositions.Add(newCubePosition);
                         newCube.transform.parent = boundaryBox.transform; 
 
                         //Sending Bounding Box bounds and VRP to the Camera Controller
@@ -83,7 +83,12 @@ public class AvailableFaceController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            Destroy(gameObject);
+            if (scriptConstruction.cubePositions.Count > 1)
+            {
+                scriptConstruction.cubePositions.Remove(gameObject.transform.position);
+                Destroy(gameObject);
+            }
+            
 
             //Sending Bounding Box bounds and VRP to the Camera Controller+
 

@@ -79,6 +79,8 @@ public class CameraController : MonoBehaviour
 
         transform.localRotation = Quaternion.Slerp(current, target, Time.deltaTime);
 
+        if (distance < 1) transform.position = Vector3.Slerp(cameraPos, cameraPos - Vector3.Normalize(repositionDir) * 0.5f, Time.deltaTime * 5);
+
         //Zoom IN
 
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
