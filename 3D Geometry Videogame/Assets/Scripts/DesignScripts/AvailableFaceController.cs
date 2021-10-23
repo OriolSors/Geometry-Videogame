@@ -45,7 +45,7 @@ public class AvailableFaceController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.collider != null) 
+                if (hit.collider != null && scriptConstruction.ObjectsAvailables()) 
                 {
                     //Adds new Cube prefab to the normal direction of face clicked
 
@@ -57,7 +57,7 @@ public class AvailableFaceController : MonoBehaviour
 
                         //If there is not an object at the new position, we add it
 
-                        scriptConstruction.cubePositions.Add(newCubePosition);
+                        scriptConstruction.AddNewObject(newCubePosition);
                         newCube.transform.parent = boundaryBox.transform; 
 
                         //Sending Bounding Box bounds and VRP to the Camera Controller
@@ -85,7 +85,7 @@ public class AvailableFaceController : MonoBehaviour
         {
             if (scriptConstruction.cubePositions.Count > 1)
             {
-                scriptConstruction.cubePositions.Remove(gameObject.transform.position);
+                scriptConstruction.RemoveObject(gameObject.transform.position);
                 Destroy(gameObject);
             }
             

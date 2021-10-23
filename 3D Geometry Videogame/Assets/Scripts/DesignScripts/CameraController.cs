@@ -16,6 +16,7 @@ public class CameraController : MonoBehaviour
     public Bounds boxBounds { get; set; } //Bounds of the Bounding Box that englobes all the construction
 
     private Vector3 cameraPos; //Main Camera position in global coordinates
+    private Vector3 cameraPosAux; //Aux Camera position in global coordinates
 
     private Vector3 closestPoint; //Closest point of the Bounding Box to the Main Camera position
 
@@ -29,6 +30,7 @@ public class CameraController : MonoBehaviour
         currentVRP = new Vector3(0, 0, 0);
         boxBounds = new Bounds();
         cameraPos = new Vector3(0, 0, 0);
+        cameraPosAux = GameObject.Find("Aux Camera").transform.position;
         closestPoint = new Vector3(0, 0, 0);
 
     }
@@ -100,5 +102,12 @@ public class CameraController : MonoBehaviour
         Debug.DrawRay(cameraPos, closestPoint - cameraPos, Color.green);
         Debug.DrawRay(cameraPos, currentVRP - cameraPos, Color.blue);
 
+    }
+
+
+    public void SetCamera()
+    {
+        transform.position = cameraPosAux;
+        transform.rotation = Quaternion.LookRotation(currentVRP - transform.position);
     }
 }
