@@ -61,4 +61,14 @@ public class ConstructionController : MonoBehaviour
             objectsLeft.color = preColor;
         }
     }
+
+    public void SaveConstruction()
+    {
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            Application.Quit();
+        }
+    }
 }
