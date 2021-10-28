@@ -43,17 +43,21 @@ public class AxisXYZ : MonoBehaviour
             GL.Color(Color.red);
             GL.Vertex3(0, 0, 0);
             GL.Vertex3(10.0f, 0.0f, 0.0f);
+            
             //Draw Y axis
             GL.Color(Color.green);
             GL.Vertex3(0, 0, 0);
             GL.Vertex3(0.0f, 10.0f, 0.0f);
+           
             //Draw Z axis
             GL.Color(Color.blue);
             GL.Vertex3(0, 0, 0);
             GL.Vertex3(0.0f, 0.0f, 10.0f);
+            
             GL.End();
             GL.PopMatrix();
         }
         
     }
+
 }

@@ -45,11 +45,12 @@ public class AvailableFaceController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.collider != null && scriptConstruction.ObjectsAvailables()) 
+                if (hit.rigidbody != null && scriptConstruction.ObjectsAvailables()) 
                 {
                     //Adds new Cube prefab to the normal direction of face clicked
 
                     GameObject newCube = Instantiate(cubePrefab, hit.transform.position + 0.5f*hit.normal, Quaternion.identity) as GameObject; //TODO: for all the other Platonic Solids, create new methods to scale and position the object
+
                     Vector3 newCubePosition = newCube.transform.position;
 
                     if (!scriptConstruction.cubePositions.Contains(newCubePosition)) 
