@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "978524456385",
+    "project_id": "geometry-videog",
+    "storage_bucket": "geometry-videog.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978524456385:android:2927479cf5586890459b40",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.GeometryVideogame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "978524456385-9hn03g5itfj56n01nlkpo3mdqdcefmij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4qW1-QKq_AgFxJo4yoevZMyiz-nzOZuk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "978524456385-9hn03g5itfj56n01nlkpo3mdqdcefmij.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -6,15 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Design.unity
+    path: Assets/3D Editor/3D Editor.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
-    path: Assets/Scenes/Collect.unity
+  - enabled: 0
+    path: Assets/Game Collect/Game Collect.unity
     guid: 09c37f00a2e308d458d3460f84cd00e9
-  - enabled: 1
-    path: Assets/Scenes/Construct.unity
+  - enabled: 0
+    path: Assets/3D Constructor/3D Constructor.unity
     guid: 58bffb69b9d6e3048beb4acba1184824
   m_configObjects: {}
