@@ -22,14 +22,13 @@ public class LoginScript : MonoBehaviour
         sceneController.LoadCorrectScene(name, ExistUser);
     }
 
-    private void ExistUser(bool exist, string advice)
+    private void ExistUser(string advice)
     {
-        if (!exist)
-        {
-            userName.placeholder.GetComponent<TextMeshProUGUI>().text = "User not exists";
-            userName.placeholder.color = Color.red;
-            userName.text = "";
-        }
+
+        userName.placeholder.GetComponent<TextMeshProUGUI>().text = advice;
+        userName.placeholder.color = Color.red;
+        userName.text = "";
+
     }
 
 }

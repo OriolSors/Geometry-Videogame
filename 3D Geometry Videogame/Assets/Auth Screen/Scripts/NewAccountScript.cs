@@ -41,7 +41,7 @@ public class NewAccountScript : MonoBehaviour
             User newUser = new User(name, account);
             string json = JsonUtility.ToJson(newUser);
             reference.Child("Users").Child(name).SetRawJsonValueAsync(json);
-            sceneController.LoadCorrectScene(name, SceneControllerCallback);
+            sceneController.LoadCorrectScene(name, null);
         }
         else
         {
@@ -50,11 +50,6 @@ public class NewAccountScript : MonoBehaviour
             userName.text = "";
 
         }
-    }
-
-    private void SceneControllerCallback(bool exist, string advice)
-    {
-        
     }
 
     private void IsNewUser(string userName, string accountTypeOption, Action<bool,string,string> callbackFunction)
