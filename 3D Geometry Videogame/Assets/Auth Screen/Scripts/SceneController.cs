@@ -50,15 +50,15 @@ public class SceneController : MonoBehaviour
 
     private void SaveUser(string username)
     {
-        SaveData data = new SaveData();
+        SaveDataUser data = new SaveDataUser();
         data.username = username;
         string json = JsonUtility.ToJson(data);
 
-        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+        File.WriteAllText(Application.persistentDataPath + "/saveuser.json", json);
     }
 
     [System.Serializable]
-    class SaveData
+    class SaveDataUser
     {
         public string username;
 

@@ -14,18 +14,22 @@ public class ConstructionController : MonoBehaviour
     public TextMeshProUGUI objectsLeft;
     private Color preColor;
 
-    private DatabaseReference reference;
 
+
+    public Canvas labelsCanvas;
 
     private string username;
 
+    private DatabaseManager labelsManagerDB;
+
     void Start()
     {
+        labelsManagerDB = labelsCanvas.GetComponent<DatabaseManager>();
+        labelsCanvas.enabled = false;
+
         cubePositions = new List<Vector3>();
         cubePositions.Add(Vector3.zero);
         preColor = objectsLeft.color;
-
-        reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
 
         LoadUser();
     }
@@ -75,11 +79,11 @@ public class ConstructionController : MonoBehaviour
 
     private void LoadUser()
     {
-        string path = Application.persistentDataPath + "/savefile.json";
+        string path = Application.persistentDataPath + "/saveuser.json";
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
-            SaveData data = JsonUtility.FromJson<SaveData>(json);
+            SaveDataUser data = JsonUtility.FromJson<SaveDataUser>(json);
 
             this.username = data.username;
         }
@@ -87,6 +91,9 @@ public class ConstructionController : MonoBehaviour
 
     public void SaveConstruction()
     {
+        labelsCanvas.enabled = true;
+        labelsManagerDB.SetUp(username, cubePositions.Count);
+        /*
         Mission mission = new Mission(username, cubePositions.Count);
         string json = JsonUtility.ToJson(mission);
         reference.Child("Users").Child(username).Child("Missions").Child(DateTime.Now.ToString()).SetRawJsonValueAsync(json); //TODO: Change to Push
@@ -96,24 +103,14 @@ public class ConstructionController : MonoBehaviour
 #endif
             Application.Quit();
         }
+
+        */
     }
 
     [System.Serializable]
-    class SaveData
+    class SaveDataUser
     {
         public string username;
 
-    }
-
-    public class Mission
-    {
-        public string name;
-        public int cubes;
-
-        public Mission(string name, int cubes)
-        {
-            this.name = name;
-            this.cubes = cubes;
-        }
     }
 }
