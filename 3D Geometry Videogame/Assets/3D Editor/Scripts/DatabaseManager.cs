@@ -57,6 +57,13 @@ public class DatabaseManager : MonoBehaviour
         Mission mission = new Mission(designer, objectsNumber, playersDict);
         string json = JsonConvert.SerializeObject(mission);
         reference.Child("Missions").Child(DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss")).SetRawJsonValueAsync(json);
+
+        foreach (string player in playersDict.Keys)
+        {
+            PlayerMission playerMission = new PlayerMission(player, objectsNumber, playersDict[player]);
+            string json_player = JsonConvert.SerializeObject(playerMission);
+            reference.Child("Users").Child(player).Child("Missions").Child(DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss")).SetRawJsonValueAsync(json_player);
+        }
         SceneManager.LoadScene("3D Editor");
 
     }
@@ -106,6 +113,22 @@ public class DatabaseManager : MonoBehaviour
             this.designer = designer;
             this.cubes = cubes;
             this.playersDict = playersDict;
+        }
+    }
+
+    [System.Serializable]
+
+    class PlayerMission
+    {
+        public string player;
+        public int cubes;
+        public List<string> characteristics;
+
+        public PlayerMission(string player, int cubes, List<string> characteristics)
+        {
+            this.player = player;
+            this.cubes = cubes;
+            this.characteristics = characteristics;
         }
     }
 }

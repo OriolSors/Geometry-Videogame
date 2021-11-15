@@ -36,12 +36,12 @@ public class SceneController : MonoBehaviour
                 SaveUser(snapshot.Child("username").Value.ToString());
                 if (snapshot.Child("account").Value.ToString() == "Player")
                 {
-                    SceneManager.LoadScene("Game Selection");
+                    SceneManager.LoadScene("Select Mission Screen");
                 }
                 else
                 {
                     DontDestroyOnLoad(transform.gameObject);
-                    SceneManager.LoadScene("3D Editor");
+                    SceneManager.LoadScene("New Mission Screen");
                 }
 
             }
