@@ -71,6 +71,11 @@ public class MissionListDesignerScript : MonoBehaviour
         SceneManager.LoadScene("3D Editor");
     }
 
+    public void ToLogin()
+    {
+        SceneManager.LoadScene("Auth Screen");
+    }
+
     private void LoadUser()
     {
         string path = Application.persistentDataPath + "/saveuser.json";

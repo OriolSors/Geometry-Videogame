@@ -37,7 +37,17 @@ public class MissionListPlayerScript : MonoBehaviour
             go.GetComponentInChildren<Text>().text = mission;
             go.transform.SetParent(missionsScroll);
 
+            go.GetComponent<Button>().onClick.AddListener(delegate {LoadMinigames(); }); //TODO: passar parametres de la DB per tal d'actualitzar les figures restants als minijocs
+
         }
+    }
+
+    private void LoadMinigames()
+    {
+        //TODO: gestionar els nivells de cada minijoc i guardar els punts de partida on apareixeran les figures. Si una ja s'ha recollit, aleshores que no torni a apareixer
+        //dins els minijocs associats a aquesta missio
+        
+        SceneManager.LoadScene("Minigame Selection Screen");
     }
 
     private void LoadMissionsWithUser(Action<List<string>> callbackFunction)
@@ -67,10 +77,9 @@ public class MissionListPlayerScript : MonoBehaviour
         });
     }
 
-
-    public void ToEditor3D()
+    public void ToLogin()
     {
-        SceneManager.LoadScene("3D Editor");
+        SceneManager.LoadScene("Auth Screen");
     }
 
     private void LoadUser()
