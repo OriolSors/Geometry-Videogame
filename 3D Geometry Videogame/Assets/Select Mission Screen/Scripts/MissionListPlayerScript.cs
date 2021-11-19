@@ -13,7 +13,7 @@ public class MissionListPlayerScript : MonoBehaviour
 {
     private string username;
 
-    public GameObject missionButton;
+    public GameObject missionView;
 
     private DatabaseReference reference;
 
@@ -28,16 +28,17 @@ public class MissionListPlayerScript : MonoBehaviour
         LoadMissionsWithUser(FillMissionScroll);
     }
 
-    private void FillMissionScroll(List<string> missions)
+    private void FillMissionScroll(Dictionary<string, List<int>> missions)
     {
 
-        foreach (string mission in missions)
+        foreach (string mission in missions.Keys)
         {
-            GameObject go = Instantiate(missionButton);
-            go.GetComponentInChildren<Text>().text = mission;
+            GameObject go = Instantiate(missionView);
+            go.GetComponentInChildren<Button>().GetComponentInChildren<Text>().text = mission;
+            go.transform.Find("Progression Text").GetComponent<Text>().text = (100 * missions[mission][0] / missions[mission][1]).ToString() + "%";
             go.transform.SetParent(missionsScroll);
 
-            go.GetComponent<Button>().onClick.AddListener(delegate {LoadMinigames(); }); //TODO: passar parametres de la DB per tal d'actualitzar les figures restants als minijocs
+            go.GetComponentInChildren<Button>().onClick.AddListener(delegate {LoadMinigames(); }); //TODO: passar parametres de la DB per tal d'actualitzar les figures restants als minijocs
 
         }
     }
@@ -50,9 +51,10 @@ public class MissionListPlayerScript : MonoBehaviour
         SceneManager.LoadScene("Minigame Selection Screen");
     }
 
-    private void LoadMissionsWithUser(Action<List<string>> callbackFunction)
+    private void LoadMissionsWithUser(Action<Dictionary<string, List<int>>> callbackFunction)
     {
-        List<string> missions = new List<string>();
+        Dictionary<string, List<int>> missions = new Dictionary<string, List<int>>();
+
         var DBTask = reference.Child("Users").Child(username).Child("Missions").GetValueAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted)
@@ -69,9 +71,13 @@ public class MissionListPlayerScript : MonoBehaviour
                 DataSnapshot snapshot = task.Result;
                 foreach (DataSnapshot mission in snapshot.Children)
                 {
-                    missions.Add(mission.Key.ToString());
-
+                    List<int> progression = new List<int>();
+                    progression.Add(int.Parse(mission.Child("inventory").Value.ToString()));
+                    progression.Add(int.Parse(mission.Child("cubes").Value.ToString()));
+                    missions[mission.Key.ToString()] = progression;
+                    
                 }
+
             }
             callbackFunction(missions);
         });
@@ -90,7 +96,7 @@ public class MissionListPlayerScript : MonoBehaviour
             string json = File.ReadAllText(path);
             SaveDataUser data = JsonUtility.FromJson<SaveDataUser>(json);
 
-            this.username = data.username;
+            username = data.username;
         }
     }
 

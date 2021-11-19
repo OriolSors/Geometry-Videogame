@@ -60,7 +60,7 @@ public class DatabaseManager : MonoBehaviour
 
         foreach (string player in playersDict.Keys)
         {
-            PlayerMission playerMission = new PlayerMission(player, objectsNumber, playersDict[player]);
+            PlayerMission playerMission = new PlayerMission(player, objectsNumber, 0, playersDict[player]);
             string json_player = JsonConvert.SerializeObject(playerMission);
             reference.Child("Users").Child(player).Child("Missions").Child(DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss")).SetRawJsonValueAsync(json_player);
         }
@@ -122,12 +122,14 @@ public class DatabaseManager : MonoBehaviour
     {
         public string player;
         public int cubes;
+        public int inventory;
         public List<string> characteristics;
 
-        public PlayerMission(string player, int cubes, List<string> characteristics)
+        public PlayerMission(string player, int cubes, int inventory, List<string> characteristics)
         {
             this.player = player;
             this.cubes = cubes;
+            this.inventory = inventory;
             this.characteristics = characteristics;
         }
     }

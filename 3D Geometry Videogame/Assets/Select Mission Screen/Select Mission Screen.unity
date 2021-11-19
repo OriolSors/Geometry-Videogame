@@ -1252,7 +1252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69fdcc3cc78e954bac5511352badfd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  missionButton: {fileID: 6781097469977265510, guid: 82ac695e8c6ad1a46a1b8797f6ac891b, type: 3}
+  missionView: {fileID: 2536481593512090416, guid: fc87b547af2ed42ed862eda3c9cbbb64, type: 3}
   missionsScroll: {fileID: 2061913748}
   font: {fileID: 12800000, guid: 3a70ad0bbaee8473c80840c8766769c1, type: 3}
 --- !u!1 &1676396235
@@ -1666,7 +1666,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 0
+  m_Spacing: 1
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
