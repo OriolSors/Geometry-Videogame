@@ -488,7 +488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e987aaa171a1df449dde42716c8effb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  missionButton: {fileID: 6781097469977265510, guid: 82ac695e8c6ad1a46a1b8797f6ac891b, type: 3}
+  missionView: {fileID: 2880393413782006704, guid: 1b209262bdc1a495b8f0d48c72da407c, type: 3}
   missionsScroll: {fileID: 1822979950}
   font: {fileID: 12800000, guid: 3a70ad0bbaee8473c80840c8766769c1, type: 3}
 --- !u!1 &608438488

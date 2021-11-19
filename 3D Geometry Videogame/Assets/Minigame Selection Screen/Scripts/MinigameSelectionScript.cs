@@ -30,6 +30,6 @@ public class MinigameSelectionScript : MonoBehaviour
 
     public void ToMissionSelection()
     {
-        SceneManager.LoadScene("Select Mission Screen");
+        SceneManager.LoadScene("Player Mission List Screen");
     }
 }

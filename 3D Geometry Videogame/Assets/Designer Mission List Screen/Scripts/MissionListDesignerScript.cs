@@ -13,7 +13,7 @@ public class MissionListDesignerScript : MonoBehaviour
 
     private string username;
 
-    public GameObject missionButton;
+    public GameObject missionView;
 
     private DatabaseReference reference;
 
@@ -33,10 +33,18 @@ public class MissionListDesignerScript : MonoBehaviour
 
         foreach (string mission in missions)
         {
-            GameObject go = Instantiate(missionButton);
-            go.GetComponentInChildren<Text>().text = mission;
+            GameObject go = Instantiate(missionView);
+            go.GetComponentInChildren<Button>().GetComponentInChildren<Text>().text = mission;
+            go.transform.Find("Progression Text").GetComponent<Text>().text = "%"; //TODO: enllaçar amb les dades de progressio de cada usuari
             go.transform.SetParent(missionsScroll);
+
+            go.GetComponentInChildren<Button>().onClick.AddListener(delegate { LoadUserStatistics(); });
         }
+    }
+
+    private void LoadUserStatistics()
+    {
+
     }
 
     private void LoadMissionsWithUser(Action<List<string>> callbackFunction)

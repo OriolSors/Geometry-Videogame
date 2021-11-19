@@ -38,7 +38,7 @@ public class MissionListPlayerScript : MonoBehaviour
             go.transform.Find("Progression Text").GetComponent<Text>().text = (100 * missions[mission][0] / missions[mission][1]).ToString() + "%";
             go.transform.SetParent(missionsScroll);
 
-            go.GetComponentInChildren<Button>().onClick.AddListener(delegate {LoadMinigames(); }); //TODO: passar parametres de la DB per tal d'actualitzar les figures restants als minijocs
+            go.GetComponentInChildren<Button>().onClick.AddListener(delegate {LoadMinigames(); });
 
         }
     }
