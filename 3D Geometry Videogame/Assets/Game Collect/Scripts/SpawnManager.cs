@@ -15,7 +15,6 @@ public class SpawnManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(LoadData());
         InvokeRepeating("SpawnPrefabFigure", 1f, 1.5f);
     }
 
@@ -44,7 +43,6 @@ public class SpawnManager : MonoBehaviour
                 counterCube = 0;
                 GameObject goldInst = Instantiate(prefabInst, GenerateSpawnPosition(), prefabInst.transform.rotation);
                 goldInst.GetComponent<Renderer>().material = goldMaterial;
-                goldInst.transform.localScale = new Vector3(dynamicEdge, dynamicEdge, dynamicEdge);
 
             }
             else
@@ -60,31 +58,6 @@ public class SpawnManager : MonoBehaviour
             
         
         
-    }
-
-    private IEnumerator LoadData()
-    {
-        DatabaseReference reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
-
-        var DBTask = reference.Child("Figures").Child("Cube").GetValueAsync();
-
-        yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
-
-        if (DBTask.Exception != null)
-        {
-            Debug.Log("fail");
-        }
-        else if (DBTask.Result.Value == null)
-        {
-            dynamicEdge = 4f;
-        }
-        else
-        {
-            DataSnapshot snapshot = DBTask.Result;
-            dynamicEdge = float.Parse(snapshot.Child("edge").Value.ToString());
-        }
-
-
     }
 
 

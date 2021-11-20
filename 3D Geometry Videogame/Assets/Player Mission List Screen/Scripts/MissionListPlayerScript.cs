@@ -38,16 +38,16 @@ public class MissionListPlayerScript : MonoBehaviour
             go.transform.Find("Progression Text").GetComponent<Text>().text = (100 * missions[mission][0] / missions[mission][1]).ToString() + "%";
             go.transform.SetParent(missionsScroll);
 
-            go.GetComponentInChildren<Button>().onClick.AddListener(delegate {LoadMinigames(); });
+            go.GetComponentInChildren<Button>().onClick.AddListener(delegate {LoadMinigames(mission, missions[mission][0]); });
 
         }
     }
 
-    private void LoadMinigames()
+    private void LoadMinigames(string mission, int inventory)
     {
         //TODO: gestionar els nivells de cada minijoc i guardar els punts de partida on apareixeran les figures. Si una ja s'ha recollit, aleshores que no torni a apareixer
         //dins els minijocs associats a aquesta missio
-        
+        SaveCurrentMission(mission, inventory);
         SceneManager.LoadScene("Minigame Selection Screen");
     }
 
@@ -100,10 +100,28 @@ public class MissionListPlayerScript : MonoBehaviour
         }
     }
 
+    private void SaveCurrentMission(string mission, int inventory)
+    {
+        SaveDataCurrentMission data = new SaveDataCurrentMission();
+        data.mission = mission;
+        data.inventory = inventory;
+        string json = JsonUtility.ToJson(data);
+
+        File.WriteAllText(Application.persistentDataPath + "/savecurrentmission.json", json);
+    }
+
     [System.Serializable]
     class SaveDataUser
     {
         public string username;
+
+    }
+
+    [System.Serializable]
+    class SaveDataCurrentMission
+    {
+        public string mission;
+        public int inventory;
 
     }
 }
