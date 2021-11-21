@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using Firebase.Database;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerControllerX : MonoBehaviour
 {
@@ -17,10 +20,19 @@ public class PlayerControllerX : MonoBehaviour
 
     public ParticleSystem dirtParticle;
 
+    private string username, mission;
+    private int inventory;
+
+    private DatabaseReference reference;
+
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
+
+        reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
+        LoadUser();
+        LoadCurrentMission();
     }
 
     void Update()
@@ -51,6 +63,12 @@ public class PlayerControllerX : MonoBehaviour
             powerupIndicator.SetActive(true);
             StartCoroutine(PowerupCooldown());
         }
+        else if (other.CompareTag("Cube"))
+        {
+            inventory++;
+            Destroy(other.gameObject);
+        }
+
     }
 
     // Coroutine to count down powerup duration
@@ -82,6 +100,62 @@ public class PlayerControllerX : MonoBehaviour
         }
     }
 
+    public void ExitGame()
+    {
+        SaveCurrentMission();
+        SceneManager.LoadScene("Minigame Selection Screen");
+    }
+
+    private void LoadUser()
+    {
+        string path = Application.persistentDataPath + "/saveuser.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            SaveDataUser data = JsonUtility.FromJson<SaveDataUser>(json);
+
+            username = data.username;
+        }
+    }
+
+    private void LoadCurrentMission()
+    {
+        string path = Application.persistentDataPath + "/savecurrentmission.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            SaveDataCurrentMission data = JsonUtility.FromJson<SaveDataCurrentMission>(json);
+
+            mission = data.mission;
+            inventory = data.inventory;
+        }
+    }
+
+    private void SaveCurrentMission()
+    {
+        SaveDataCurrentMission data = new SaveDataCurrentMission();
+        data.mission = mission;
+        data.inventory = inventory;
+        string json = JsonUtility.ToJson(data);
+
+        File.WriteAllText(Application.persistentDataPath + "/savecurrentmission.json", json);
+        reference.Child("Users").Child(username).Child("Missions").Child(mission).Child("inventory").SetValueAsync(inventory);
+    }
+
+    [System.Serializable]
+    class SaveDataUser
+    {
+        public string username;
+
+    }
+
+    [System.Serializable]
+    class SaveDataCurrentMission
+    {
+        public string mission;
+        public int inventory;
+
+    }
 
 
 }

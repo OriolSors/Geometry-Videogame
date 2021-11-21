@@ -6,6 +6,7 @@ public class SpawnTatamiManager : MonoBehaviour
 {
     public GameObject enemyPrefab;
     public GameObject powerupPrefab;
+    public GameObject cubePrefab;
 
     private float spawnRange = 9;
     public int enemyCount;
@@ -30,6 +31,7 @@ public class SpawnTatamiManager : MonoBehaviour
         if (enemyCount == 0 && !playerControllerScript.gameOver)
         {
             waveNumber++;
+            if(waveNumber % 3 == 0) Instantiate(cubePrefab, GenerateSpawnPosition(), cubePrefab.transform.rotation);
             Instantiate(powerupPrefab, GenerateSpawnPosition(), powerupPrefab.transform.rotation);
             SpawnEnemyWave(waveNumber);
         }

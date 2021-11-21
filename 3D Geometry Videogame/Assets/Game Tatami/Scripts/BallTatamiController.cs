@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using Firebase.Database;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BallTatamiController : MonoBehaviour
 {
@@ -14,11 +17,20 @@ public class BallTatamiController : MonoBehaviour
 
     public bool gameOver = false;
 
+    private string username, mission;
+    private int inventory;
+
+    private DatabaseReference reference;
+
     // Start is called before the first frame update
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
+
+        reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
+        LoadUser();
+        LoadCurrentMission();
     }
 
     // Update is called once per frame
@@ -27,7 +39,9 @@ public class BallTatamiController : MonoBehaviour
         if (transform.position.y < -5)
         {
             gameOver = true;
-            
+            SaveCurrentMission();
+            SceneManager.LoadScene("Minigame Selection Screen");
+
         }
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.5f, 0);
         float forwardInput = Input.GetAxis("Vertical");
@@ -36,12 +50,19 @@ public class BallTatamiController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Powerup"))
+        //TODO: checkear i activar alguna pregunta associada amb les caracteristiques per poder agafar el bonus. Diferenciar bonus de orientacio cap a la figura
+        //i de xoc amb les boles enemigues 
+        if (other.CompareTag("Powerup")) 
         {
             hasPowerup = true;
             powerupIndicator.gameObject.SetActive(true);
             Destroy(other.gameObject);
             StartCoroutine(PowerupCountdownRoutine());
+        }
+        else if (other.CompareTag("Cube"))
+        {
+            inventory++;
+            Destroy(other.gameObject);
         }
     }
 
@@ -61,5 +82,62 @@ public class BallTatamiController : MonoBehaviour
         yield return new WaitForSeconds(7);
         powerupIndicator.gameObject.SetActive(false);
         hasPowerup = false;
+    }
+
+    public void ExitGame()
+    {
+        SaveCurrentMission();
+        SceneManager.LoadScene("Minigame Selection Screen");
+    }
+
+    private void LoadUser()
+    {
+        string path = Application.persistentDataPath + "/saveuser.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            SaveDataUser data = JsonUtility.FromJson<SaveDataUser>(json);
+
+            username = data.username;
+        }
+    }
+
+    private void LoadCurrentMission()
+    {
+        string path = Application.persistentDataPath + "/savecurrentmission.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            SaveDataCurrentMission data = JsonUtility.FromJson<SaveDataCurrentMission>(json);
+
+            mission = data.mission;
+            inventory = data.inventory;
+        }
+    }
+
+    private void SaveCurrentMission()
+    {
+        SaveDataCurrentMission data = new SaveDataCurrentMission();
+        data.mission = mission;
+        data.inventory = inventory;
+        string json = JsonUtility.ToJson(data);
+
+        File.WriteAllText(Application.persistentDataPath + "/savecurrentmission.json", json);
+        reference.Child("Users").Child(username).Child("Missions").Child(mission).Child("inventory").SetValueAsync(inventory);
+    }
+
+    [System.Serializable]
+    class SaveDataUser
+    {
+        public string username;
+
+    }
+
+    [System.Serializable]
+    class SaveDataCurrentMission
+    {
+        public string mission;
+        public int inventory;
+
     }
 }

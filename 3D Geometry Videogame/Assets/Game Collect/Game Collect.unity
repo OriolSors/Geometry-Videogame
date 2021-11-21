@@ -842,7 +842,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabs:
   - {fileID: 2026222825980632730, guid: 2cef48b1e7c506a41acc925b0f1fd1cb, type: 3}
-  - {fileID: 1273145567072870255, guid: f3e46444ee0761440aac683f435b5f71, type: 3}
+  - {fileID: 3728995404547026315, guid: 10494d91a36ad4a12a9d2b90fc08d8e2, type: 3}
   - {fileID: 6163880949298806177, guid: 338c884f1e52d474685a91669cc26ee3, type: 3}
   - {fileID: 82609543678794869, guid: 7e3f76956af370e4cb9cd264f836a927, type: 3}
   goldMaterial: {fileID: 2100000, guid: 7c831143737a53442b73f048f2897398, type: 2}

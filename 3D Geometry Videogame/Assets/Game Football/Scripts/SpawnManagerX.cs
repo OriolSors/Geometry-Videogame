@@ -6,6 +6,7 @@ public class SpawnManagerX : MonoBehaviour
 {
     public GameObject enemyPrefab;
     public GameObject powerupPrefab;
+    public GameObject cubePrefab;
 
     private float spawnRangeX = 10;
     private float spawnZMin = 15; // set min spawn Z
@@ -56,6 +57,7 @@ public class SpawnManagerX : MonoBehaviour
         }
 
         waveCount++;
+        if (waveCount % 3 == 0) Instantiate(cubePrefab, GenerateSpawnPosition(), cubePrefab.transform.rotation);
         increaseSpeed += 10;
         ResetPlayerPosition(); // put player back at start
 

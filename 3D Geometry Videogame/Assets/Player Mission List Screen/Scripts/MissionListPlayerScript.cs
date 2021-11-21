@@ -35,7 +35,8 @@ public class MissionListPlayerScript : MonoBehaviour
         {
             GameObject go = Instantiate(missionView);
             go.GetComponentInChildren<Button>().GetComponentInChildren<Text>().text = mission;
-            go.transform.Find("Progression Text").GetComponent<Text>().text = (100 * missions[mission][0] / missions[mission][1]).ToString() + "%";
+            if (missions[mission][0] >= missions[mission][1]) go.transform.Find("Progression Text").GetComponent<Text>().text = "100%";
+            else go.transform.Find("Progression Text").GetComponent<Text>().text = (100 * missions[mission][0] / missions[mission][1]).ToString() + "%";
             go.transform.SetParent(missionsScroll);
 
             go.GetComponentInChildren<Button>().onClick.AddListener(delegate {LoadMinigames(mission, missions[mission][0]); });
