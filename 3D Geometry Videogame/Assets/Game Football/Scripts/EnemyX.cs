@@ -9,6 +9,8 @@ public class EnemyX : MonoBehaviour
     private GameObject playerGoal;
     private SpawnManagerX spawnScript;
 
+    private bool stopped = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,8 +25,21 @@ public class EnemyX : MonoBehaviour
     {
         // Set enemy direction towards player goal and move there
         Vector3 lookDirection = (playerGoal.transform.position - transform.position).normalized;
-        enemyRb.AddForce(lookDirection * speed * Time.deltaTime);
+        if(!stopped)enemyRb.AddForce(lookDirection * speed * Time.deltaTime);
+        else enemyRb.AddForce(Vector3.zero);
 
+    }
+
+    public void StopMovement()
+    {
+        stopped = true;
+        enemyRb.velocity = Vector3.zero;
+        enemyRb.angularVelocity = Vector3.zero;
+    }
+
+    public void RestartMovement()
+    {
+        stopped = false;
     }
 
     private void OnCollisionEnter(Collision other)

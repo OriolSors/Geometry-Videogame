@@ -79,7 +79,17 @@ public class BallTatamiController : MonoBehaviour
     }
 
     IEnumerator PowerupCountdownRoutine() {
+        foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            enemy.GetComponent<Enemy>().StopMovement();
+        }
+
         yield return new WaitForSeconds(7);
+
+        foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            enemy.GetComponent<Enemy>().RestartMovement();
+        }
         powerupIndicator.gameObject.SetActive(false);
         hasPowerup = false;
     }

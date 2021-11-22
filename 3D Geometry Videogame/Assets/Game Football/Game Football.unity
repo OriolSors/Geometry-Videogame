@@ -1122,7 +1122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hasPowerup: 0
   powerupIndicator: {fileID: 1427939658}
-  powerUpDuration: 5
+  powerUpDuration: 10
   dirtParticle: {fileID: 258856315}
 --- !u!1 &639034990
 GameObject:
