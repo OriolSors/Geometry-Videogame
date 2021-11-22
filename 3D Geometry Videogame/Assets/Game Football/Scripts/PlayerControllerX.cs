@@ -23,12 +23,15 @@ public class PlayerControllerX : MonoBehaviour
     private string username, mission;
     private int inventory;
 
+    private SpawnManagerX spawnManagerScript;
     private DatabaseReference reference;
 
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
+
+        spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManagerX>();
 
         reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
         LoadUser();
@@ -68,6 +71,7 @@ public class PlayerControllerX : MonoBehaviour
         else if (other.CompareTag("Cube"))
         {
             inventory++;
+            spawnManagerScript.SetCollectedCube();
             Destroy(other.gameObject);
         }
 
@@ -153,6 +157,7 @@ public class PlayerControllerX : MonoBehaviour
 
         File.WriteAllText(Application.persistentDataPath + "/savecurrentmission.json", json);
         reference.Child("Users").Child(username).Child("Missions").Child(mission).Child("inventory").SetValueAsync(inventory);
+        reference.Child("Users").Child(username).Child("Missions").Child(mission).Child("waveCubeSpawn").Child("football").SetValueAsync(spawnManagerScript.GetWaveCubes());
     }
 
     [System.Serializable]

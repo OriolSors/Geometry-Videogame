@@ -20,6 +20,7 @@ public class BallTatamiController : MonoBehaviour
     private string username, mission;
     private int inventory;
 
+    private SpawnTatamiManager spawnManagerScript;
     private DatabaseReference reference;
 
     // Start is called before the first frame update
@@ -27,6 +28,8 @@ public class BallTatamiController : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
+
+        spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnTatamiManager>();
 
         reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
         LoadUser();
@@ -62,6 +65,7 @@ public class BallTatamiController : MonoBehaviour
         else if (other.CompareTag("Cube"))
         {
             inventory++;
+            spawnManagerScript.SetCollectedCube();
             Destroy(other.gameObject);
         }
     }
@@ -134,6 +138,7 @@ public class BallTatamiController : MonoBehaviour
 
         File.WriteAllText(Application.persistentDataPath + "/savecurrentmission.json", json);
         reference.Child("Users").Child(username).Child("Missions").Child(mission).Child("inventory").SetValueAsync(inventory);
+        reference.Child("Users").Child(username).Child("Missions").Child(mission).Child("waveCubeSpawn").Child("tatami").SetValueAsync(spawnManagerScript.GetWaveCubes());
     }
 
     [System.Serializable]
