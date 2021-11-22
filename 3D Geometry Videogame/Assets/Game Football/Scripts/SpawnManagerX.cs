@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SpawnManagerX : MonoBehaviour
 {
@@ -16,19 +18,47 @@ public class SpawnManagerX : MonoBehaviour
     public int waveCount = 1;
     public float increaseSpeed = 0;
 
+    public bool gameOver = false;
+    public Canvas scoreboard;
 
-    public GameObject player; 
+    private int playerScore = 0;
+    private int enemyScore = 0;
+
+    public GameObject player;
+    private PlayerControllerX playerScript;
+
+    private void Start()
+    {
+        playerScript = player.GetComponent<PlayerControllerX>();
+    }
 
     // Update is called once per frame
     void Update()
     {
+        gameOver = (enemyScore - playerScore) == 5;
         enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
 
-        if (enemyCount == 0)
+        if (enemyCount == 0 && !gameOver)
         {
             SpawnEnemyWave(waveCount);
         }
+        else if (gameOver)
+        {
+            playerScript.ExitGame();
+        }
 
+    }
+
+    public void NewGoalPlayer()
+    {
+        playerScore++;
+        scoreboard.transform.Find("Player Goals Number").GetComponent<TextMeshProUGUI>().text = playerScore.ToString();
+    }
+
+    public void NewGoalEnemy()
+    {
+        enemyScore++;
+        scoreboard.transform.Find("Enemy Goals Number").GetComponent<TextMeshProUGUI>().text = enemyScore.ToString();
     }
 
     // Generate random spawn position for powerups and enemy balls

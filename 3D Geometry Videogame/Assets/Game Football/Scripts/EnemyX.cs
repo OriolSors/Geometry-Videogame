@@ -32,10 +32,12 @@ public class EnemyX : MonoBehaviour
         // If enemy collides with either goal, destroy it
         if (other.gameObject.name == "Enemy Goal")
         {
+            spawnScript.NewGoalPlayer();
             Destroy(gameObject);
         } 
         else if (other.gameObject.name == "Player Goal")
         {
+            spawnScript.NewGoalEnemy();
             Destroy(gameObject);
         }
 

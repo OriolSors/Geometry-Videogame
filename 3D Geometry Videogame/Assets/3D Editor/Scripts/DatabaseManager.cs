@@ -82,18 +82,26 @@ public class DatabaseManager : MonoBehaviour
 
     public void CreateMission()
     {
-        Mission mission = new Mission(designer, objectsNumber, playersDict);
-        string json = JsonConvert.SerializeObject(mission);
-        reference.Child("Missions").Child(DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss")).SetRawJsonValueAsync(json);
-
-        foreach (string player in playersDict.Keys)
+        if (playersDict.Count == 0)
         {
-            PlayerMission playerMission = new PlayerMission(player, objectsNumber, 0, playersDict[player]);
-            string json_player = JsonConvert.SerializeObject(playerMission);
-            reference.Child("Users").Child(player).Child("Missions").Child(DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss")).SetRawJsonValueAsync(json_player);
+            confirmPlayerCanvas.enabled = true;
+            confirmPlayerCanvas.GetComponentInChildren<TextMeshProUGUI>().text = "Mission has no players!";
         }
-        SceneManager.LoadScene("Designer Mission List Screen");
+        else
+        {
+            Mission mission = new Mission(designer, objectsNumber, playersDict);
+            string json = JsonConvert.SerializeObject(mission);
+            reference.Child("Missions").Child(DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss")).SetRawJsonValueAsync(json);
 
+            foreach (string player in playersDict.Keys)
+            {
+                PlayerMission playerMission = new PlayerMission(player, objectsNumber, 0, playersDict[player]);
+                string json_player = JsonConvert.SerializeObject(playerMission);
+                reference.Child("Users").Child(player).Child("Missions").Child(DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss")).SetRawJsonValueAsync(json_player);
+            }
+            SceneManager.LoadScene("Designer Mission List Screen");
+        }
+        
     }
 
     public void ExitScreen()
