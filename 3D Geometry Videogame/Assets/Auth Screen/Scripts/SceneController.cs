@@ -48,6 +48,14 @@ public class SceneController : MonoBehaviour
         });
     }
 
+    public void ExitApp()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        Application.Quit();
+    }
+
     private void SaveUser(string username)
     {
         SaveDataUser data = new SaveDataUser();
