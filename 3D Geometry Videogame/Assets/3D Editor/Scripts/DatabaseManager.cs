@@ -22,6 +22,8 @@ public class DatabaseManager : MonoBehaviour
     public Button addNewPlayer;
     public Button createMission;
 
+    public Canvas confirmPlayerCanvas;
+
     private DatabaseReference reference;
 
     private void Start()
@@ -29,6 +31,8 @@ public class DatabaseManager : MonoBehaviour
         reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
 
         toggles = labels.GetComponentsInChildren<Toggle>();
+
+        confirmPlayerCanvas.enabled = false;
 
         LoadPlayers(SetPlayersToDropdown);
     }
@@ -43,13 +47,37 @@ public class DatabaseManager : MonoBehaviour
     public void AddNewPlayer()
     {
         List<string> characteristics = new List<string>();
+        string player = selectPlayer.options[selectPlayer.value].text;
         foreach (Toggle prop in toggles)
         {
             if (prop.isOn) characteristics.Add(prop.GetComponentInChildren<Text>().text);
             
         }
-        playersDict.Add(selectPlayer.options[selectPlayer.value].text, characteristics);
 
+        if (player == "All players")
+        {
+            //TODO: dinamicament tots els jugadors registrats tindran la missio
+        }
+
+        if (playersDict.ContainsKey(player))
+        {
+            confirmPlayerCanvas.enabled = true;
+            confirmPlayerCanvas.GetComponentInChildren<TextMeshProUGUI>().text = player + " has already been assigned!";
+        }
+        else
+        {
+            confirmPlayerCanvas.enabled = true;
+            confirmPlayerCanvas.GetComponentInChildren<TextMeshProUGUI>().text = "Mission assigned to " + player + "!";
+            playersDict.Add(player, characteristics);
+        }
+        
+        
+
+    }
+
+    public void ConfirmPlayer()
+    {
+        confirmPlayerCanvas.enabled = false;
     }
 
     public void CreateMission()
@@ -64,8 +92,13 @@ public class DatabaseManager : MonoBehaviour
             string json_player = JsonConvert.SerializeObject(playerMission);
             reference.Child("Users").Child(player).Child("Missions").Child(DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss")).SetRawJsonValueAsync(json_player);
         }
-        SceneManager.LoadScene("3D Editor");
+        SceneManager.LoadScene("Designer Mission List Screen");
 
+    }
+
+    public void ExitScreen()
+    {
+        SceneManager.LoadScene("Designer Mission List Screen");
     }
 
     private void SetPlayersToDropdown(List<string> players)
