@@ -72,6 +72,17 @@ public class SpawnManagerX : MonoBehaviour
     private void SetWaveCubes(Dictionary<int, bool> waveCubes)
     {
         this.waveCubes = waveCubes;
+
+        foreach (int waveCount in waveCubes.Keys)
+        {
+            if (!waveCubes[waveCount])
+            {
+                this.waveCount = waveCount-1;
+                break;
+            }
+        }
+
+        if (waveCount == -1) waveCount = 0;
         ready = true;
     }
 

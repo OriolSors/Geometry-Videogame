@@ -54,6 +54,15 @@ public class SpawnTatamiManager : MonoBehaviour
     private void SetWaveCubes(Dictionary<int, bool> waveCubes)
     {
         this.waveCubes = waveCubes;
+        foreach (int waveNumber in waveCubes.Keys)
+        {
+            if (!waveCubes[waveNumber])
+            {
+                this.waveNumber = waveNumber - 1;
+                break;
+            }
+        }
+        if (waveNumber == -1) waveNumber = 0;
         ready = true;
     }
 
