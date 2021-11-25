@@ -21,6 +21,8 @@ public class SpawnManagerX : MonoBehaviour
 
     public int enemyCount;
     public int waveCount = 0;
+    public Canvas waveCanvas;
+
     public float increaseSpeed = 0;
 
     public bool gameOver = false;
@@ -43,7 +45,7 @@ public class SpawnManagerX : MonoBehaviour
     private void Start()
     {
         playerScript = player.GetComponent<PlayerControllerX>();
-
+        waveCanvas.enabled = false;
         reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
 
         LoadUser();
@@ -60,6 +62,8 @@ public class SpawnManagerX : MonoBehaviour
         if (enemyCount == 0 && !gameOver && ready)
         {
             waveCount++;
+            waveCanvas.enabled = true;
+            StartCoroutine(IndicatorRoundCoroutine());
             SpawnEnemyWave(waveCount);
         }
         else if (gameOver)
@@ -67,6 +71,13 @@ public class SpawnManagerX : MonoBehaviour
             playerScript.ExitGame();
         }
 
+    }
+
+    IEnumerator IndicatorRoundCoroutine()
+    {
+        waveCanvas.transform.Find("Number Round Text").GetComponent<TextMeshProUGUI>().text = "ROUND " + waveCount + "!";
+        yield return new WaitForSeconds(1.5f);
+        waveCanvas.enabled = false;
     }
 
     private void SetWaveCubes(Dictionary<int, bool> waveCubes)

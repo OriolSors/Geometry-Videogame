@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using Firebase.Database;
 using Firebase.Extensions;
+using TMPro;
 using UnityEngine;
 
 public class SpawnTatamiManager : MonoBehaviour
@@ -15,6 +16,7 @@ public class SpawnTatamiManager : MonoBehaviour
     private float spawnRange = 9;
     public int enemyCount;
     public int waveNumber = 0;
+    public Canvas waveCanvas;
 
     private BallTatamiController playerControllerScript;
 
@@ -31,7 +33,7 @@ public class SpawnTatamiManager : MonoBehaviour
     {
         Physics.gravity = new Vector3(0, -9.81f, 0);
         playerControllerScript = GameObject.Find("Player").GetComponent<BallTatamiController>();
-
+        waveCanvas.enabled = false;
         reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
 
         LoadUser();
@@ -46,9 +48,18 @@ public class SpawnTatamiManager : MonoBehaviour
         if (enemyCount == 0 && !playerControllerScript.gameOver && ready)
         {
             waveNumber++;
+            waveCanvas.enabled = true;
+            StartCoroutine(IndicatorRoundCoroutine());
             Instantiate(powerupPrefab, GenerateSpawnPosition(), powerupPrefab.transform.rotation);
             SpawnEnemyWave(waveNumber);
         }
+    }
+
+    IEnumerator IndicatorRoundCoroutine()
+    {
+        waveCanvas.transform.Find("Number Round Text").GetComponent<TextMeshProUGUI>().text = "ROUND " + waveNumber + "!";
+        yield return new WaitForSeconds(1.5f);
+        waveCanvas.enabled = false;
     }
 
     private void SetWaveCubes(Dictionary<int, bool> waveCubes)
