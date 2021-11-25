@@ -1253,6 +1253,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   missionView: {fileID: 2536481593512090416, guid: fc87b547af2ed42ed862eda3c9cbbb64, type: 3}
+  missionReadyView: {fileID: 3139967556108839883, guid: 7b9fac68afbb44e7ea65873ec7fbdcd6, type: 3}
   missionsScroll: {fileID: 2061913748}
   font: {fileID: 12800000, guid: 3a70ad0bbaee8473c80840c8766769c1, type: 3}
 --- !u!1 &1676396235

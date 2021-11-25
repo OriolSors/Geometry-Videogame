@@ -14,6 +14,7 @@ public class MissionListPlayerScript : MonoBehaviour
     private string username;
 
     public GameObject missionView;
+    public GameObject missionReadyView;
 
     private DatabaseReference reference;
 
@@ -33,15 +34,40 @@ public class MissionListPlayerScript : MonoBehaviour
 
         foreach (string mission in missions.Keys)
         {
-            GameObject go = Instantiate(missionView);
-            go.GetComponentInChildren<Button>().GetComponentInChildren<Text>().text = mission;
-            if (missions[mission][0] >= missions[mission][1]) go.transform.Find("Progression Text").GetComponent<Text>().text = "100%";
-            else go.transform.Find("Progression Text").GetComponent<Text>().text = (100 * missions[mission][0] / missions[mission][1]).ToString() + "%";
-            go.transform.SetParent(missionsScroll);
+            
+            if (missions[mission][0] >= missions[mission][1])
+            {
+                GameObject go = Instantiate(missionReadyView);
+                Button minigameMission = go.transform.Find("Mission Button").GetComponent<Button>();
+                Button finishMission = go.transform.Find("Ready Button").GetComponent<Button>();
 
-            go.GetComponentInChildren<Button>().onClick.AddListener(delegate {LoadMinigames(mission, missions[mission][0]); });
+                minigameMission.GetComponentInChildren<Text>().text = mission;
+                minigameMission.onClick.AddListener(delegate { LoadMinigames(mission, missions[mission][0]); });
+                finishMission.onClick.AddListener(delegate { GoToConstruct(); });
+
+                go.transform.SetParent(missionsScroll);
+
+            }
+            else
+            {
+                GameObject go = Instantiate(missionView);
+                Button minigameMission = go.transform.Find("Mission Button").GetComponent<Button>();
+
+                minigameMission.GetComponentInChildren<Text>().text = mission;
+                go.transform.Find("Progression Text").GetComponent<Text>().text = (100 * missions[mission][0] / missions[mission][1]).ToString() + "%";
+                minigameMission.onClick.AddListener(delegate { LoadMinigames(mission, missions[mission][0]); });
+
+                go.transform.SetParent(missionsScroll);
+            }
+            
+
+            
 
         }
+    }
+    private void GoToConstruct()
+    {
+        SceneManager.LoadScene("3D Constructor");
     }
 
     private void LoadMinigames(string mission, int inventory)
