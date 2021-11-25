@@ -24,11 +24,11 @@ EditorBuildSettings:
     path: Assets/Player Mission List Screen/Player Mission List Screen.unity
     guid: b5d99e1018e56ab4ab6e3f727d4b99c9
   - enabled: 1
-    path: Assets/Game Tatami/Game Tatami.unity
-    guid: e7cc7749d30ace242b120d2df802159e
-  - enabled: 1
     path: Assets/Minigame Selection Screen/Minigame Selection Screen.unity
     guid: efdff2357ab0547d68501092b85cc303
+  - enabled: 1
+    path: Assets/Game Tatami/Game Tatami.unity
+    guid: e7cc7749d30ace242b120d2df802159e
   - enabled: 1
     path: Assets/Game Football/Game Football.unity
     guid: a0d1b3db2912f7845a6230d20f0efeb4

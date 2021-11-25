@@ -42,12 +42,14 @@ public class PlayerControllerX : MonoBehaviour
 
     void Update()
     {
+        
         if (Input.GetKeyDown(KeyCode.Space))
         {
             dirtParticle.gameObject.transform.position = transform.position;
             dirtParticle.Play();
             playerRb.AddForce(focalPoint.transform.forward * speed * 2 * Time.deltaTime, ForceMode.Impulse);
         }
+        
         
         // Add force to player in direction of the focal point (and camera)
         float verticalInput = Input.GetAxis("Vertical");
@@ -67,6 +69,7 @@ public class PlayerControllerX : MonoBehaviour
             //TODO: activar Canvas amb una pregunta de la tematica
             Destroy(other.gameObject);
             bonusCanvas.enabled = true;
+
         }
         else if (other.CompareTag("Cube"))
         {
@@ -80,10 +83,12 @@ public class PlayerControllerX : MonoBehaviour
     public void ConfirmBonus()
     {
         //TODO: checkear i activar alguna pregunta associada amb les caracteristiques per poder agafar el bonus.
+        
         hasPowerup = true;
         powerupIndicator.SetActive(true);
         bonusCanvas.enabled = false;
         StartCoroutine(PowerupCooldown());
+        
     }
 
     // Coroutine to count down powerup duration
