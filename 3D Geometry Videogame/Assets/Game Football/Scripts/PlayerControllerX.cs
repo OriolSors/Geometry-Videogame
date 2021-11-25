@@ -65,10 +65,10 @@ public class PlayerControllerX : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Powerup"))
         {
-
-            //TODO: activar Canvas amb una pregunta de la tematica
             Destroy(other.gameObject);
+            //TODO: activar Canvas amb una pregunta de la tematica
             bonusCanvas.enabled = true;
+            StartCoroutine(IndicatorBonusCoroutine());
 
         }
         else if (other.CompareTag("Cube"))
@@ -80,14 +80,13 @@ public class PlayerControllerX : MonoBehaviour
 
     }
 
-    public void ConfirmBonus()
+    IEnumerator IndicatorBonusCoroutine()
     {
-        //TODO: checkear i activar alguna pregunta associada amb les caracteristiques per poder agafar el bonus.
-        
-        hasPowerup = true;
-        powerupIndicator.SetActive(true);
-        bonusCanvas.enabled = false;
         StartCoroutine(PowerupCooldown());
+        yield return new WaitForSeconds(1.5f);
+        hasPowerup = true;
+        powerupIndicator.gameObject.SetActive(true);
+        bonusCanvas.enabled = false;
         
     }
 

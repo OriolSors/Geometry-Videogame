@@ -58,8 +58,10 @@ public class BallTatamiController : MonoBehaviour
         
         if (other.CompareTag("Powerup")) 
         {
-            bonusCanvas.enabled = true;
             Destroy(other.gameObject);
+            //TODO: checkear i activar alguna pregunta associada amb les caracteristiques per poder agafar el bonus.
+            bonusCanvas.enabled = true;
+            StartCoroutine(IndicatorBonusCoroutine());
 
         }
         else if (other.CompareTag("Cube"))
@@ -70,14 +72,6 @@ public class BallTatamiController : MonoBehaviour
         }
     }
 
-    public void ConfirmBonus()
-    {
-        //TODO: checkear i activar alguna pregunta associada amb les caracteristiques per poder agafar el bonus.
-        hasPowerup = true;
-        powerupIndicator.gameObject.SetActive(true);
-        bonusCanvas.enabled = false;
-        StartCoroutine(PowerupCountdownRoutine());
-    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -89,6 +83,15 @@ public class BallTatamiController : MonoBehaviour
             enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
         }
 
+    }
+
+    IEnumerator IndicatorBonusCoroutine()
+    {
+        StartCoroutine(PowerupCountdownRoutine());
+        yield return new WaitForSeconds(1.5f);
+        hasPowerup = true;
+        powerupIndicator.gameObject.SetActive(true);
+        bonusCanvas.enabled = false;
     }
 
     IEnumerator PowerupCountdownRoutine() {
