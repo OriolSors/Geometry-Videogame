@@ -9,6 +9,8 @@ using UnityEngine;
 
 public class SpawnTatamiManager : MonoBehaviour
 {
+    public Canvas tutorialCanvas;
+
     public GameObject enemyPrefab;
     public GameObject powerupPrefab;
     public GameObject cubePrefab;
@@ -74,7 +76,13 @@ public class SpawnTatamiManager : MonoBehaviour
             }
         }
         if (waveNumber == -1) waveNumber = 0;
+        
+    }
+
+    public void PlayerReady()
+    {
         ready = true;
+        tutorialCanvas.enabled = false;
     }
 
     private void LoadWaveParameters(Action<Dictionary<int, bool>> callbackFunction)

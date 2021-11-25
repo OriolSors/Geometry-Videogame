@@ -11,6 +11,8 @@ using UnityEngine.SceneManagement;
 
 public class SpawnManagerX : MonoBehaviour
 {
+    public Canvas tutorialCanvas;
+
     public GameObject enemyPrefab;
     public GameObject powerupPrefab;
     public GameObject cubePrefab;
@@ -27,6 +29,7 @@ public class SpawnManagerX : MonoBehaviour
 
     public bool gameOver = false;
     public Canvas scoreboard;
+    public Canvas gameOverCanvas;
 
     private int playerScore = 0;
     private int enemyScore = 0;
@@ -46,6 +49,7 @@ public class SpawnManagerX : MonoBehaviour
     {
         playerScript = player.GetComponent<PlayerControllerX>();
         waveCanvas.enabled = false;
+        gameOverCanvas.enabled = false;
         reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
 
         LoadUser();
@@ -68,9 +72,17 @@ public class SpawnManagerX : MonoBehaviour
         }
         else if (gameOver)
         {
-            playerScript.ExitGame();
+            gameOverCanvas.enabled = true;
+            StartCoroutine(IndicatorGameOverCoroutine());
         }
 
+    }
+
+    IEnumerator IndicatorGameOverCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+        gameOverCanvas.enabled = false;
+        playerScript.ExitGame();
     }
 
     IEnumerator IndicatorRoundCoroutine()
@@ -94,7 +106,12 @@ public class SpawnManagerX : MonoBehaviour
         }
 
         if (waveCount == -1) waveCount = 0;
+    }
+
+    public void PlayerReady()
+    {
         ready = true;
+        tutorialCanvas.enabled = false;
     }
 
     private void LoadWaveParameters(Action<Dictionary<int, bool>> callbackFunction)

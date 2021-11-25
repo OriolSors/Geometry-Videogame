@@ -17,6 +17,7 @@ public class BallTatamiController : MonoBehaviour
     public Canvas bonusCanvas;
 
     public bool gameOver = false;
+    public Canvas gameOverCanvas;
 
     private string username, mission;
     private int inventory;
@@ -30,6 +31,7 @@ public class BallTatamiController : MonoBehaviour
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
         bonusCanvas.enabled = false;
+        gameOverCanvas.enabled = false;
 
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnTatamiManager>();
 
@@ -44,8 +46,8 @@ public class BallTatamiController : MonoBehaviour
         if (transform.position.y < -5)
         {
             gameOver = true;
-            SaveCurrentMission();
-            SceneManager.LoadScene("Minigame Selection Screen");
+            gameOverCanvas.enabled = true;
+            StartCoroutine(IndicatorGameOverCoroutine());
 
         }
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.5f, 0);
@@ -83,6 +85,14 @@ public class BallTatamiController : MonoBehaviour
             enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
         }
 
+    }
+
+    IEnumerator IndicatorGameOverCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+        gameOverCanvas.enabled = false;
+        SaveCurrentMission();
+        SceneManager.LoadScene("Minigame Selection Screen");
     }
 
     IEnumerator IndicatorBonusCoroutine()
