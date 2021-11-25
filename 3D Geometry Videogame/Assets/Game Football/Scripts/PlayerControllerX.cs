@@ -14,6 +14,7 @@ public class PlayerControllerX : MonoBehaviour
     public bool hasPowerup;
     public GameObject powerupIndicator;
     public int powerUpDuration = 10;
+    public Canvas bonusCanvas;
 
     private float normalStrength = 10; // how hard to hit enemy without powerup
     private float powerupStrength = 25; // how hard to hit enemy with powerup
@@ -30,6 +31,7 @@ public class PlayerControllerX : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
+        bonusCanvas.enabled = false;
 
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManagerX>();
 
@@ -64,9 +66,7 @@ public class PlayerControllerX : MonoBehaviour
 
             //TODO: activar Canvas amb una pregunta de la tematica
             Destroy(other.gameObject);
-            hasPowerup = true;
-            powerupIndicator.SetActive(true);
-            StartCoroutine(PowerupCooldown());
+            bonusCanvas.enabled = true;
         }
         else if (other.CompareTag("Cube"))
         {
@@ -75,6 +75,15 @@ public class PlayerControllerX : MonoBehaviour
             Destroy(other.gameObject);
         }
 
+    }
+
+    public void ConfirmBonus()
+    {
+        //TODO: checkear i activar alguna pregunta associada amb les caracteristiques per poder agafar el bonus.
+        hasPowerup = true;
+        powerupIndicator.SetActive(true);
+        bonusCanvas.enabled = false;
+        StartCoroutine(PowerupCooldown());
     }
 
     // Coroutine to count down powerup duration

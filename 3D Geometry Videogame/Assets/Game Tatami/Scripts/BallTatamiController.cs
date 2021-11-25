@@ -14,6 +14,7 @@ public class BallTatamiController : MonoBehaviour
     public bool hasPowerup;
     private float powerupStrength = 15.0f;
     public GameObject powerupIndicator;
+    public Canvas bonusCanvas;
 
     public bool gameOver = false;
 
@@ -28,6 +29,7 @@ public class BallTatamiController : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
+        bonusCanvas.enabled = false;
 
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnTatamiManager>();
 
@@ -53,14 +55,12 @@ public class BallTatamiController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //TODO: checkear i activar alguna pregunta associada amb les caracteristiques per poder agafar el bonus. Diferenciar bonus de orientacio cap a la figura
-        //i de xoc amb les boles enemigues 
+        
         if (other.CompareTag("Powerup")) 
         {
-            hasPowerup = true;
-            powerupIndicator.gameObject.SetActive(true);
+            bonusCanvas.enabled = true;
             Destroy(other.gameObject);
-            StartCoroutine(PowerupCountdownRoutine());
+
         }
         else if (other.CompareTag("Cube"))
         {
@@ -68,6 +68,15 @@ public class BallTatamiController : MonoBehaviour
             spawnManagerScript.SetCollectedCube();
             Destroy(other.gameObject);
         }
+    }
+
+    public void ConfirmBonus()
+    {
+        //TODO: checkear i activar alguna pregunta associada amb les caracteristiques per poder agafar el bonus.
+        hasPowerup = true;
+        powerupIndicator.gameObject.SetActive(true);
+        bonusCanvas.enabled = false;
+        StartCoroutine(PowerupCountdownRoutine());
     }
 
     private void OnCollisionEnter(Collision collision)
