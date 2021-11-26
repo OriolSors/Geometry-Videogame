@@ -24,6 +24,7 @@ public class DatabaseManager : MonoBehaviour
     public Button createMission;
 
     public Canvas confirmPlayerCanvas;
+    public Canvas noPlayerCanvas;
 
     private DatabaseReference reference;
 
@@ -34,6 +35,9 @@ public class DatabaseManager : MonoBehaviour
         toggles = labels.GetComponentsInChildren<Toggle>();
 
         confirmPlayerCanvas.enabled = false;
+        noPlayerCanvas.enabled = false;
+
+        createMission.interactable = false;
 
         LoadPlayers(SetPlayersToDropdown);
     }
@@ -51,7 +55,7 @@ public class DatabaseManager : MonoBehaviour
         string player = selectPlayer.options[selectPlayer.value].text;
         foreach (Toggle prop in toggles)
         {
-            if (prop.isOn) characteristics.Add(prop.GetComponentInChildren<Text>().text);
+            if (prop.isOn) characteristics.Add(prop.GetComponentInChildren<TextMeshProUGUI>().text);
             
         }
 
@@ -81,12 +85,16 @@ public class DatabaseManager : MonoBehaviour
         confirmPlayerCanvas.enabled = false;
     }
 
+    public void ConfirmNoPlayer()
+    {
+        noPlayerCanvas.enabled = false;
+    }
+
     public void CreateMission()
     {
         if (playersDict.Count == 0)
         {
-            confirmPlayerCanvas.enabled = true;
-            confirmPlayerCanvas.GetComponentInChildren<TextMeshProUGUI>().text = "Mission has no players!";
+            noPlayerCanvas.enabled = true;
         }
         else
         {
@@ -113,6 +121,7 @@ public class DatabaseManager : MonoBehaviour
     private void SetPlayersToDropdown(List<string> players)
     {
         selectPlayer.AddOptions(players);
+        if (players.Count != 0) createMission.interactable = true;
     }
 
     private void LoadPlayers(Action<List<string>> callbackFunction)
