@@ -13,17 +13,22 @@ public class MissionListDesignerScript : MonoBehaviour
 
     private string username;
 
+    public RectTransform missionsScroll;
     public GameObject missionView;
 
-    private DatabaseReference reference;
+    public Canvas userStatistics;
+    public RectTransform userStatisticsScroll;
 
-    public RectTransform missionsScroll;
+    private DatabaseReference reference;
+    
 
     public Font font;
 
     void Start()
     {
         reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
+        userStatistics.enabled = false;
+
         LoadUser();
         LoadMissionsWithUser(FillMissionScroll);
     }
@@ -35,16 +40,21 @@ public class MissionListDesignerScript : MonoBehaviour
         {
             GameObject go = Instantiate(missionView);
             go.GetComponentInChildren<Button>().GetComponentInChildren<Text>().text = mission;
-            go.transform.Find("Progression Text").GetComponent<Text>().text = "%"; //TODO: enllaçar amb les dades de progressio de cada usuari
             go.transform.SetParent(missionsScroll);
 
-            go.GetComponentInChildren<Button>().onClick.AddListener(delegate { LoadUserStatistics(); });
+            go.GetComponentInChildren<Button>().onClick.AddListener(delegate { LoadUserStatistics(mission); });
         }
     }
 
-    private void LoadUserStatistics()
+    private void LoadUserStatistics(string mission)
     {
+        //TODO: llegir de Firebase els percentatges de cada usuari
+        userStatistics.enabled = true;
+    }
 
+    public void ReturnMissionList()
+    {
+        userStatistics.enabled = false;
     }
 
     private void LoadMissionsWithUser(Action<List<string>> callbackFunction)
