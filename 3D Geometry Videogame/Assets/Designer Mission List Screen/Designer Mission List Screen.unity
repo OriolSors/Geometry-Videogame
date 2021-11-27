@@ -968,6 +968,7 @@ MonoBehaviour:
   missionView: {fileID: 1030368684230005186, guid: 4d58fc7fb60db4e6387f6e720429982a, type: 3}
   userStatistics: {fileID: 59056736}
   userStatisticsScroll: {fileID: 676102353}
+  userView: {fileID: 3767780168434132735, guid: f653b67e95734414a8de82764bcc4df0, type: 3}
   font: {fileID: 12800000, guid: 3a70ad0bbaee8473c80840c8766769c1, type: 3}
 --- !u!1 &608438488
 GameObject:

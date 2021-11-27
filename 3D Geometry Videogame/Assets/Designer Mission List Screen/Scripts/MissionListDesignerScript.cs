@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using Firebase.Database;
 using Firebase.Extensions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -18,6 +19,7 @@ public class MissionListDesignerScript : MonoBehaviour
 
     public Canvas userStatistics;
     public RectTransform userStatisticsScroll;
+    public GameObject userView;
 
     private DatabaseReference reference;
     
@@ -42,14 +44,65 @@ public class MissionListDesignerScript : MonoBehaviour
             go.GetComponentInChildren<Button>().GetComponentInChildren<Text>().text = mission;
             go.transform.SetParent(missionsScroll);
 
-            go.GetComponentInChildren<Button>().onClick.AddListener(delegate { LoadUserStatistics(mission); });
+            go.GetComponentInChildren<Button>().onClick.AddListener(delegate { LoadUserStatistics(mission, FillUserStatistics); });
         }
     }
 
-    private void LoadUserStatistics(string mission)
+    private void FillUserStatistics(Dictionary <string, string> players)
     {
-        //TODO: llegir de Firebase els percentatges de cada usuari
         userStatistics.enabled = true;
+
+        foreach (Transform child in userStatisticsScroll.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (string user in players.Keys)
+        {
+            GameObject go = Instantiate(userView);
+            go.transform.Find("Username Text").GetComponent<TextMeshProUGUI>().text = user;
+            go.transform.Find("Status Text").GetComponent<TextMeshProUGUI>().text = players[user];
+            go.transform.SetParent(userStatisticsScroll);
+
+        }
+    }
+
+    private void LoadUserStatistics(string mission, Action<Dictionary<string, string>> callbackFunction)
+    {
+
+        Dictionary<string, string> players = new Dictionary<string, string>();
+        var DBTask = reference.Child("Missions").Child(mission).GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.Result.Value == null)
+            {
+                Debug.Log("No missions");
+
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                int cubes = int.Parse(snapshot.Child("cubes").Value.ToString());
+                foreach (DataSnapshot user in snapshot.Child("playersDict").Children)
+                {
+                    int inventory = int.Parse(user.Child("inventory").Value.ToString());
+                    if (inventory / cubes >= 1)
+                    {
+                        players[user.Key.ToString()] = "100%";
+                    }
+                    else
+                    {
+                        players[user.Key.ToString()] = (100 * inventory/cubes).ToString() + "%";
+                    }
+                }
+            }
+
+            callbackFunction(players);
+            
+        });
     }
 
     public void ReturnMissionList()

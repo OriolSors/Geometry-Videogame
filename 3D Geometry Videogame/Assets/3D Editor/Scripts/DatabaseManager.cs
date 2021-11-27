@@ -98,15 +98,17 @@ public class DatabaseManager : MonoBehaviour
         }
         else
         {
+            string date = DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss");
             Mission mission = new Mission(designer, objectsNumber, playersDict);
             string json = JsonConvert.SerializeObject(mission);
-            reference.Child("Missions").Child(DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss")).SetRawJsonValueAsync(json);
+            reference.Child("Missions").Child(date).SetRawJsonValueAsync(json);
 
             foreach (string player in playersDict.Keys)
             {
                 PlayerMission playerMission = new PlayerMission(player, objectsNumber, 0, playersDict[player]);
                 string json_player = JsonConvert.SerializeObject(playerMission);
-                reference.Child("Users").Child(player).Child("Missions").Child(DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss")).SetRawJsonValueAsync(json_player);
+                reference.Child("Users").Child(player).Child("Missions").Child(date).SetRawJsonValueAsync(json_player);
+                reference.Child("Missions").Child(date).Child("playersDict").Child(player).Child("inventory").SetValueAsync(0);
             }
             SceneManager.LoadScene("Designer Mission List Screen");
         }
@@ -168,7 +170,6 @@ public class DatabaseManager : MonoBehaviour
     }
 
     [System.Serializable]
-
     class PlayerMission
     {
         public string player;

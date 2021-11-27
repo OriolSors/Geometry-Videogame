@@ -170,6 +170,7 @@ public class PlayerControllerX : MonoBehaviour
 
         File.WriteAllText(Application.persistentDataPath + "/savecurrentmission.json", json);
         reference.Child("Users").Child(username).Child("Missions").Child(mission).Child("inventory").SetValueAsync(inventory);
+        reference.Child("Missions").Child(mission).Child("playersDict").Child(username).Child("inventory").SetValueAsync(inventory);
         reference.Child("Users").Child(username).Child("Missions").Child(mission).Child("waveCubeSpawn").Child("football").SetValueAsync(spawnManagerScript.GetWaveCubes());
     }
 
