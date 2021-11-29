@@ -1,20 +1,37 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Firebase.Database;
+using Firebase.Extensions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerControllerX : MonoBehaviour
 {
     private Rigidbody playerRb;
     private float speed = 500;
     private GameObject focalPoint;
+    private bool stopped = false;
 
     public bool hasPowerup;
     public GameObject powerupIndicator;
     public int powerUpDuration = 10;
     public Canvas bonusCanvas;
+    public Canvas noBonusCanvas;
+
+    private List<string> characteristics;
+    private List<Question> questions;
+    public Canvas questionCanvas;
+    public TextMeshProUGUI questionText;
+    public Button firstAnswer;
+    public Button secondAnswer;
+    public Button thirdAnswer;
+    public Button fourthAnswer;
+
 
     private float normalStrength = 10; // how hard to hit enemy without powerup
     private float powerupStrength = 25; // how hard to hit enemy with powerup
@@ -31,13 +48,72 @@ public class PlayerControllerX : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
+
         bonusCanvas.enabled = false;
+        noBonusCanvas.enabled = false;
+        questionCanvas.enabled = false;
 
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManagerX>();
 
         reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
         LoadUser();
         LoadCurrentMission();
+        LoadCharacteristics();
+        LoadQuestions(SetQuestions);
+    }
+
+    private void SetQuestions(List<Question> questions)
+    {
+        this.questions = questions;
+    }
+    private void LoadQuestions(Action<List<Question>> callbackFunction)
+    {
+        List<Question> questions = new List<Question>();
+        var DBTask = reference.Child("Questions").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.Result.Value == null)
+            {
+                Debug.Log("No questions");
+
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                foreach (DataSnapshot characteristic in snapshot.Children)
+                {
+                    if (characteristics.Contains(characteristic.Key.ToString()))
+                    {
+                        foreach (DataSnapshot question in characteristic.Children)
+                        {
+                            string q = question.Children.First().Key.ToString();
+                            string correct;
+
+                            string first = question.Children.First().Children.ElementAt(0).Key.ToString();
+                            string second = question.Children.First().Children.ElementAt(1).Key.ToString();
+                            string third = question.Children.First().Children.ElementAt(2).Key.ToString();
+                            string fourth = question.Children.First().Children.ElementAt(3).Key.ToString();
+
+                            if ((bool)question.Children.First().Children.ElementAt(0).Value) correct = first;
+                            else if ((bool)question.Children.First().Children.ElementAt(1).Value) correct = second;
+                            else if ((bool)question.Children.First().Children.ElementAt(2).Value) correct = third;
+                            else correct = fourth;
+
+                            questions.Add(new Question(q, first, second, third, fourth, correct));
+                        }
+
+                    }
+                }
+
+                callbackFunction(questions);
+
+            }
+
+
+        });
     }
 
     void Update()
@@ -53,7 +129,7 @@ public class PlayerControllerX : MonoBehaviour
         
         // Add force to player in direction of the focal point (and camera)
         float verticalInput = Input.GetAxis("Vertical");
-        playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime); 
+        if (!stopped) playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime); 
 
         // Set powerup indicator position to beneath player
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
@@ -66,9 +142,17 @@ public class PlayerControllerX : MonoBehaviour
         if (other.gameObject.CompareTag("Powerup"))
         {
             Destroy(other.gameObject);
-            //TODO: activar Canvas amb una pregunta de la tematica
-            bonusCanvas.enabled = true;
-            StartCoroutine(IndicatorBonusCoroutine());
+
+            playerRb.velocity = Vector3.zero;
+            playerRb.angularVelocity = Vector3.zero;
+            stopped = true;
+            foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+            {
+                enemy.GetComponent<EnemyX>().StopMovement();
+            }
+
+            questionCanvas.enabled = true;
+            SetCurrentQuestion();
 
         }
         else if (other.CompareTag("Cube"))
@@ -80,6 +164,86 @@ public class PlayerControllerX : MonoBehaviour
 
     }
 
+    private void SetCurrentQuestion()
+    {
+        var rand = new System.Random();
+        int index = rand.Next(questions.Count);
+        Question currentQuestion = questions[index];
+        questionText.text = currentQuestion.question;
+        firstAnswer.GetComponentInChildren<TextMeshProUGUI>().text = currentQuestion.first;
+        secondAnswer.GetComponentInChildren<TextMeshProUGUI>().text = currentQuestion.second;
+        thirdAnswer.GetComponentInChildren<TextMeshProUGUI>().text = currentQuestion.third;
+        fourthAnswer.GetComponentInChildren<TextMeshProUGUI>().text = currentQuestion.fourth;
+
+        switch (currentQuestion.CorrectIndexAnswer())
+        {
+            case "first":
+                firstAnswer.onClick.AddListener(delegate { GetBonus(); });
+                secondAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                thirdAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                fourthAnswer.onClick.AddListener(delegate { LoseBonus(); });
+
+                break;
+
+            case "second":
+                firstAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                secondAnswer.onClick.AddListener(delegate { GetBonus(); });
+                thirdAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                fourthAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                break;
+
+            case "third":
+                firstAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                secondAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                thirdAnswer.onClick.AddListener(delegate { GetBonus(); });
+                fourthAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                break;
+
+            case "fourth":
+                firstAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                secondAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                thirdAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                fourthAnswer.onClick.AddListener(delegate { GetBonus(); });
+                break;
+        }
+
+
+    }
+
+    private void RemoveListeners()
+    {
+
+        firstAnswer.onClick.RemoveAllListeners();
+        secondAnswer.onClick.RemoveAllListeners();
+        thirdAnswer.onClick.RemoveAllListeners();
+        fourthAnswer.onClick.RemoveAllListeners();
+    }
+
+    private void LoseBonus()
+    {
+        RemoveListeners();
+        stopped = false;
+        questionCanvas.enabled = false;
+        foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            enemy.GetComponent<EnemyX>().RestartMovement();
+        }
+        noBonusCanvas.enabled = true;
+        StartCoroutine(IndicatorNoBonusCoroutine());
+
+    }
+
+    private void GetBonus()
+    {
+        stopped = false;
+        RemoveListeners();
+        questionCanvas.enabled = false;
+        bonusCanvas.enabled = true;
+        StartCoroutine(IndicatorBonusCoroutine());
+
+    }
+
+
     IEnumerator IndicatorBonusCoroutine()
     {
         StartCoroutine(PowerupCooldown());
@@ -88,6 +252,12 @@ public class PlayerControllerX : MonoBehaviour
         powerupIndicator.gameObject.SetActive(true);
         bonusCanvas.enabled = false;
         
+    }
+
+    IEnumerator IndicatorNoBonusCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+        noBonusCanvas.enabled = false;
     }
 
     // Coroutine to count down powerup duration
@@ -161,6 +331,18 @@ public class PlayerControllerX : MonoBehaviour
         }
     }
 
+    private void LoadCharacteristics()
+    {
+        string path = Application.persistentDataPath + "/savecharacteristics.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            SaveDataCharacteristics data = JsonUtility.FromJson<SaveDataCharacteristics>(json);
+
+            characteristics = data.characteristics;
+        }
+    }
+
     private void SaveCurrentMission()
     {
         SaveDataCurrentMission data = new SaveDataCurrentMission();
@@ -189,5 +371,33 @@ public class PlayerControllerX : MonoBehaviour
 
     }
 
+    [System.Serializable]
+    class SaveDataCharacteristics
+    {
+        public List<string> characteristics;
+    }
+
+    public class Question
+    {
+        public string question, first, second, third, fourth, correct;
+
+        public Question(string question, string first, string second, string third, string fourth, string correct)
+        {
+            this.question = question;
+            this.first = first;
+            this.second = second;
+            this.third = third;
+            this.fourth = fourth;
+            this.correct = correct;
+        }
+
+        public string CorrectIndexAnswer()
+        {
+            if (first == correct) return "first";
+            else if (second == correct) return "second";
+            else if (third == correct) return "third";
+            else return "fourth";
+        }
+    }
 
 }

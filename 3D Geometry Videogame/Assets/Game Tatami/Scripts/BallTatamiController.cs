@@ -175,85 +175,50 @@ public class BallTatamiController : MonoBehaviour
         switch (currentQuestion.CorrectIndexAnswer())
         {
             case "first":
-                firstAnswer.onClick.AddListener(delegate { GetBonus("first"); });
-                secondAnswer.onClick.AddListener(delegate { LoseBonus("first"); });
-                thirdAnswer.onClick.AddListener(delegate { LoseBonus("first"); });
-                fourthAnswer.onClick.AddListener(delegate { LoseBonus("first"); });
+                firstAnswer.onClick.AddListener(delegate { GetBonus(); });
+                secondAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                thirdAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                fourthAnswer.onClick.AddListener(delegate { LoseBonus(); });
 
                 break;
                 
             case "second":
-                firstAnswer.onClick.AddListener(delegate { LoseBonus("second"); });
-                secondAnswer.onClick.AddListener(delegate { GetBonus("second"); });
-                thirdAnswer.onClick.AddListener(delegate { LoseBonus("second"); });
-                fourthAnswer.onClick.AddListener(delegate { LoseBonus("second"); });
+                firstAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                secondAnswer.onClick.AddListener(delegate { GetBonus(); });
+                thirdAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                fourthAnswer.onClick.AddListener(delegate { LoseBonus(); });
                 break;
 
             case "third":
-                firstAnswer.onClick.AddListener(delegate { LoseBonus("third"); });
-                secondAnswer.onClick.AddListener(delegate { LoseBonus("third"); });
-                thirdAnswer.onClick.AddListener(delegate { GetBonus("third"); });
-                fourthAnswer.onClick.AddListener(delegate { LoseBonus("third"); });
+                firstAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                secondAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                thirdAnswer.onClick.AddListener(delegate { GetBonus(); });
+                fourthAnswer.onClick.AddListener(delegate { LoseBonus(); });
                 break;
 
             case "fourth":
-                firstAnswer.onClick.AddListener(delegate { LoseBonus("fourth"); });
-                secondAnswer.onClick.AddListener(delegate { LoseBonus("fourth"); });
-                thirdAnswer.onClick.AddListener(delegate { LoseBonus("fourth"); });
-                fourthAnswer.onClick.AddListener(delegate { GetBonus("fourth"); });
+                firstAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                secondAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                thirdAnswer.onClick.AddListener(delegate { LoseBonus(); });
+                fourthAnswer.onClick.AddListener(delegate { GetBonus(); });
                 break;
         }
         
 
     }
 
-    private void RemoveListeners(string correct)
+    private void RemoveListeners()
     {
 
         firstAnswer.onClick.RemoveAllListeners();
         secondAnswer.onClick.RemoveAllListeners();
         thirdAnswer.onClick.RemoveAllListeners();
         fourthAnswer.onClick.RemoveAllListeners();
-
-        /*
-        switch (correct)
-        {
-            case "first":
-                firstAnswer.onClick.RemoveListener(delegate { GetBonus("first"); });
-                secondAnswer.onClick.RemoveListener(delegate { LoseBonus("first"); });
-                thirdAnswer.onClick.RemoveListener(delegate { LoseBonus("first"); });
-                fourthAnswer.onClick.RemoveListener(delegate { LoseBonus("first"); });
-
-                break;
-
-            case "second":
-                firstAnswer.onClick.RemoveListener(delegate { LoseBonus("second"); });
-                secondAnswer.onClick.RemoveListener(delegate { GetBonus("second"); });
-                thirdAnswer.onClick.RemoveListener(delegate { LoseBonus("second"); });
-                fourthAnswer.onClick.RemoveListener(delegate { LoseBonus("second"); });
-                break;
-
-            case "third":
-                firstAnswer.onClick.RemoveListener(delegate { LoseBonus("third"); });
-                secondAnswer.onClick.RemoveListener(delegate { LoseBonus("third"); });
-                thirdAnswer.onClick.RemoveListener(delegate { GetBonus("third"); });
-                fourthAnswer.onClick.RemoveListener(delegate { LoseBonus("third"); });
-                break;
-
-            case "fourth":
-                firstAnswer.onClick.RemoveListener(delegate { LoseBonus("fourth"); });
-                secondAnswer.onClick.RemoveListener(delegate { LoseBonus("fourth"); });
-                thirdAnswer.onClick.RemoveListener(delegate { LoseBonus("fourth"); });
-                fourthAnswer.onClick.RemoveListener(delegate { GetBonus("fourth"); });
-                break;
-        }
-
-        */
     }
 
-    private void LoseBonus(string correct)
+    private void LoseBonus()
     {
-        RemoveListeners(correct);
+        RemoveListeners();
         stopped = false;
         questionCanvas.enabled = false;
         foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy"))
@@ -265,10 +230,10 @@ public class BallTatamiController : MonoBehaviour
 
     }
 
-    private void GetBonus(string correct)
+    private void GetBonus()
     {
         stopped = false;
-        RemoveListeners(correct);
+        RemoveListeners();
         questionCanvas.enabled = false;
         bonusCanvas.enabled = true;
         StartCoroutine(IndicatorBonusCoroutine());
