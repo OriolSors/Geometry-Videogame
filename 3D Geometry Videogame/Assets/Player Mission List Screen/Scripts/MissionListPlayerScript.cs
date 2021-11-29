@@ -140,8 +140,6 @@ public class MissionListPlayerScript : MonoBehaviour
 
     private void LoadMinigames(string mission, int inventory)
     {
-        //TODO: gestionar els nivells de cada minijoc i guardar els punts de partida on apareixeran les figures. Si una ja s'ha recollit, aleshores que no torni a apareixer
-        //dins els minijocs associats a aquesta missio
         SaveCurrentMission(mission, inventory);
         SceneManager.LoadScene("Minigame Selection Screen");
     }
@@ -195,14 +193,49 @@ public class MissionListPlayerScript : MonoBehaviour
         }
     }
 
+    private void RetrieveCharacteristics(string mission, Action<List<string>> callbackFunction)
+    {
+        List<string> characteristics = new List<string>();
+        var DBTask = reference.Child("Users").Child(username).Child("Missions").Child(mission).Child("characteristics").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.Result.Value == null)
+            {
+                Debug.Log("No cubes");
+
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                foreach (DataSnapshot characteristic in snapshot.Children)
+                {
+                    characteristics.Add(characteristic.Value.ToString());
+                }
+            }
+
+            callbackFunction(characteristics);
+        });
+    }
+
     private void SaveCurrentMission(string mission, int inventory)
     {
         SaveDataCurrentMission data = new SaveDataCurrentMission();
         data.mission = mission;
         data.inventory = inventory;
         string json = JsonUtility.ToJson(data);
-
         File.WriteAllText(Application.persistentDataPath + "/savecurrentmission.json", json);
+        RetrieveCharacteristics(mission, SaveCharacteristics);
+    }
+
+    private void SaveCharacteristics(List<string> characteristics)
+    {
+        SaveDataCharacteristics data = new SaveDataCharacteristics();
+        data.characteristics = characteristics;
+        string json = JsonUtility.ToJson(data);
+        File.WriteAllText(Application.persistentDataPath + "/savecharacteristics.json", json);
     }
 
     [System.Serializable]
@@ -213,10 +246,15 @@ public class MissionListPlayerScript : MonoBehaviour
     }
 
     [System.Serializable]
+    class SaveDataCharacteristics
+    {
+        public List<string> characteristics;
+    }
+
+    [System.Serializable]
     class SaveDataCurrentMission
     {
         public string mission;
         public int inventory;
-
     }
 }

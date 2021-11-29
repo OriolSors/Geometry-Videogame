@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.45113963, g: 0.50092083, b: 0.5739072, a: 1}
+  m_IndirectSpecularColor: {r: 0.45113915, g: 0.5009199, b: 0.5739063, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2846,7 +2846,7 @@ GameObject:
   - component: {fileID: 553203700}
   - component: {fileID: 553203701}
   m_Layer: 5
-  m_Name: Toggle Edges per face
+  m_Name: Toggle Faces per vertex
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14026,7 +14026,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Edges per face
+  m_text: Faces per vertex
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f0bfb73449e8943d0a0d1efb2290352e, type: 2}
   m_sharedMaterial: {fileID: 21976234817437650, guid: f0bfb73449e8943d0a0d1efb2290352e, type: 2}
