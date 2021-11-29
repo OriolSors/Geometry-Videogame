@@ -17,11 +17,13 @@ public class DatabaseManager : MonoBehaviour
     private int objectsNumber;
     private Dictionary<string, List<string>> playersDict = new Dictionary<string, List<string>>();
 
+    private List<string> players;
     public TMP_Dropdown selectPlayer;
     public GameObject labels;
     private Toggle[] toggles;
     public Button addNewPlayer;
     public Button createMission;
+    private bool mission_default = false;
 
     public Canvas confirmPlayerCanvas;
     public Canvas noPlayerCanvas;
@@ -59,16 +61,32 @@ public class DatabaseManager : MonoBehaviour
             
         }
 
-        if (player == "All players")
-        {
-            //TODO: dinamicament tots els jugadors registrats tindran la missio
-        }
-
         if (playersDict.ContainsKey(player))
         {
             confirmPlayerCanvas.enabled = true;
             confirmPlayerCanvas.GetComponentInChildren<TextMeshProUGUI>().text = player + " has already been assigned!";
         }
+        else if (player == "All players")
+        {
+            confirmPlayerCanvas.enabled = true;
+            confirmPlayerCanvas.GetComponentInChildren<TextMeshProUGUI>().text = "Mission assigned to all players!";
+            foreach (string player_aux in players)
+            {
+                playersDict.Add(player_aux, characteristics);
+            }
+        }
+
+        else if (player == "Default mission")
+        {
+            confirmPlayerCanvas.enabled = true;
+            confirmPlayerCanvas.GetComponentInChildren<TextMeshProUGUI>().text = "Mission assigned by default!";
+            foreach (string player_aux in players)
+            {
+                playersDict.Add(player_aux, characteristics);
+            }
+            mission_default = true;
+        }
+
         else
         {
             confirmPlayerCanvas.enabled = true;
@@ -99,7 +117,7 @@ public class DatabaseManager : MonoBehaviour
         else
         {
             string date = DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss");
-            Mission mission = new Mission(designer, objectsNumber, playersDict);
+            Mission mission = new Mission(designer, objectsNumber, playersDict, mission_default);
             string json = JsonConvert.SerializeObject(mission);
             reference.Child("Missions").Child(date).SetRawJsonValueAsync(json);
 
@@ -122,6 +140,7 @@ public class DatabaseManager : MonoBehaviour
 
     private void SetPlayersToDropdown(List<string> players)
     {
+        this.players = players;
         selectPlayer.AddOptions(players);
         if (players.Count != 0) createMission.interactable = true;
     }
@@ -160,12 +179,14 @@ public class DatabaseManager : MonoBehaviour
         public string designer;
         public int cubes;
         public Dictionary<string, List<string>> playersDict;
+        public bool mission_default;
 
-        public Mission(string designer, int cubes, Dictionary<string, List<string>> playersDict)
+        public Mission(string designer, int cubes, Dictionary<string, List<string>> playersDict, bool mission_default)
         {
             this.designer = designer;
             this.cubes = cubes;
             this.playersDict = playersDict;
+            this.mission_default = mission_default;
         }
     }
 

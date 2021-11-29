@@ -6,6 +6,7 @@ using TMPro;
 using Firebase.Extensions;
 using System;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class NewAccountScript : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class NewAccountScript : MonoBehaviour
 
     [SerializeField]
     private TMP_Dropdown accountTypeOption;
+
+    private List<PlayerMission> defaultMissions;
 
     private DatabaseReference reference;
 
@@ -89,6 +92,57 @@ public class NewAccountScript : MonoBehaviour
         {
             this.username = username;
             this.account = account;
+        }
+    }
+
+    [System.Serializable]
+    class PlayerMission
+    {
+        public string player;
+        public int cubes;
+        public Dictionary<string, Dictionary<int, bool>> waveCubeSpawn = new Dictionary<string, Dictionary<int, bool>>();
+        public int inventory;
+        public List<string> characteristics;
+
+        public PlayerMission(string player, int cubes, int inventory, List<string> characteristics)
+        {
+            this.player = player;
+            this.cubes = cubes;
+            this.inventory = inventory;
+            this.characteristics = characteristics;
+            SetWaveNumberToSpawn();
+        }
+
+        public void SetWaveNumberToSpawn()
+        {
+            int quotient_down = Convert.ToInt32(Math.Floor((float)cubes / 2f)); //TODO: tenir en compte el joc Collect Game, aixi que s'haura de modificar aixo
+            int[] waveSpawnArray = { quotient_down, quotient_down };
+
+            for (int i = 0; i < waveSpawnArray.Length; i++)
+            {
+                if (waveSpawnArray.Sum() == cubes) break;
+                waveSpawnArray[i]++;
+            }
+
+            var rand = new System.Random();
+
+
+            Dictionary<int, bool> cubeWaveTatami = new Dictionary<int, bool>();
+            Dictionary<int, bool> cubeWaveFootball = new Dictionary<int, bool>();
+
+            foreach (int wavePos in Enumerable.Range(1, 5).OrderBy(x => rand.Next()).Take(waveSpawnArray[0]))
+            {
+                cubeWaveTatami[wavePos] = false;
+            }
+
+            foreach (int wavePos in Enumerable.Range(1, 5).OrderBy(x => rand.Next()).Take(waveSpawnArray[1]))
+            {
+                cubeWaveFootball[wavePos] = false;
+            }
+
+            waveCubeSpawn["tatami"] = cubeWaveTatami;
+            waveCubeSpawn["football"] = cubeWaveFootball;
+
         }
     }
 
