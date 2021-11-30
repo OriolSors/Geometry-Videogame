@@ -172,6 +172,12 @@ public class BallTatamiController : MonoBehaviour
         thirdAnswer.GetComponentInChildren<TextMeshProUGUI>().text = currentQuestion.third;
         fourthAnswer.GetComponentInChildren<TextMeshProUGUI>().text = currentQuestion.fourth;
 
+        firstAnswer.onClick.AddListener(delegate { CheckBonus(currentQuestion, currentQuestion.first); });
+        secondAnswer.onClick.AddListener(delegate { CheckBonus(currentQuestion, currentQuestion.second); });
+        thirdAnswer.onClick.AddListener(delegate { CheckBonus(currentQuestion, currentQuestion.third); });
+        fourthAnswer.onClick.AddListener(delegate { CheckBonus(currentQuestion, currentQuestion.fourth); });
+
+        /*
         switch (currentQuestion.CorrectIndexAnswer())
         {
             case "first":
@@ -179,7 +185,6 @@ public class BallTatamiController : MonoBehaviour
                 secondAnswer.onClick.AddListener(delegate { LoseBonus(); });
                 thirdAnswer.onClick.AddListener(delegate { LoseBonus(); });
                 fourthAnswer.onClick.AddListener(delegate { LoseBonus(); });
-
                 break;
                 
             case "second":
@@ -203,8 +208,14 @@ public class BallTatamiController : MonoBehaviour
                 fourthAnswer.onClick.AddListener(delegate { GetBonus(); });
                 break;
         }
-        
+        */
 
+    }
+
+    private void CheckBonus(Question question, string textAnswer)
+    {
+        if (question.CheckCorrectAnswer(textAnswer)) GetBonus();
+        else LoseBonus();
     }
 
     private void RemoveListeners()
@@ -383,12 +394,9 @@ public class BallTatamiController : MonoBehaviour
             this.correct = correct;
         }
 
-        public string CorrectIndexAnswer()
+        public bool CheckCorrectAnswer(string text)
         {
-            if (first == correct) return "first";
-            else if (second == correct) return "second";
-            else if (third == correct) return "third";
-            else return "fourth";
+            return this.correct == text;
         }
     }
 }
