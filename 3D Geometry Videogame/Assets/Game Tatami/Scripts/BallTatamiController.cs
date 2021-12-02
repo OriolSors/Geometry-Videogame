@@ -22,6 +22,7 @@ public class BallTatamiController : MonoBehaviour
     public GameObject powerupIndicator;
     public Canvas bonusCanvas;
     public Canvas noBonusCanvas;
+    public Canvas figureObtainedCanvas;
 
     public bool gameOver = false;
     public Canvas gameOverCanvas;
@@ -52,6 +53,7 @@ public class BallTatamiController : MonoBehaviour
         noBonusCanvas.enabled = false;
         gameOverCanvas.enabled = false;
         questionCanvas.enabled = false;
+        figureObtainedCanvas.enabled = false;
 
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnTatamiManager>();
 
@@ -158,6 +160,8 @@ public class BallTatamiController : MonoBehaviour
             inventory++;
             spawnManagerScript.SetCollectedCube();
             Destroy(other.gameObject);
+            figureObtainedCanvas.enabled = true;
+            StartCoroutine(IndicatorFigureObtainedCoroutine());
         }
     }
 
@@ -176,39 +180,6 @@ public class BallTatamiController : MonoBehaviour
         secondAnswer.onClick.AddListener(delegate { CheckBonus(currentQuestion, currentQuestion.second); });
         thirdAnswer.onClick.AddListener(delegate { CheckBonus(currentQuestion, currentQuestion.third); });
         fourthAnswer.onClick.AddListener(delegate { CheckBonus(currentQuestion, currentQuestion.fourth); });
-
-        /*
-        switch (currentQuestion.CorrectIndexAnswer())
-        {
-            case "first":
-                firstAnswer.onClick.AddListener(delegate { GetBonus(); });
-                secondAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                thirdAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                fourthAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                break;
-                
-            case "second":
-                firstAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                secondAnswer.onClick.AddListener(delegate { GetBonus(); });
-                thirdAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                fourthAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                break;
-
-            case "third":
-                firstAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                secondAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                thirdAnswer.onClick.AddListener(delegate { GetBonus(); });
-                fourthAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                break;
-
-            case "fourth":
-                firstAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                secondAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                thirdAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                fourthAnswer.onClick.AddListener(delegate { GetBonus(); });
-                break;
-        }
-        */
 
     }
 
@@ -262,6 +233,12 @@ public class BallTatamiController : MonoBehaviour
             enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
         }
 
+    }
+
+    IEnumerator IndicatorFigureObtainedCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+        figureObtainedCanvas.enabled = false;
     }
 
     IEnumerator IndicatorGameOverCoroutine()
@@ -396,7 +373,7 @@ public class BallTatamiController : MonoBehaviour
 
         public bool CheckCorrectAnswer(string text)
         {
-            return this.correct == text;
+            return correct == text;
         }
     }
 }

@@ -22,6 +22,7 @@ public class PlayerControllerX : MonoBehaviour
     public int powerUpDuration = 10;
     public Canvas bonusCanvas;
     public Canvas noBonusCanvas;
+    public Canvas figureObtainedCanvas;
 
     private List<string> characteristics;
     private List<Question> questions;
@@ -52,6 +53,7 @@ public class PlayerControllerX : MonoBehaviour
         bonusCanvas.enabled = false;
         noBonusCanvas.enabled = false;
         questionCanvas.enabled = false;
+        figureObtainedCanvas.enabled = false;
 
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManagerX>();
 
@@ -160,6 +162,8 @@ public class PlayerControllerX : MonoBehaviour
             inventory++;
             spawnManagerScript.SetCollectedCube();
             Destroy(other.gameObject);
+            figureObtainedCanvas.enabled = true;
+            StartCoroutine(IndicatorFigureObtainedCoroutine());
         }
 
     }
@@ -175,39 +179,17 @@ public class PlayerControllerX : MonoBehaviour
         thirdAnswer.GetComponentInChildren<TextMeshProUGUI>().text = currentQuestion.third;
         fourthAnswer.GetComponentInChildren<TextMeshProUGUI>().text = currentQuestion.fourth;
 
-        switch (currentQuestion.CorrectIndexAnswer())
-        {
-            case "first":
-                firstAnswer.onClick.AddListener(delegate { GetBonus(); });
-                secondAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                thirdAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                fourthAnswer.onClick.AddListener(delegate { LoseBonus(); });
+        firstAnswer.onClick.AddListener(delegate { CheckBonus(currentQuestion, currentQuestion.first); });
+        secondAnswer.onClick.AddListener(delegate { CheckBonus(currentQuestion, currentQuestion.second); });
+        thirdAnswer.onClick.AddListener(delegate { CheckBonus(currentQuestion, currentQuestion.third); });
+        fourthAnswer.onClick.AddListener(delegate { CheckBonus(currentQuestion, currentQuestion.fourth); });
 
-                break;
+    }
 
-            case "second":
-                firstAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                secondAnswer.onClick.AddListener(delegate { GetBonus(); });
-                thirdAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                fourthAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                break;
-
-            case "third":
-                firstAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                secondAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                thirdAnswer.onClick.AddListener(delegate { GetBonus(); });
-                fourthAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                break;
-
-            case "fourth":
-                firstAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                secondAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                thirdAnswer.onClick.AddListener(delegate { LoseBonus(); });
-                fourthAnswer.onClick.AddListener(delegate { GetBonus(); });
-                break;
-        }
-
-
+    private void CheckBonus(Question question, string textAnswer)
+    {
+        if (question.CheckCorrectAnswer(textAnswer)) GetBonus();
+        else LoseBonus();
     }
 
     private void RemoveListeners()
@@ -252,6 +234,12 @@ public class PlayerControllerX : MonoBehaviour
         powerupIndicator.gameObject.SetActive(true);
         bonusCanvas.enabled = false;
         
+    }
+
+    IEnumerator IndicatorFigureObtainedCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+        figureObtainedCanvas.enabled = false;
     }
 
     IEnumerator IndicatorNoBonusCoroutine()
@@ -391,12 +379,9 @@ public class PlayerControllerX : MonoBehaviour
             this.correct = correct;
         }
 
-        public string CorrectIndexAnswer()
+        public bool CheckCorrectAnswer(string text)
         {
-            if (first == correct) return "first";
-            else if (second == correct) return "second";
-            else if (third == correct) return "third";
-            else return "fourth";
+            return correct == text;
         }
     }
 
