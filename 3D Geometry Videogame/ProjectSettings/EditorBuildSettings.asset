@@ -6,30 +6,30 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Auth Screen/Auth Screen.unity
+    path: Assets/MVC/View/Auth Screen/Auth Screen.unity
     guid: 6813bca76ee7f1a4aa2c01bc68541fba
   - enabled: 1
-    path: Assets/3D Editor/3D Editor.unity
+    path: Assets/MVC/View/3D Editor/3D Editor.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Game Collect/Game Collect.unity
+    path: Assets/MVC/View/Game Collect/Game Collect.unity
     guid: 09c37f00a2e308d458d3460f84cd00e9
   - enabled: 1
-    path: Assets/3D Constructor/3D Constructor.unity
+    path: Assets/MVC/View/3D Constructor/3D Constructor.unity
     guid: 58bffb69b9d6e3048beb4acba1184824
   - enabled: 1
-    path: Assets/Designer Mission List Screen/Designer Mission List Screen.unity
+    path: Assets/MVC/View/Designer Mission List Screen/Designer Mission List Screen.unity
     guid: 70fa42fe410d66046b3097e13b16c05b
   - enabled: 1
-    path: Assets/Player Mission List Screen/Player Mission List Screen.unity
+    path: Assets/MVC/View/Player Mission List Screen/Player Mission List Screen.unity
     guid: b5d99e1018e56ab4ab6e3f727d4b99c9
   - enabled: 1
-    path: Assets/Minigame Selection Screen/Minigame Selection Screen.unity
+    path: Assets/MVC/View/Minigame Selection Screen/Minigame Selection Screen.unity
     guid: efdff2357ab0547d68501092b85cc303
   - enabled: 1
-    path: Assets/Game Tatami/Game Tatami.unity
+    path: Assets/MVC/View/Game Tatami/Game Tatami.unity
     guid: e7cc7749d30ace242b120d2df802159e
   - enabled: 1
-    path: Assets/Game Football/Game Football.unity
+    path: Assets/MVC/View/Game Football/Game Football.unity
     guid: a0d1b3db2912f7845a6230d20f0efeb4
   m_configObjects: {}
