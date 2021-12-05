@@ -1,6 +1,7 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using Firebase.Database;
 using UnityEngine;
 
 [System.Serializable]
@@ -29,22 +30,28 @@ public class Designer : User
         }
     }
 
-    [System.Serializable]
-    private class SaveDataDesigner
+    public override void SetAllMissions(IEnumerable<DataSnapshot> listOfMissions)
     {
-        [SerializeField]
-        private string username;
-
-        [SerializeField]
-        private string account = "Designer";
-
-        [SerializeField]
-        private List<MissionDesigner> listOfMissionsDesigned;
-
-        public SaveDataDesigner(string username, List<MissionDesigner> listOfMissionsDesigned)
+        foreach (DataSnapshot missionDesigner in listOfMissions)
         {
-            this.username = username;
-            this.listOfMissionsDesigned = listOfMissionsDesigned;
+
+            MissionDesigner newMissionDesigner = missionDesigner.Value as MissionDesigner;
+
+            /*
+            string missionNameDesigned = missionDesigner.Child("missionName").Value.ToString();
+
+            int numberOfFiguresDesigned = Convert.ToInt32(missionDesigner.Child("missionName").Value);
+
+            Dictionary<string, MissionPlayer> listOfPlayers = missionDesigner.Child("listOfPlayers").Value as Dictionary<string, MissionPlayer>;
+            
+            //TODO: retrieve correctament les MissionPlayer del diccionari guardat a la Firebase
+
+
+            MissionDesigner newMissionDesigner = new MissionDesigner(missionNameDesigned, numberOfFiguresDesigned, listOfPlayers);
+
+            */
+
+            listOfMissionsDesigned.Add(newMissionDesigner);
         }
     }
 }

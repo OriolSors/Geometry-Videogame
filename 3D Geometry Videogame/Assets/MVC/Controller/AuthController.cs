@@ -1,19 +1,37 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Firebase.Database;
 using Firebase.Extensions;
 using UnityEngine;
 
-public class AuthController
+public sealed class AuthController
 {
+
     private DatabaseReference reference;
     private Firebase.Auth.FirebaseAuth auth;
 
-    public AuthController()
+    private MissionListController missionListController;
+
+    private User currentUser = null;
+
+    private AuthController()
     {
         reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
         auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+
+        missionListController = new MissionListController();
+    }
+
+    private static AuthController instance = null;
+    public static AuthController Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new AuthController();
+            }
+            return instance;
+        }
     }
 
     public void RegisterNewUser(string username, string email, string password, string accountType, Action<string> ConfirmUserLogged, Action<string> GetNegativeResultOfUserCreation)
@@ -103,7 +121,6 @@ public class AuthController
                     DataSnapshot snapshot = task.Result;
                     string accountType = snapshot.Child("account").Value.ToString();
 
-                    User currentUser = null;
                     switch (accountType)
                     {
                         case "Designer":
@@ -116,6 +133,7 @@ public class AuthController
 
                     if (currentUser != null)
                     {
+                        missionListController.RetrieveAllMissionUser(currentUser, snapshot.Child("listOfMissions").Children);
                         currentUser.WriteUserToLocalJSON();
                         ConfirmUserLogged(accountType);
                     }
@@ -126,4 +144,12 @@ public class AuthController
         }
         
     }
+
+    public User GetCurrentUser()
+    {
+        return currentUser;
+    }
+
+    
+
 }

@@ -1,7 +1,5 @@
 using UnityEngine;
 using TMPro;
-using Firebase.Database;
-using System.Collections.Generic;
 
 public class RegisterScript : MonoBehaviour
 {

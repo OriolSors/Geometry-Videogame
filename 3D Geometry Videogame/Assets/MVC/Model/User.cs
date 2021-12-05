@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using Firebase.Database;
-using UnityEngine;
 
 [System.Serializable]
 public abstract class User
@@ -24,4 +22,5 @@ public abstract class User
 
     public abstract void WriteNewUserToDB();
     public abstract void WriteUserToLocalJSON();
+    public abstract void SetAllMissions(IEnumerable<DataSnapshot> listOfMissions);
 }

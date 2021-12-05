@@ -1,9 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using Firebase.Database;
-using Firebase.Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,7 +10,7 @@ public class SceneController : MonoBehaviour
 
     private void Start()
     {
-        authController = new AuthController();
+        authController = AuthController.Instance;
     }
 
     public void RegisterAndCreateNewUser(string username, string email, string password, string accountType, Action<string> GetNegativeResultOfUserCreation)
