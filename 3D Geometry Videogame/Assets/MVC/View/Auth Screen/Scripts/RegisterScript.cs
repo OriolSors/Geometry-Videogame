@@ -1,104 +1,54 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Firebase.Database;
 using TMPro;
-using Firebase.Extensions;
-using System;
-using UnityEngine.SceneManagement;
-using System.Linq;
+using Firebase.Database;
+using System.Collections.Generic;
 
 public class RegisterScript : MonoBehaviour
 {
     [SerializeField]
-    private TMP_InputField username;
+    private TMP_InputField usernameInput;
 
     [SerializeField]
-    private TMP_InputField email;
+    private TMP_InputField emailInput;
 
     [SerializeField]
-    private TMP_InputField password;
+    private TMP_InputField passwordInput;
 
     [SerializeField]
     private TMP_Dropdown accountTypeOption;
 
-    private DatabaseReference reference;
-
-    private Firebase.Auth.FirebaseAuth auth;
-
     private SceneController sceneController;
+
+    public Canvas errorCanvas;
 
     private void Start()
     {
-        reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
-        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+        errorCanvas.enabled = false;
         sceneController = GameObject.Find("Scene Controller").GetComponent<SceneController>();
     }
 
-    public void CreateNewUser()
+    public void RegisterAndCreateNewUser()
     {
-        string name = username.text;
-        string account = accountTypeOption.options[accountTypeOption.value].text;
-        IsNewUser(name, account, AssignUser);
+        string username = usernameInput.text;
+        string email = emailInput.text;
+        string password = passwordInput.text;
+        string accountType = accountTypeOption.options[accountTypeOption.value].text;
+
+        sceneController.RegisterAndCreateNewUser(username, email, password, accountType, GetNegativeResultOfUserCreation);
 
     }
 
-    private void AssignUser(bool available, string name, string account)
+    private void GetNegativeResultOfUserCreation(string message)
     {
-        if (available)
-        {
-            User newUser = new User(name, account);
-            string json = JsonUtility.ToJson(newUser);
-            reference.Child("Users").Child(name).SetRawJsonValueAsync(json);
-            sceneController.LoadCorrectScene(name, null);
-        }
-        else
-        {
-            username.placeholder.GetComponent<TextMeshProUGUI>().text = "User exists";
-            username.placeholder.color = Color.red;
-            username.text = "";
-
-        }
+        errorCanvas.enabled = true;
+        errorCanvas.GetComponentInChildren<TextMeshProUGUI>().text = message;
+        
     }
 
-    private void IsNewUser(string username, string accountTypeOption, Action<bool,string,string> callbackFunction)
+    public void HideErrorCanvas()
     {
-        bool isNewUser = true;
-
-        var DBTask = reference.Child("Users").Child(username).GetValueAsync().ContinueWithOnMainThread(task => {
-            if (task.IsFaulted)
-            {
-                // Handle the error...
-            }
-            else if (task.Result.Value == null)
-            {
-                Debug.Log("Full new user");
-                
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                if (snapshot.Child("username").Value.ToString() == username)
-                {
-                    isNewUser = false;
-
-                }
-            }
-            callbackFunction(isNewUser, username, accountTypeOption);
-        });
-
+        errorCanvas.enabled = false;
     }
 
-    public class User
-    {
-        public string username;
-        public string account;
-
-        public User(string username, string account)
-        {
-            this.username = username;
-            this.account = account;
-        }
-    }
 
 }

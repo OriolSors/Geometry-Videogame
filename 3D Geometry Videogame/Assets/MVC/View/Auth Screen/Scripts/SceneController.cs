@@ -10,42 +10,35 @@ using UnityEngine.SceneManagement;
 public class SceneController : MonoBehaviour
 {
 
-    private DatabaseReference reference;
+    private AuthController authController;
 
 
     private void Start()
     {
-        reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
+        authController = new AuthController();
     }
 
-    public void LoadCorrectScene(string name, Action<string> callbackFunction)
+    public void RegisterAndCreateNewUser(string username, string email, string password, string accountType, Action<string> GetNegativeResultOfUserCreation)
     {
-        var DBTask = reference.Child("Users").Child(name).GetValueAsync().ContinueWithOnMainThread(task => {
-            if (task.IsFaulted)
-            {
-                // Handle the error...
-            }
-            else if (task.Result.Value == null)
-            {
-                callbackFunction("User not exist");
+        authController.RegisterNewUser(username, email, password, accountType, ConfirmUserLogged, GetNegativeResultOfUserCreation);
+    }
 
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                SaveUser(snapshot.Child("username").Value.ToString());
-                if (snapshot.Child("account").Value.ToString() == "Player")
-                {
-                    SceneManager.LoadScene("Player Mission List Screen");
-                }
-                else
-                {
-                    DontDestroyOnLoad(transform.gameObject);
-                    SceneManager.LoadScene("Designer Mission List Screen");
-                }
+    public void LoginUser(string email, string password, Action<string> GetNegativeResultOfUserLogged)
+    {
+        authController.LoginUser(email, password, ConfirmUserLogged, GetNegativeResultOfUserLogged);
+    }
 
-            }
-        });
+    private void ConfirmUserLogged(string accountType)
+    {
+        switch (accountType)
+        {
+            case "Designer":
+                SceneManager.LoadScene("Designer Mission List Screen");
+                break;
+            case "Player":
+                SceneManager.LoadScene("Player Mission List Screen");
+                break;
+        }
     }
 
     public void ExitApp()
@@ -54,22 +47,6 @@ public class SceneController : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
         Application.Quit();
-    }
-
-    private void SaveUser(string username)
-    {
-        SaveDataUser data = new SaveDataUser();
-        data.username = username;
-        string json = JsonUtility.ToJson(data);
-
-        File.WriteAllText(Application.persistentDataPath + "/saveuser.json", json);
-    }
-
-    [System.Serializable]
-    class SaveDataUser
-    {
-        public string username;
-
     }
 
 }

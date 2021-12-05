@@ -26,6 +26,7 @@ public class MissionListPlayerScript : MonoBehaviour
     public TextMeshProUGUI inventoryMissionStatus;
 
 
+    protected Firebase.Auth.FirebaseAuth auth;
     private DatabaseReference reference;
 
     public Font font;
@@ -33,6 +34,7 @@ public class MissionListPlayerScript : MonoBehaviour
     void Start()
     {
         reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
+        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
         LoadUser();
         LoadMissionsWithUser(FillMissionScroll);
         inventoryCanvas.enabled = false;
@@ -178,6 +180,7 @@ public class MissionListPlayerScript : MonoBehaviour
 
     public void ToLogin()
     {
+        auth.SignOut();
         SceneManager.LoadScene("Auth Screen");
     }
 

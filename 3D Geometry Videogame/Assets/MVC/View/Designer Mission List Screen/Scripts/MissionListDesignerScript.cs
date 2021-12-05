@@ -21,6 +21,7 @@ public class MissionListDesignerScript : MonoBehaviour
     public RectTransform userStatisticsScroll;
     public GameObject userView;
 
+    protected Firebase.Auth.FirebaseAuth auth;
     private DatabaseReference reference;
     
 
@@ -29,6 +30,7 @@ public class MissionListDesignerScript : MonoBehaviour
     void Start()
     {
         reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
+        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
         userStatistics.enabled = false;
 
         LoadUser();
@@ -144,6 +146,7 @@ public class MissionListDesignerScript : MonoBehaviour
 
     public void ToLogin()
     {
+        auth.SignOut();
         SceneManager.LoadScene("Auth Screen");
     }
 
