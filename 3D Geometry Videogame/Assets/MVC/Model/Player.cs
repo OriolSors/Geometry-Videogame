@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Firebase.Database;
@@ -14,6 +13,11 @@ public class Player : User
     {
     
         listOfMissions = new List<MissionPlayer>();
+    }
+
+    public List<MissionPlayer> GetMissionPlayers()
+    {
+        return listOfMissions;
     }
 
     public override void WriteUserToLocalJSON()

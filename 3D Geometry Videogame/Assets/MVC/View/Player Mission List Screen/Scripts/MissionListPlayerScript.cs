@@ -11,8 +11,6 @@ using System.Linq;
 
 public class MissionListPlayerScript : MonoBehaviour
 {
-    private string username;
-
     public RectTransform missionsScroll;
     public GameObject missionView;
     public GameObject missionReadyView;
@@ -24,18 +22,12 @@ public class MissionListPlayerScript : MonoBehaviour
     public TextMeshProUGUI inventoryCubeNumbers;
     public TextMeshProUGUI inventoryMissionStatus;
 
-
-    protected Firebase.Auth.FirebaseAuth auth;
-    private DatabaseReference reference;
-
-    public Font font;
+    private MissionListController missionListController;
 
     void Start()
     {
-        reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
-        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
-        LoadUser();
-        LoadMissionsWithUser(FillMissionScroll);
+        missionListController = new MissionListController();
+        FillMissionScroll();
         inventoryCanvas.enabled = false;
     }
 
@@ -45,8 +37,9 @@ public class MissionListPlayerScript : MonoBehaviour
         else inventoryCanvas.enabled = false;
     }
 
-    private void FillMissionScroll(Dictionary<string, List<int>> missions)
+    private void FillMissionScroll()
     {
+        Dictionary<string, int[]> missions = missionListController.GetAllMissionPlayer(AuthController.Instance.GetCurrentUser());
 
         foreach (string mission in missions.Keys)
         {
@@ -145,37 +138,7 @@ public class MissionListPlayerScript : MonoBehaviour
         SceneManager.LoadScene("Minigame Selection Screen");
     }
 
-    private void LoadMissionsWithUser(Action<Dictionary<string, List<int>>> callbackFunction)
-    {
-        Dictionary<string, List<int>> missions = new Dictionary<string, List<int>>();
-
-        var DBTask = reference.Child("Users").Child(username).Child("Missions").GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                // Handle the error...
-            }
-            else if (task.Result.Value == null)
-            {
-                Debug.Log("No missions");
-
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                foreach (DataSnapshot mission in snapshot.Children)
-                {
-                    List<int> progression = new List<int>();
-                    progression.Add(int.Parse(mission.Child("inventory").Value.ToString()));
-                    progression.Add(int.Parse(mission.Child("cubes").Value.ToString()));
-                    missions[mission.Key.ToString()] = progression;
-                    
-                }
-
-            }
-            callbackFunction(missions);
-        });
-    }
+    
 
     public void ToLogin()
     {
@@ -183,80 +146,5 @@ public class MissionListPlayerScript : MonoBehaviour
         SceneManager.LoadScene("Auth Screen");
     }
 
-    private void LoadUser()
-    {
-        string path = Application.persistentDataPath + "/saveuser.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            SaveDataUser data = JsonUtility.FromJson<SaveDataUser>(json);
-
-            username = data.username;
-        }
-    }
-
-    private void RetrieveCharacteristics(string mission, Action<List<string>> callbackFunction)
-    {
-        List<string> characteristics = new List<string>();
-        var DBTask = reference.Child("Users").Child(username).Child("Missions").Child(mission).Child("characteristics").GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                // Handle the error...
-            }
-            else if (task.Result.Value == null)
-            {
-                Debug.Log("No cubes");
-
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                foreach (DataSnapshot characteristic in snapshot.Children)
-                {
-                    characteristics.Add(characteristic.Value.ToString());
-                }
-            }
-
-            callbackFunction(characteristics);
-        });
-    }
-
-    private void SaveCurrentMission(string mission, int inventory)
-    {
-        SaveDataCurrentMission data = new SaveDataCurrentMission();
-        data.mission = mission;
-        data.inventory = inventory;
-        string json = JsonUtility.ToJson(data);
-        File.WriteAllText(Application.persistentDataPath + "/savecurrentmission.json", json);
-        RetrieveCharacteristics(mission, SaveCharacteristics);
-    }
-
-    private void SaveCharacteristics(List<string> characteristics)
-    {
-        SaveDataCharacteristics data = new SaveDataCharacteristics();
-        data.characteristics = characteristics;
-        string json = JsonUtility.ToJson(data);
-        File.WriteAllText(Application.persistentDataPath + "/savecharacteristics.json", json);
-    }
-
-    [System.Serializable]
-    class SaveDataUser
-    {
-        public string username;
-
-    }
-
-    [System.Serializable]
-    class SaveDataCharacteristics
-    {
-        public List<string> characteristics;
-    }
-
-    [System.Serializable]
-    class SaveDataCurrentMission
-    {
-        public string mission;
-        public int inventory;
-    }
+    
 }

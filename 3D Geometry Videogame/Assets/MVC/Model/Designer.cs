@@ -14,6 +14,11 @@ public class Designer : User
         listOfMissionsDesigned = new List<MissionDesigner>();
     }
 
+    public List<MissionDesigner> GetMissionDesigner()
+    {
+        return listOfMissionsDesigned;
+    }
+
     public override void WriteUserToLocalJSON()
     {
         SaveDataDesigner saveDesignerDataToLocal = new SaveDataDesigner(username, listOfMissionsDesigned);

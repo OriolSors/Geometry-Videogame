@@ -16,4 +16,10 @@ public class MissionListController
     {
         currentUser.SetAllMissions(listOfMissions);
     }
+
+    public Dictionary<string, int[]> GetAllMissionPlayer(User currentUser)
+    {
+        Player currentPlayer = currentUser as Player;
+        return currentPlayer.GetMissionPlayers();
+    }
 }
