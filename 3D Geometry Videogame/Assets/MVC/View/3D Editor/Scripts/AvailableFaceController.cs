@@ -15,7 +15,7 @@ public class AvailableFaceController : MonoBehaviour
 
     private CameraController scriptCamera; //The Main Camera script
 
-    private ConstructionController scriptConstruction; //The Construction script
+    private CanvasManager canvasManager; //The Construction script
 
 
     // ------------------------------------------------ INITIALIZATIONS ------------------------------------------------
@@ -25,7 +25,7 @@ public class AvailableFaceController : MonoBehaviour
     {
 
         scriptCamera = GameObject.Find("Main Camera").GetComponent<CameraController>();
-        scriptConstruction = GameObject.Find("Boundary Box").GetComponent<ConstructionController>();
+        canvasManager = GameObject.Find("Boundary Box").GetComponent<CanvasManager>();
 
     }
 
@@ -45,7 +45,7 @@ public class AvailableFaceController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.rigidbody != null && scriptConstruction.ObjectsAvailables()) 
+                if (hit.rigidbody != null && canvasManager.ObjectsAvailables()) 
                 {
                     //Adds new Cube prefab to the normal direction of face clicked
 
@@ -53,12 +53,12 @@ public class AvailableFaceController : MonoBehaviour
 
                     Vector3 newCubePosition = newCube.transform.position;
 
-                    if (!scriptConstruction.cubePositions.Contains(newCubePosition)) 
+                    if (!canvasManager.cubePositions.Contains(newCubePosition)) 
                     {
 
                         //If there is not an object at the new position, we add it
 
-                        scriptConstruction.AddNewObject(newCubePosition);
+                        canvasManager.AddNewObject(newCubePosition);
                         newCube.transform.parent = boundaryBox.transform; 
 
                         //Sending Bounding Box bounds and VRP to the Camera Controller
@@ -84,9 +84,9 @@ public class AvailableFaceController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            if (scriptConstruction.cubePositions.Count > 1)
+            if (canvasManager.cubePositions.Count > 1)
             {
-                scriptConstruction.RemoveObject(gameObject.transform.position);
+                canvasManager.RemoveObject(gameObject.transform.position);
                 Destroy(gameObject);
             }
             

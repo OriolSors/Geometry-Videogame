@@ -15,9 +15,15 @@ public class Player : User
         listOfMissions = new List<MissionPlayer>();
     }
 
-    public List<MissionPlayer> GetMissionPlayers()
+    public Dictionary<string, int[]> GetAllMissionPlayer()
     {
-        return listOfMissions;
+        Dictionary<string, int[]> dictMission = new Dictionary<string, int[]>();
+        foreach(MissionPlayer mission in listOfMissions)
+        {
+            dictMission[mission.GetMissionName()] = new int[2] { mission.GetInventory(), mission.GetNumberOfFigures() };
+        }
+
+        return dictMission;
     }
 
     public override void WriteUserToLocalJSON()

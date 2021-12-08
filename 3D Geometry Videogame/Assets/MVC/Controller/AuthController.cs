@@ -150,6 +150,11 @@ public sealed class AuthController
         return currentUser;
     }
 
-    
+    public void SignOut()
+    {
+        auth.SignOut();
+    }
+
+
 
 }

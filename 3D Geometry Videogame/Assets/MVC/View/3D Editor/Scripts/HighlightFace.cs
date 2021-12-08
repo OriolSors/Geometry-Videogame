@@ -13,11 +13,11 @@ public class HighlightFace : MonoBehaviour
     [SerializeField]
     private Material defaultMaterial;
 
-    private ConstructionController scriptConstruction; //The Construction script
+    private CanvasManager canvasManager; //The Construction script
 
     private void Start()
     {
-        scriptConstruction = GameObject.Find("Boundary Box").GetComponent<ConstructionController>();
+        canvasManager = GameObject.Find("Boundary Box").GetComponent<CanvasManager>();
     }
 
     private void Update()
@@ -30,7 +30,7 @@ public class HighlightFace : MonoBehaviour
         {
             if (hit.collider.gameObject == gameObject)
             {
-                if (scriptConstruction.ObjectsAvailables())
+                if (canvasManager.ObjectsAvailables())
                 {
                     gameObject.GetComponent<MeshRenderer>().material = highlightGreenMaterial;
 

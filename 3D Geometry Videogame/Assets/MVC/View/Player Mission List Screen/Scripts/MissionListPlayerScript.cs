@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
-using Firebase.Database;
-using Firebase.Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -134,7 +130,7 @@ public class MissionListPlayerScript : MonoBehaviour
 
     private void LoadMinigames(string mission, int inventory)
     {
-        SaveCurrentMission(mission, inventory);
+        missionListController.SaveCurrentMissionPlayer(mission, inventory);
         SceneManager.LoadScene("Minigame Selection Screen");
     }
 
@@ -142,7 +138,7 @@ public class MissionListPlayerScript : MonoBehaviour
 
     public void ToLogin()
     {
-        auth.SignOut();
+        AuthController.Instance.SignOut();
         SceneManager.LoadScene("Auth Screen");
     }
 

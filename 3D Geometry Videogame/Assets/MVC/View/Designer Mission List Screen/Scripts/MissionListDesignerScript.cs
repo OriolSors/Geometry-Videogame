@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
-using Firebase.Database;
-using Firebase.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,9 +6,6 @@ using UnityEngine.UI;
 
 public class MissionListDesignerScript : MonoBehaviour
 {
-
-    private string username;
-
     public RectTransform missionsScroll;
     public GameObject missionView;
 
@@ -20,38 +13,33 @@ public class MissionListDesignerScript : MonoBehaviour
     public RectTransform userStatisticsScroll;
     public GameObject userView;
 
-    protected Firebase.Auth.FirebaseAuth auth;
-    private DatabaseReference reference;
-    
-
-    public Font font;
+    private MissionListController missionListController;
 
     void Start()
     {
-        reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
-        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
         userStatistics.enabled = false;
-
-        LoadUser();
-        LoadMissionsWithUser(FillMissionScroll);
+        missionListController = new MissionListController();
+        FillMissionScroll();
     }
 
-    private void FillMissionScroll(List<string> missions)
+    private void FillMissionScroll()
     {
-
+        List<string> missions = missionListController.GetAllMissionDesigner(AuthController.Instance.GetCurrentUser());
         foreach (string mission in missions)
         {
             GameObject go = Instantiate(missionView);
             go.GetComponentInChildren<Button>().GetComponentInChildren<Text>().text = mission;
             go.transform.SetParent(missionsScroll);
 
-            go.GetComponentInChildren<Button>().onClick.AddListener(delegate { LoadUserStatistics(mission, FillUserStatistics); });
+            go.GetComponentInChildren<Button>().onClick.AddListener(delegate { FillUserStatistics(mission); });
         }
     }
 
-    private void FillUserStatistics(Dictionary <string, string> players)
+    private void FillUserStatistics(string mission)
     {
         userStatistics.enabled = true;
+
+        Dictionary<string, string> players = missionListController.GetAllUserStatisticsInMission(AuthController.Instance.GetCurrentUser(), mission);
 
         foreach (Transform child in userStatisticsScroll.transform)
         {
@@ -68,73 +56,9 @@ public class MissionListDesignerScript : MonoBehaviour
         }
     }
 
-    private void LoadUserStatistics(string mission, Action<Dictionary<string, string>> callbackFunction)
-    {
-
-        Dictionary<string, string> players = new Dictionary<string, string>();
-        var DBTask = reference.Child("Missions").Child(mission).GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                // Handle the error...
-            }
-            else if (task.Result.Value == null)
-            {
-                Debug.Log("No missions");
-
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                int cubes = int.Parse(snapshot.Child("cubes").Value.ToString());
-                foreach (DataSnapshot user in snapshot.Child("playersDict").Children)
-                {
-                    int inventory = int.Parse(user.Child("inventory").Value.ToString());
-                    if (inventory / cubes >= 1)
-                    {
-                        players[user.Key.ToString()] = "100%";
-                    }
-                    else
-                    {
-                        players[user.Key.ToString()] = (100 * inventory/cubes).ToString() + "%";
-                    }
-                }
-            }
-
-            callbackFunction(players);
-            
-        });
-    }
-
     public void ReturnMissionList()
     {
         userStatistics.enabled = false;
-    }
-
-    private void LoadMissionsWithUser(Action<List<string>> callbackFunction)
-    {
-        List<string> missions = new List<string>();
-        var DBTask = reference.Child("Missions").GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                // Handle the error...
-            }
-            else if (task.Result.Value == null)
-            {
-                Debug.Log("No missions");
-
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                foreach (DataSnapshot s in snapshot.Children)
-                {
-                    if (s.Child("designer").Value.ToString() == username) missions.Add(s.Key.ToString());
-                }
-            }
-            callbackFunction(missions);
-        });
     }
 
 
@@ -145,26 +69,8 @@ public class MissionListDesignerScript : MonoBehaviour
 
     public void ToLogin()
     {
-        auth.SignOut();
+        AuthController.Instance.SignOut();
         SceneManager.LoadScene("Auth Screen");
     }
 
-    private void LoadUser()
-    {
-        string path = Application.persistentDataPath + "/saveuser.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            SaveDataUser data = JsonUtility.FromJson<SaveDataUser>(json);
-
-            this.username = data.username;
-        }
-    }
-
-    [System.Serializable]
-    class SaveDataUser
-    {
-        public string username;
-
-    }
 }

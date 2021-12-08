@@ -15,4 +15,20 @@ public class MissionDesigner
         this.numberOfFigures = numberOfFigures;
         this.listOfPlayers = listOfPlayers;
     }
+
+    public string GetMissionName()
+    {
+        return missionName;
+    }
+
+    public int GetNumberOfFigures()
+    {
+        return numberOfFigures;
+    }
+
+    public Dictionary<string, MissionPlayer> GetListOfPlayers()
+    {
+        return listOfPlayers;
+    }
+    
 }

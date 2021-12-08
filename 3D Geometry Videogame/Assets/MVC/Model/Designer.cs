@@ -35,6 +35,45 @@ public class Designer : User
         }
     }
 
+    public List<string> GetAllMissionDesigner()
+    {
+        List<string> missions = new List<string>();
+        foreach(MissionDesigner mission in listOfMissionsDesigned)
+        {
+            missions.Add(mission.GetMissionName());
+        }
+
+        return missions;
+    }
+
+    public Dictionary<string, string> GetAllUserStatisticsInMission(string currentMission)
+    {
+        Dictionary<string, string> userStatistics = new Dictionary<string, string>();
+        foreach(MissionDesigner mission in listOfMissionsDesigned)
+        {
+            if (mission.GetMissionName() == currentMission)
+            {
+                Dictionary<string, MissionPlayer> players = mission.GetListOfPlayers();
+
+                foreach (string player in players.Keys)
+                {
+                    if (players[player].GetInventory() >= players[player].GetNumberOfFigures())
+                    {
+                        userStatistics[player] = "100%";
+                    }
+                    else
+                    {
+                        userStatistics[player] = (players[player].GetInventory()/ players[player].GetNumberOfFigures()).ToString() + "%";
+                    }
+                }
+
+                break;
+            }
+        }
+
+        return userStatistics;
+    }
+
     public override void SetAllMissions(IEnumerable<DataSnapshot> listOfMissions)
     {
         foreach (DataSnapshot missionDesigner in listOfMissions)
@@ -59,4 +98,6 @@ public class Designer : User
             listOfMissionsDesigned.Add(newMissionDesigner);
         }
     }
+
+    
 }

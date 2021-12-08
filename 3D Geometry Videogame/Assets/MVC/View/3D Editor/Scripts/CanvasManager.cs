@@ -1,43 +1,31 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
-using Firebase.Database;
-using System;
 using System.IO;
 
-public class ConstructionController : MonoBehaviour
+public class CanvasManager : MonoBehaviour
 {
 
     public List<Vector3> cubePositions;
     public TextMeshProUGUI objectsLeft;
     private Color preColor;
 
-
-
     public Canvas labelsCanvas;
 
     private string username;
 
-    private DatabaseManager labelsManagerDB;
+    private NewMissionManager missionManager;
 
     void Start()
     {
-        labelsManagerDB = labelsCanvas.GetComponent<DatabaseManager>();
+        missionManager = labelsCanvas.GetComponent<NewMissionManager>();
         labelsCanvas.enabled = false;
 
         cubePositions = new List<Vector3>();
         cubePositions.Add(Vector3.zero);
         preColor = objectsLeft.color;
 
-        LoadUser();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void ResetConstruction()
@@ -77,22 +65,11 @@ public class ConstructionController : MonoBehaviour
         }
     }
 
-    private void LoadUser()
-    {
-        string path = Application.persistentDataPath + "/saveuser.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            SaveDataUser data = JsonUtility.FromJson<SaveDataUser>(json);
-
-            this.username = data.username;
-        }
-    }
 
     public void SaveConstruction()
     {
         labelsCanvas.enabled = true;
-        labelsManagerDB.SetUp(username, cubePositions.Count);
+        missionManager.SetUp(username, cubePositions.Count);
         /*
         Mission mission = new Mission(username, cubePositions.Count);
         string json = JsonUtility.ToJson(mission);
@@ -107,10 +84,4 @@ public class ConstructionController : MonoBehaviour
         */
     }
 
-    [System.Serializable]
-    class SaveDataUser
-    {
-        public string username;
-
-    }
 }

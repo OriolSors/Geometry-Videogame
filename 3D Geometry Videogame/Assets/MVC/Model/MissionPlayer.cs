@@ -22,4 +22,19 @@ public class MissionPlayer
         this.footballGame = footballGame;
     }
 
+    public string GetMissionName()
+    {
+        return missionName;
+    }
+
+    public int GetNumberOfFigures()
+    {
+        return numberOfFigures;
+    }
+
+    public int GetInventory()
+    {
+        return inventory;
+    }
+
 }

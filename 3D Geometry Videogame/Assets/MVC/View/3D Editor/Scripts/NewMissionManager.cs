@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Firebase;
 using Firebase.Database;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,7 +9,7 @@ using Firebase.Extensions;
 using Newtonsoft.Json;
 using System.Linq;
 
-public class DatabaseManager : MonoBehaviour
+public class NewMissionManager : MonoBehaviour
 {
     private string designer;
     private int objectsNumber;
