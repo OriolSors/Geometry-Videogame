@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Firebase.Database;
 
@@ -22,6 +23,12 @@ public abstract class User
 
     public abstract void WriteNewUserToDB();
     public abstract void WriteUserToLocalJSON();
+
+    public string GetUserName()
+    {
+        return username;
+    }
+
     public abstract void SetAllMissions(IEnumerable<DataSnapshot> listOfMissions);
     
 }

@@ -35,6 +35,22 @@ public class Designer : User
         }
     }
 
+    private void UpdateUserToDB()
+    {
+        Firebase.Auth.FirebaseUser user = auth.CurrentUser;
+        if (user != null)
+        {
+            SaveDataDesigner saveDesignerDataToDB = new SaveDataDesigner(username, listOfMissionsDesigned);
+            reference.Child("Users").Child(user.UserId).SetRawJsonValueAsync(JsonUtility.ToJson(saveDesignerDataToDB));
+        }
+    }
+
+    public void AddNewMission(MissionDesigner missionDesigner)
+    {
+        listOfMissionsDesigned.Add(missionDesigner);
+        UpdateUserToDB();
+    }
+
     public List<string> GetAllMissionDesigner()
     {
         List<string> missions = new List<string>();

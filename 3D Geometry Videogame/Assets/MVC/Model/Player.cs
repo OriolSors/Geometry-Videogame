@@ -43,6 +43,18 @@ public class Player : User
         
     }
 
+    public void AddNewMission(string userId, MissionPlayer missionPlayer)
+    {
+        listOfMissions.Add(missionPlayer);
+        UpdateUserToDB(userId);
+    }
+
+    private void UpdateUserToDB(string userId)
+    {
+        SaveDataPlayer savePlayerDataToDB = new SaveDataPlayer(username, listOfMissions);
+        reference.Child("Users").Child(userId).SetRawJsonValueAsync(JsonUtility.ToJson(savePlayerDataToDB));
+    }
+
     public override void SetAllMissions(IEnumerable<DataSnapshot> listOfMissions)
     {
         foreach(DataSnapshot missionPlayer in listOfMissions)

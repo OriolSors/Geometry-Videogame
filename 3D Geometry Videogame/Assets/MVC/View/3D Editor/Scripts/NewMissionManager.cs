@@ -11,7 +11,6 @@ using System.Linq;
 
 public class NewMissionManager : MonoBehaviour
 {
-    private string designer;
     private int objectsNumber;
     private Dictionary<string, List<string>> playersDict = new Dictionary<string, List<string>>();
 
@@ -21,16 +20,16 @@ public class NewMissionManager : MonoBehaviour
     private Toggle[] toggles;
     public Button addNewPlayer;
     public Button createMission;
-    private bool mission_default = false;
+    private bool isDefaultMission = false;
 
     public Canvas confirmPlayerCanvas;
     public Canvas noPlayerCanvas;
 
-    private DatabaseReference reference;
+    private MissionController missionController;
 
     private void Start()
     {
-        reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
+        missionController = new MissionController();
 
         toggles = labels.GetComponentsInChildren<Toggle>();
 
@@ -43,9 +42,8 @@ public class NewMissionManager : MonoBehaviour
     }
 
 
-    public void SetUp(string designer, int objectsNumber)
+    public void SetUp(int objectsNumber)
     {
-        this.designer = designer;
         this.objectsNumber = objectsNumber;
     }
 
@@ -82,7 +80,7 @@ public class NewMissionManager : MonoBehaviour
             {
                 playersDict.Add(player_aux, characteristics);
             }
-            mission_default = true;
+            isDefaultMission = true;
         }
 
         else
@@ -115,17 +113,7 @@ public class NewMissionManager : MonoBehaviour
         else
         {
             string date = DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss");
-            Mission mission = new Mission(designer, objectsNumber, playersDict, mission_default);
-            string json = JsonConvert.SerializeObject(mission);
-            reference.Child("Missions").Child(date).SetRawJsonValueAsync(json);
-
-            foreach (string player in playersDict.Keys)
-            {
-                PlayerMission playerMission = new PlayerMission(player, objectsNumber, 0, playersDict[player]);
-                string json_player = JsonConvert.SerializeObject(playerMission);
-                reference.Child("Users").Child(player).Child("Missions").Child(date).SetRawJsonValueAsync(json_player);
-                reference.Child("Missions").Child(date).Child("playersDict").Child(player).Child("inventory").SetValueAsync(0);
-            }
+            missionController.CreateNewMission(date, AuthController.Instance.GetCurrentUser(), objectsNumber, isDefaultMission, playersDict);
             SceneManager.LoadScene("Designer Mission List Screen");
         }
         
@@ -136,6 +124,11 @@ public class NewMissionManager : MonoBehaviour
         SceneManager.LoadScene("Designer Mission List Screen");
     }
 
+    private void LoadPlayers(Action<List<string>> SetPlayersToDropdown)
+    {
+        missionController.GetAllPlayerNames(SetPlayersToDropdown);
+    }
+
     private void SetPlayersToDropdown(List<string> players)
     {
         this.players = players;
@@ -143,99 +136,4 @@ public class NewMissionManager : MonoBehaviour
         if (players.Count != 0) createMission.interactable = true;
     }
 
-    private void LoadPlayers(Action<List<string>> callbackFunction)
-    {
-        List<string> players = new List<string>();
-        var DBTask = reference.Child("Users").GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                // Handle the error...
-            }
-            else if (task.Result.Value == null)
-            {
-                Debug.Log("No players");
-
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                foreach (DataSnapshot s in snapshot.Children)
-                {
-                    if (s.Child("account").Value.ToString() == "Player") players.Add(s.Child("username").Value.ToString());
-                }
-            }
-
-            callbackFunction(players);
-        });
-    }
-
-
-    [System.Serializable]
-    class Mission
-    {
-        public string designer;
-        public int cubes;
-        public Dictionary<string, List<string>> playersDict;
-        public bool mission_default;
-
-        public Mission(string designer, int cubes, Dictionary<string, List<string>> playersDict, bool mission_default)
-        {
-            this.designer = designer;
-            this.cubes = cubes;
-            this.playersDict = playersDict;
-            this.mission_default = mission_default;
-        }
-    }
-
-    [System.Serializable]
-    class PlayerMission
-    {
-        public string player;
-        public int cubes;
-        public Dictionary<string, Dictionary<int,bool>> waveCubeSpawn = new Dictionary<string, Dictionary<int, bool>>();
-        public int inventory;
-        public List<string> characteristics;
-
-        public PlayerMission(string player, int cubes, int inventory, List<string> characteristics)
-        {
-            this.player = player;
-            this.cubes = cubes;
-            this.inventory = inventory;
-            this.characteristics = characteristics;
-            SetWaveNumberToSpawn();
-        }
-
-        public void SetWaveNumberToSpawn()
-        {
-            int quotient_down = Convert.ToInt32(Math.Floor((float)cubes / 2f)); //TODO: tenir en compte el joc Collect Game, aixi que s'haura de modificar aixo
-            int[] waveSpawnArray = { quotient_down, quotient_down };
-            
-            for (int i = 0; i < waveSpawnArray.Length; i++)
-            {
-                if (waveSpawnArray.Sum() == cubes) break;
-                waveSpawnArray[i]++;
-            }
-
-            var rand = new System.Random();
-            
-
-            Dictionary<int, bool> cubeWaveTatami = new Dictionary<int, bool>();
-            Dictionary<int, bool> cubeWaveFootball = new Dictionary<int, bool>();
-
-            foreach (int wavePos in Enumerable.Range(1, 5).OrderBy(x => rand.Next()).Take(waveSpawnArray[0]))
-            {
-                cubeWaveTatami[wavePos] = false;
-            }
-
-            foreach (int wavePos in Enumerable.Range(1, 5).OrderBy(x => rand.Next()).Take(waveSpawnArray[1]))
-            {
-                cubeWaveFootball[wavePos] = false;
-            }
-
-            waveCubeSpawn["tatami"] = cubeWaveTatami; 
-            waveCubeSpawn["football"] = cubeWaveFootball;
-
-        }
-    }
 }

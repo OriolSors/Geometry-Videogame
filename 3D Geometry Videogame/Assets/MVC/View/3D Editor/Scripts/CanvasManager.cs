@@ -13,8 +13,6 @@ public class CanvasManager : MonoBehaviour
 
     public Canvas labelsCanvas;
 
-    private string username;
-
     private NewMissionManager missionManager;
 
     void Start()
@@ -69,7 +67,7 @@ public class CanvasManager : MonoBehaviour
     public void SaveConstruction()
     {
         labelsCanvas.enabled = true;
-        missionManager.SetUp(username, cubePositions.Count);
+        missionManager.SetUp(cubePositions.Count);
         /*
         Mission mission = new Mission(username, cubePositions.Count);
         string json = JsonUtility.ToJson(mission);
