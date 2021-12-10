@@ -1,13 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Firebase.Database;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using System;
-using Firebase.Extensions;
-using Newtonsoft.Json;
-using System.Linq;
 
 public class NewMissionManager : MonoBehaviour
 {

@@ -41,7 +41,8 @@ public class Designer : User
         if (user != null)
         {
             SaveDataDesigner saveDesignerDataToDB = new SaveDataDesigner(username, listOfMissionsDesigned);
-            reference.Child("Users").Child(user.UserId).SetRawJsonValueAsync(JsonUtility.ToJson(saveDesignerDataToDB));
+            string json = JsonUtility.ToJson(saveDesignerDataToDB);
+            reference.Child("Users").Child(user.UserId).SetRawJsonValueAsync(json);
         }
     }
 

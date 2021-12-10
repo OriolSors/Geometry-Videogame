@@ -37,69 +37,72 @@ public class MissionListPlayerScript : MonoBehaviour
     {
         Dictionary<string, int[]> missions = missionListController.GetAllMissionPlayer(AuthController.Instance.GetCurrentUser());
 
-        foreach (string mission in missions.Keys)
+        if(missions != null)
         {
-            
-            if (missions[mission][0] >= missions[mission][1])
+            foreach (string mission in missions.Keys)
             {
-                //---------- MAIN LIST MISSIONS ----------
 
-                GameObject go = Instantiate(missionReadyView);
-                Button minigameMission = go.transform.Find("Mission Button").GetComponent<Button>();
-                Button finishMission = go.transform.Find("Ready Button").GetComponent<Button>();
+                if (missions[mission][0] >= missions[mission][1])
+                {
+                    //---------- MAIN LIST MISSIONS ----------
 
-                minigameMission.GetComponentInChildren<Text>().text = mission;
-                minigameMission.onClick.AddListener(delegate { LoadMinigames(mission, missions[mission][0]); });
-                finishMission.onClick.AddListener(delegate { GoToConstruct(); });
+                    GameObject go = Instantiate(missionReadyView);
+                    Button minigameMission = go.transform.Find("Mission Button").GetComponent<Button>();
+                    Button finishMission = go.transform.Find("Ready Button").GetComponent<Button>();
 
-                go.transform.SetParent(missionsScroll);
+                    minigameMission.GetComponentInChildren<Text>().text = mission;
+                    minigameMission.onClick.AddListener(delegate { LoadMinigames(mission, missions[mission][0]); });
+                    finishMission.onClick.AddListener(delegate { GoToConstruct(); });
 
-                //---------- INVENTORY LIST MISSIONS ----------
+                    go.transform.SetParent(missionsScroll);
 
-                GameObject inventoryGo = Instantiate(inventoryMissionView);
-                Button inventoryMission = inventoryGo.transform.Find("Mission Button").GetComponent<Button>();
+                    //---------- INVENTORY LIST MISSIONS ----------
 
-                inventoryMission.GetComponentInChildren<Text>().text = mission;
-                inventoryMission.onClick.AddListener(delegate { SetInventoryMission(mission, "DONE!", missions[mission][0].ToString()); });
+                    GameObject inventoryGo = Instantiate(inventoryMissionView);
+                    Button inventoryMission = inventoryGo.transform.Find("Mission Button").GetComponent<Button>();
 
-                inventoryGo.transform.SetParent(inventoryMissionsScroll);
+                    inventoryMission.GetComponentInChildren<Text>().text = mission;
+                    inventoryMission.onClick.AddListener(delegate { SetInventoryMission(mission, "DONE!", missions[mission][0].ToString()); });
 
+                    inventoryGo.transform.SetParent(inventoryMissionsScroll);
+
+
+                }
+                else
+                {
+                    //---------- MAIN LIST MISSIONS ----------
+
+                    GameObject go = Instantiate(missionView);
+                    Button minigameMission = go.transform.Find("Mission Button").GetComponent<Button>();
+
+                    minigameMission.GetComponentInChildren<Text>().text = mission;
+                    go.transform.Find("Progression Text").GetComponent<Text>().text = (100 * missions[mission][0] / missions[mission][1]).ToString() + "%";
+                    minigameMission.onClick.AddListener(delegate { LoadMinigames(mission, missions[mission][0]); });
+
+                    go.transform.SetParent(missionsScroll);
+
+                    //---------- INVENTORY LIST MISSIONS ----------
+
+                    GameObject inventoryGo = Instantiate(inventoryMissionView);
+                    Button inventoryMission = inventoryGo.transform.Find("Mission Button").GetComponent<Button>();
+
+                    inventoryMission.GetComponentInChildren<Text>().text = mission;
+                    inventoryMission.onClick.AddListener(delegate { SetInventoryMission(mission, (100 * missions[mission][0] / missions[mission][1]).ToString() + "%", missions[mission][0].ToString()); });
+
+                    inventoryGo.transform.SetParent(inventoryMissionsScroll);
+
+                }
 
             }
-            else
+            string firstMission = missions.Keys.First();
+            if (missions[firstMission] != null && missions[firstMission][0] >= missions[firstMission][1])
             {
-                //---------- MAIN LIST MISSIONS ----------
-
-                GameObject go = Instantiate(missionView);
-                Button minigameMission = go.transform.Find("Mission Button").GetComponent<Button>();
-
-                minigameMission.GetComponentInChildren<Text>().text = mission;
-                go.transform.Find("Progression Text").GetComponent<Text>().text = (100 * missions[mission][0] / missions[mission][1]).ToString() + "%";
-                minigameMission.onClick.AddListener(delegate { LoadMinigames(mission, missions[mission][0]); });
-
-                go.transform.SetParent(missionsScroll);
-
-                //---------- INVENTORY LIST MISSIONS ----------
-
-                GameObject inventoryGo = Instantiate(inventoryMissionView);
-                Button inventoryMission = inventoryGo.transform.Find("Mission Button").GetComponent<Button>();
-
-                inventoryMission.GetComponentInChildren<Text>().text = mission;
-                inventoryMission.onClick.AddListener(delegate { SetInventoryMission(mission, (100 * missions[mission][0] / missions[mission][1]).ToString() + "%", missions[mission][0].ToString()); });
-
-                inventoryGo.transform.SetParent(inventoryMissionsScroll);
-
+                SetInventoryMission(firstMission, "DONE!", missions[firstMission][0].ToString());
             }
-
-        }
-        string firstMission = missions.Keys.First();
-        if (missions[firstMission] != null && missions[firstMission][0] >= missions[firstMission][1])
-        {
-            SetInventoryMission(firstMission, "DONE!", missions[firstMission][0].ToString());
-        }
-        else if (missions[firstMission] != null && missions[firstMission][0] < missions[firstMission][1]) 
-        { 
-            SetInventoryMission(firstMission, (100 * missions[firstMission][0] / missions[firstMission][1]).ToString() + "%", missions[firstMission][0].ToString()); 
+            else if (missions[firstMission] != null && missions[firstMission][0] < missions[firstMission][1])
+            {
+                SetInventoryMission(firstMission, (100 * missions[firstMission][0] / missions[firstMission][1]).ToString() + "%", missions[firstMission][0].ToString());
+            }
         }
 
 

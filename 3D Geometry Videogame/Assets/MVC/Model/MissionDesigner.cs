@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,5 +29,10 @@ public class MissionDesigner
     {
         return listOfPlayers;
     }
-    
+
+    public string WriteToDB()
+    {
+        SaveDataMissionDesigner missionDesignerToDB = new SaveDataMissionDesigner(missionName, numberOfFigures, listOfPlayers);
+        return JsonUtility.ToJson(missionDesignerToDB);
+    }
 }

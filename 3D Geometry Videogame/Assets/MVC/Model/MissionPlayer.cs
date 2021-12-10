@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,4 +38,9 @@ public class MissionPlayer
         return inventory;
     }
 
+    public string WriteToDB()
+    {
+        SaveDataMissionPlayer missionPlayerToDB = new SaveDataMissionPlayer(missionName, numberOfFigures, characteristics, inventory, tatamiGame, footballGame);
+        return JsonUtility.ToJson(missionPlayerToDB);
+    }
 }
