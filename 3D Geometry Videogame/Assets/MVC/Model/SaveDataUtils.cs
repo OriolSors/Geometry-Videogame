@@ -44,6 +44,7 @@ public class SaveDataDesigner
     {
         this.username = username;
         account = "Designer";
+
         foreach(MissionDesigner mission in listOfMissions)
         {
             this.listOfMissions.Add(mission.WriteToDB());
@@ -120,14 +121,37 @@ public class SaveDataMinigame
     private int currentWave;
 
     [SerializeField]
-    private Dictionary<string, string> isFigureCollectedInWave = new Dictionary<string, string>();
+    private List<SaveDataFigureInWave> isFigureCollectedInWave = new List<SaveDataFigureInWave>();
 
     public SaveDataMinigame(int currentWave, Dictionary<int, bool> isFigureCollectedInWave)
     {
         this.currentWave = currentWave;
 
-        this.isFigureCollectedInWave["test"] = "test1";
+        foreach(int wave in isFigureCollectedInWave.Keys)
+        {
+            this.isFigureCollectedInWave.Add(new SaveDataFigureInWave(wave, isFigureCollectedInWave[wave]));
+        }
 
     }
+
+}
+
+[System.Serializable]
+public class SaveDataFigureInWave
+{
+    [SerializeField]
+    private int waveNumber;
+
+    [SerializeField]
+    private bool isCollected;
+
+    public SaveDataFigureInWave(int waveNumber, bool isCollected)
+    {
+        this.waveNumber = waveNumber;
+
+        this.isCollected = isCollected;
+
+    }
+
 }
 
