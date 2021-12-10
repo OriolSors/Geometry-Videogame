@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Firebase.Database;
@@ -41,8 +40,7 @@ public class Designer : User
         if (user != null)
         {
             SaveDataDesigner saveDesignerDataToDB = new SaveDataDesigner(username, listOfMissionsDesigned);
-            string json = JsonUtility.ToJson(saveDesignerDataToDB);
-            reference.Child("Users").Child(user.UserId).SetRawJsonValueAsync(json);
+            reference.Child("Users").Child(user.UserId).SetRawJsonValueAsync(JsonUtility.ToJson(saveDesignerDataToDB));
         }
     }
 
@@ -72,18 +70,21 @@ public class Designer : User
             {
                 Dictionary<string, MissionPlayer> players = mission.GetListOfPlayers();
 
-                foreach (string player in players.Keys)
+                if (players != null)
                 {
-                    if (players[player].GetInventory() >= players[player].GetNumberOfFigures())
+                    foreach (string player in players.Keys)
                     {
-                        userStatistics[player] = "100%";
-                    }
-                    else
-                    {
-                        userStatistics[player] = (players[player].GetInventory()/ players[player].GetNumberOfFigures()).ToString() + "%";
+                        if (players[player].GetInventory() >= players[player].GetNumberOfFigures())
+                        {
+                            userStatistics[player] = "100%";
+                        }
+                        else
+                        {
+                            userStatistics[player] = (players[player].GetInventory() / players[player].GetNumberOfFigures()).ToString() + "%";
+                        }
                     }
                 }
-
+                
                 break;
             }
         }

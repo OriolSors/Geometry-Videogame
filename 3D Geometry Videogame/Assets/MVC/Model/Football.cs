@@ -25,4 +25,10 @@ public class Football : Minigame
         }
 
     }
+
+    public SaveDataMinigame WriteToDB()
+    {
+        SaveDataMinigame saveFootballDataToDB = new SaveDataMinigame(currentWave, isFigureCollectedInWave);
+        return saveFootballDataToDB;
+    }
 }

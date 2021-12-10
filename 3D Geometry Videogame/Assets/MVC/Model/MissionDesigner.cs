@@ -30,9 +30,9 @@ public class MissionDesigner
         return listOfPlayers;
     }
 
-    public string WriteToDB()
+    public SaveDataMissionDesigner WriteToDB()
     {
         SaveDataMissionDesigner missionDesignerToDB = new SaveDataMissionDesigner(missionName, numberOfFigures, listOfPlayers);
-        return JsonUtility.ToJson(missionDesignerToDB);
+        return missionDesignerToDB;
     }
 }

@@ -37,7 +37,7 @@ public class MissionListPlayerScript : MonoBehaviour
     {
         Dictionary<string, int[]> missions = missionListController.GetAllMissionPlayer(AuthController.Instance.GetCurrentUser());
 
-        if(missions != null)
+        if(missions.Count != 0)
         {
             foreach (string mission in missions.Keys)
             {

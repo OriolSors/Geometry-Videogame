@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,7 @@ public class SaveDataPlayer
     private string account;
 
     [SerializeField]
-    private List<string> listOfMissions;
+    private List<SaveDataMissionPlayer> listOfMissions;
 
     public SaveDataPlayer(string username, List<MissionPlayer> listOfMissions)
     {
@@ -21,7 +22,7 @@ public class SaveDataPlayer
         account = "Player";
         foreach (MissionPlayer mission in listOfMissions)
         {
-            this.listOfMissions.Add(mission.WriteToDB());
+            this.listOfMissions.Add(mission.WriteToDB(username));
         }
 
     }
@@ -37,7 +38,7 @@ public class SaveDataDesigner
     private string account;
 
     [SerializeField]
-    private List<string> listOfMissions = new List<string>();
+    private List<SaveDataMissionDesigner> listOfMissions = new List<SaveDataMissionDesigner>();
 
     public SaveDataDesigner(string username, List<MissionDesigner> listOfMissions)
     {
@@ -61,7 +62,7 @@ public class SaveDataMissionDesigner
     private int numberOfFigures;
 
     [SerializeField]
-    private Dictionary<string, string> listOfPlayers = new Dictionary<string, string>();
+    private List<SaveDataMissionPlayer> listOfPlayers = new List<SaveDataMissionPlayer>();
 
     public SaveDataMissionDesigner(string missionName, int numberOfFigures, Dictionary<string, MissionPlayer> listOfPlayers)
     {
@@ -69,7 +70,7 @@ public class SaveDataMissionDesigner
         this.numberOfFigures = numberOfFigures;
         foreach (string player in listOfPlayers.Keys)
         {
-            this.listOfPlayers[player] = listOfPlayers[player].WriteToDB();
+            this.listOfPlayers.Add(listOfPlayers[player].WriteToDB(player));
         }
 
     }
@@ -78,6 +79,9 @@ public class SaveDataMissionDesigner
 [System.Serializable]
 public class SaveDataMissionPlayer
 {
+    [SerializeField]
+    private string playerName;
+
     [SerializeField]
     private string missionName;
 
@@ -91,19 +95,38 @@ public class SaveDataMissionPlayer
     private int inventory;
 
     [SerializeField]
-    private string tatamiGame;
+    private SaveDataMinigame tatamiGame;
 
     [SerializeField]
-    private string footballGame;
+    private SaveDataMinigame footballGame;
 
-    public SaveDataMissionPlayer(string missionName, int numberOfFigures, List<string> characteristics, int inventory, Tatami tatamiGame, Football footballGame)
+    public SaveDataMissionPlayer(string playerName, string missionName, int numberOfFigures, List<string> characteristics, int inventory, Tatami tatamiGame, Football footballGame)
     {
+        this.playerName = playerName;
         this.missionName = missionName;
         this.numberOfFigures = numberOfFigures;
         this.characteristics = characteristics;
         this.inventory = inventory;
-        this.tatamiGame = JsonUtility.ToJson(tatamiGame);
-        this.footballGame = JsonUtility.ToJson(footballGame);
+        this.tatamiGame = tatamiGame.WriteToDB();
+        this.footballGame = footballGame.WriteToDB();
+
+    }
+}
+
+[System.Serializable]
+public class SaveDataMinigame
+{
+    [SerializeField]
+    private int currentWave;
+
+    [SerializeField]
+    private Dictionary<string, string> isFigureCollectedInWave = new Dictionary<string, string>();
+
+    public SaveDataMinigame(int currentWave, Dictionary<int, bool> isFigureCollectedInWave)
+    {
+        this.currentWave = currentWave;
+
+        this.isFigureCollectedInWave["test"] = "test1";
 
     }
 }

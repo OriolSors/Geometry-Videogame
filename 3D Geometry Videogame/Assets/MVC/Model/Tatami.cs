@@ -25,4 +25,10 @@ public class Tatami : Minigame
         }
 
     }
+
+    public SaveDataMinigame WriteToDB()
+    {
+        SaveDataMinigame saveTatamiDataToDB = new SaveDataMinigame(currentWave, isFigureCollectedInWave);
+        return saveTatamiDataToDB;
+    }
 }

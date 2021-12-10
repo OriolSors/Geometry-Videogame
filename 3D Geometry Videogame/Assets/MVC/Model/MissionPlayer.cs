@@ -38,9 +38,9 @@ public class MissionPlayer
         return inventory;
     }
 
-    public string WriteToDB()
+    public SaveDataMissionPlayer WriteToDB(string player)
     {
-        SaveDataMissionPlayer missionPlayerToDB = new SaveDataMissionPlayer(missionName, numberOfFigures, characteristics, inventory, tatamiGame, footballGame);
-        return JsonUtility.ToJson(missionPlayerToDB);
+        SaveDataMissionPlayer missionPlayerToDB = new SaveDataMissionPlayer(player, missionName, numberOfFigures, characteristics, inventory, tatamiGame, footballGame);
+        return missionPlayerToDB;
     }
 }
