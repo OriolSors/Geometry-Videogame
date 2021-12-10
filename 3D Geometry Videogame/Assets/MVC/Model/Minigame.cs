@@ -11,4 +11,10 @@ public class Minigame
         this.currentWave = currentWave;
         this.isFigureCollectedInWave = isFigureCollectedInWave;
     }
+
+    public Minigame(SaveDataMinigame minigameData)
+    {
+        this.currentWave = minigameData.currentWave;
+        this.isFigureCollectedInWave = minigameData.ToDictionary();
+    }
 }

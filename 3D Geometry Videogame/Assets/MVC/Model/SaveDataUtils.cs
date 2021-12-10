@@ -8,18 +8,22 @@ using UnityEngine;
 public class SaveDataPlayer
 {
     [SerializeField]
-    private string username;
+    public string username;
 
     [SerializeField]
-    private string account;
+    public string account;
 
     [SerializeField]
-    private List<SaveDataMissionPlayer> listOfMissions;
+    public string email;
 
-    public SaveDataPlayer(string username, List<MissionPlayer> listOfMissions)
+    [SerializeField]
+    public List<SaveDataMissionPlayer> listOfMissions;
+
+    public SaveDataPlayer(string username, string email, List<MissionPlayer> listOfMissions)
     {
         this.username = username;
         account = "Player";
+        this.email = email;
         foreach (MissionPlayer mission in listOfMissions)
         {
             this.listOfMissions.Add(mission.WriteToDB(username));
@@ -32,20 +36,23 @@ public class SaveDataPlayer
 public class SaveDataDesigner
 {
     [SerializeField]
-    private string username;
+    public string username;
 
     [SerializeField]
-    private string account;
+    public string account;
 
     [SerializeField]
-    private List<SaveDataMissionDesigner> listOfMissions = new List<SaveDataMissionDesigner>();
+    public string email;
 
-    public SaveDataDesigner(string username, List<MissionDesigner> listOfMissions)
+    [SerializeField]
+    public List<SaveDataMissionDesigner> listOfMissions = new List<SaveDataMissionDesigner>();
+
+    public SaveDataDesigner(string username, string email, List<MissionDesigner> listOfMissions)
     {
         this.username = username;
         account = "Designer";
-
-        foreach(MissionDesigner mission in listOfMissions)
+        this.email = email;
+        foreach (MissionDesigner mission in listOfMissions)
         {
             this.listOfMissions.Add(mission.WriteToDB());
         }
@@ -57,13 +64,13 @@ public class SaveDataDesigner
 public class SaveDataMissionDesigner
 {
     [SerializeField]
-    private string missionName;
+    public string missionName;
 
     [SerializeField]
-    private int numberOfFigures;
+    public int numberOfFigures;
 
     [SerializeField]
-    private List<SaveDataMissionPlayer> listOfPlayers = new List<SaveDataMissionPlayer>();
+    public List<SaveDataMissionPlayer> listOfPlayers = new List<SaveDataMissionPlayer>();
 
     public SaveDataMissionDesigner(string missionName, int numberOfFigures, Dictionary<string, MissionPlayer> listOfPlayers)
     {
@@ -81,25 +88,25 @@ public class SaveDataMissionDesigner
 public class SaveDataMissionPlayer
 {
     [SerializeField]
-    private string playerName;
+    public string playerName;
 
     [SerializeField]
-    private string missionName;
+    public string missionName;
 
     [SerializeField]
-    private int numberOfFigures;
+    public int numberOfFigures;
 
     [SerializeField]
-    private List<string> characteristics;
+    public List<string> characteristics;
 
     [SerializeField]
-    private int inventory;
+    public int inventory;
 
     [SerializeField]
-    private SaveDataMinigame tatamiGame;
+    public SaveDataMinigame tatamiGame;
 
     [SerializeField]
-    private SaveDataMinigame footballGame;
+    public SaveDataMinigame footballGame;
 
     public SaveDataMissionPlayer(string playerName, string missionName, int numberOfFigures, List<string> characteristics, int inventory, Tatami tatamiGame, Football footballGame)
     {
@@ -118,10 +125,10 @@ public class SaveDataMissionPlayer
 public class SaveDataMinigame
 {
     [SerializeField]
-    private int currentWave;
+    public int currentWave;
 
     [SerializeField]
-    private List<SaveDataFigureInWave> isFigureCollectedInWave = new List<SaveDataFigureInWave>();
+    public List<SaveDataFigureInWave> isFigureCollectedInWave = new List<SaveDataFigureInWave>();
 
     public SaveDataMinigame(int currentWave, Dictionary<int, bool> isFigureCollectedInWave)
     {
@@ -134,16 +141,21 @@ public class SaveDataMinigame
 
     }
 
+    public Dictionary<int, bool> ToDictionary()
+    {
+        return new Dictionary<int, bool>();
+    }
+
 }
 
 [System.Serializable]
 public class SaveDataFigureInWave
 {
     [SerializeField]
-    private int waveNumber;
+    public int waveNumber;
 
     [SerializeField]
-    private bool isCollected;
+    public bool isCollected;
 
     public SaveDataFigureInWave(int waveNumber, bool isCollected)
     {

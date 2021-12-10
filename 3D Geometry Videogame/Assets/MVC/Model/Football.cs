@@ -7,9 +7,15 @@ using UnityEngine;
 [System.Serializable]
 public class Football : Minigame
 {
+
     public Football(int currentWave, Dictionary<int, bool> isFigureCollectedInWave, int numberOfFigures) : base(currentWave, isFigureCollectedInWave)
     {
         SetWaveNumberToSpawn(numberOfFigures);
+    }
+
+    public Football(SaveDataMinigame footballGame): base(footballGame)
+    {
+
     }
 
     private void SetWaveNumberToSpawn(int numberOfFigures)

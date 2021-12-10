@@ -23,6 +23,16 @@ public class MissionPlayer
         this.footballGame = footballGame;
     }
 
+    public MissionPlayer(SaveDataMissionPlayer missionPlayerData)
+    {
+        this.missionName = missionPlayerData.missionName;
+        this.numberOfFigures = missionPlayerData.numberOfFigures;
+        this.characteristics = missionPlayerData.characteristics;
+        this.inventory = missionPlayerData.inventory;
+        this.tatamiGame = new Tatami(missionPlayerData.tatamiGame);
+        this.footballGame = new Football(missionPlayerData.footballGame);
+    }
+
     public string GetMissionName()
     {
         return missionName;

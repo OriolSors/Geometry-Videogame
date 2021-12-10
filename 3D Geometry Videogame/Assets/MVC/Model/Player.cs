@@ -15,6 +15,15 @@ public class Player : User
         listOfMissions = new List<MissionPlayer>();
     }
 
+    public Player(SaveDataPlayer dataPlayer): base (dataPlayer.username, dataPlayer.email)
+    {
+        foreach(SaveDataMissionPlayer missionPlayerData in dataPlayer.listOfMissions)
+        {
+            listOfMissions = new List<MissionPlayer>();
+            listOfMissions.Add(new MissionPlayer(missionPlayerData));
+        }
+    }
+
     public Dictionary<string, int[]> GetAllMissionPlayer()
     {
         Dictionary<string, int[]> dictMission = new Dictionary<string, int[]>();
@@ -28,7 +37,7 @@ public class Player : User
 
     public override void WriteUserToLocalJSON()
     {
-        SaveDataPlayer savePlayerDataToLocal = new SaveDataPlayer(username, listOfMissions);
+        SaveDataPlayer savePlayerDataToLocal = new SaveDataPlayer(username, email, listOfMissions);
         File.WriteAllText(Application.persistentDataPath + "/currentuser.json", JsonUtility.ToJson(savePlayerDataToLocal));
     }
 
@@ -37,7 +46,7 @@ public class Player : User
         Firebase.Auth.FirebaseUser user = auth.CurrentUser;
         if (user != null)
         {
-            SaveDataPlayer savePlayerDataToDB = new SaveDataPlayer(username, listOfMissions);
+            SaveDataPlayer savePlayerDataToDB = new SaveDataPlayer(username, email, listOfMissions);
             reference.Child("Users").Child(user.UserId).SetRawJsonValueAsync(JsonUtility.ToJson(savePlayerDataToDB));
         }
         
@@ -51,7 +60,7 @@ public class Player : User
 
     private void UpdateUserToDB(string userId)
     {
-        SaveDataPlayer savePlayerDataToDB = new SaveDataPlayer(username, listOfMissions);
+        SaveDataPlayer savePlayerDataToDB = new SaveDataPlayer(username, email, listOfMissions);
         reference.Child("Users").Child(userId).SetRawJsonValueAsync(JsonUtility.ToJson(savePlayerDataToDB));
     }
 

@@ -7,9 +7,15 @@ using UnityEngine;
 [System.Serializable]
 public class Tatami : Minigame
 {
+
     public Tatami(int currentWave, Dictionary<int, bool> isFigureCollectedInWave, int numberOfFigures): base(currentWave, isFigureCollectedInWave)
     {
         SetWaveNumberToSpawn(numberOfFigures);
+    }
+
+    public Tatami(SaveDataMinigame tatamiGame): base(tatamiGame)
+    {
+        
     }
 
     private void SetWaveNumberToSpawn(int numberOfFigures)

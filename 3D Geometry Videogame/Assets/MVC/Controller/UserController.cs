@@ -59,7 +59,9 @@ public class UserController
                 {
                     if (s.Child("account").Value.ToString() == "Player")
                     {
-                        players[s.Key] = s.Value as Player;
+                        string json = s.GetRawJsonValue();
+                        SaveDataPlayer playerData = JsonUtility.FromJson<SaveDataPlayer>(json);
+                        players[s.Key] = new Player(playerData);
                     }
                 }
             }
