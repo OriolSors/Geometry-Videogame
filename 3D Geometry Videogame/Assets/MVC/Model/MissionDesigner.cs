@@ -15,6 +15,17 @@ public class MissionDesigner
         this.listOfPlayers = listOfPlayers;
     }
 
+    public MissionDesigner(SaveDataMissionDesigner missionDesignerData)
+    {
+        this.missionName = missionDesignerData.missionName;
+        this.numberOfFigures = missionDesignerData.numberOfFigures;
+        this.listOfPlayers = new Dictionary<string, MissionPlayer>();
+        foreach(SaveDataMissionPlayer missionPlayerData in missionDesignerData.listOfPlayers)
+        {
+            this.listOfPlayers[missionPlayerData.playerName] = new MissionPlayer(missionPlayerData);
+        }
+    }
+
     public string GetMissionName()
     {
         return missionName;

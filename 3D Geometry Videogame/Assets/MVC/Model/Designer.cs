@@ -13,6 +13,16 @@ public class Designer : User
         listOfMissionsDesigned = new List<MissionDesigner>();
     }
 
+    public Designer(SaveDataDesigner dataDesigner) : base(dataDesigner.username, dataDesigner.email)
+    {
+        listOfMissionsDesigned = new List<MissionDesigner>();
+
+        foreach (SaveDataMissionDesigner missionDesignerData in dataDesigner.listOfMissions)
+        {
+            listOfMissionsDesigned.Add(new MissionDesigner(missionDesignerData));
+        }
+    }
+
     public List<MissionDesigner> GetMissionDesigner()
     {
         return listOfMissionsDesigned;

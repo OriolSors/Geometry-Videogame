@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Firebase.Database;
 using Firebase.Extensions;
 using UnityEngine;
@@ -34,9 +35,9 @@ public sealed class AuthController
         }
     }
 
-    public void RegisterNewUser(string username, string email, string password, string accountType, Action<string> ConfirmUserLogged, Action<string> GetNegativeResultOfUserCreation)
+    public async Task RegisterNewUser(string email, string password, Action<string> GetNegativeResultOfUserCreation)
     {
-        auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {
+        await auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {
             if (task.IsCanceled)
             {
                 Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled.");
@@ -54,15 +55,13 @@ public sealed class AuthController
             Firebase.Auth.FirebaseUser newUser = task.Result;
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
-
-            CreateNewUser(username, email, accountType);
-            SetCurrentUser(email, ConfirmUserLogged);
         });
+        return;
     }
 
-    public void LoginUser(string email, string password, Action<string> ConfirmUserLogged, Action<string> GetNegativeResultOfUserLogged)
+    public async Task LoginUser(string email, string password, Action<string> GetNegativeResultOfUserLogged)
     {
-        auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {
+        await auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {
             if (task.IsCanceled)
             {
                 Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
@@ -79,12 +78,11 @@ public sealed class AuthController
             Firebase.Auth.FirebaseUser newUser = task.Result;
             Debug.LogFormat("User signed in successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
-
-            SetCurrentUser(email, ConfirmUserLogged);
         });
+        return;
     }
 
-    private void CreateNewUser(string username, string email, string accountType)
+    public void CreateNewUser(string username, string email, string accountType)
     {
         User newUser = null;
         switch (accountType)
@@ -100,12 +98,12 @@ public sealed class AuthController
         if (newUser != null) newUser.WriteNewUserToDB();
     }
 
-    private void SetCurrentUser(string email, Action<string> ConfirmUserLogged)
+    public async Task SetCurrentUser(string email, Action<string> ConfirmUserLogged)
     {
         Firebase.Auth.FirebaseUser user = auth.CurrentUser;
         if (user != null)
         {
-            var DBTask = reference.Child("Users").Child(user.UserId).GetValueAsync().ContinueWithOnMainThread(task =>
+            await reference.Child("Users").Child(user.UserId).GetValueAsync().ContinueWithOnMainThread(task =>
             {
                 if (task.IsFaulted)
                 {
@@ -120,14 +118,19 @@ public sealed class AuthController
                 {
                     DataSnapshot snapshot = task.Result;
                     string accountType = snapshot.Child("account").Value.ToString();
+                    string json;
 
                     switch (accountType)
                     {
                         case "Designer":
-                            currentUser = new Designer(snapshot.Child("username").Value.ToString(), email);
+                            json = snapshot.GetRawJsonValue();
+                            SaveDataDesigner designerData = JsonUtility.FromJson<SaveDataDesigner>(json);
+                            currentUser = new Designer(designerData);
                             break;
                         case "Player":
-                            currentUser = new Player(snapshot.Child("username").Value.ToString(), email);
+                            json = snapshot.GetRawJsonValue();
+                            SaveDataPlayer playerData = JsonUtility.FromJson<SaveDataPlayer>(json);
+                            currentUser = new Player(playerData);
                             break;
                     }
 
@@ -141,6 +144,7 @@ public sealed class AuthController
                 }
 
             });
+            return;
         }
         
     }

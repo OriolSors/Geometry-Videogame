@@ -10,21 +10,21 @@ public class LoginScript : MonoBehaviour
     [SerializeField]
     private TMP_InputField passwordInput;
 
-    private SceneController sceneController;
+    private AuthManager authManager;
 
     public Canvas errorCanvas;
 
     void Start()
     {
         errorCanvas.enabled = false;
-        sceneController = GameObject.Find("Scene Controller").GetComponent<SceneController>();
+        authManager = GameObject.Find("Scene Controller").GetComponent<AuthManager>();
     }
 
-    public void LoginUser()
+    public async void LoginUser()
     {
         string email = emailInput.text;
         string password = passwordInput.text;
-        sceneController.LoginUser(email, password, GetNegativeResultOfUserLogged);
+        await authManager.LoginUser(email, password, GetNegativeResultOfUserLogged);
 
     }
 

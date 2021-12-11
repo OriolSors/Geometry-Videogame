@@ -15,24 +15,24 @@ public class RegisterScript : MonoBehaviour
     [SerializeField]
     private TMP_Dropdown accountTypeOption;
 
-    private SceneController sceneController;
+    private AuthManager authManager;
 
     public Canvas errorCanvas;
 
     private void Start()
     {
         errorCanvas.enabled = false;
-        sceneController = GameObject.Find("Scene Controller").GetComponent<SceneController>();
+        authManager = GameObject.Find("Scene Controller").GetComponent<AuthManager>();
     }
 
-    public void RegisterAndCreateNewUser()
+    public async void RegisterAndCreateNewUser()
     {
         string username = usernameInput.text;
         string email = emailInput.text;
         string password = passwordInput.text;
         string accountType = accountTypeOption.options[accountTypeOption.value].text;
 
-        sceneController.RegisterAndCreateNewUser(username, email, password, accountType, GetNegativeResultOfUserCreation);
+        await authManager.RegisterAndCreateNewUser(username, email, password, accountType, GetNegativeResultOfUserCreation);
 
     }
 
