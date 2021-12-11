@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Firebase.Database;
 using Firebase.Extensions;
 using UnityEngine;
@@ -10,26 +11,20 @@ public class UserController
 
     private DatabaseReference reference;
 
-    Dictionary <string, Player> listOfPlayers;
+    private Dictionary<string, Player> listOfPlayers;
 
     public UserController()
 
     {
-        listOfPlayers = new Dictionary<string, Player>();
         reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
+        listOfPlayers = new Dictionary<string, Player>();
     }
 
-    public void AddNewMissionPlayer(MissionPlayer missionPlayer, string player)
+    public async void AddNewMissionPlayer(MissionPlayer missionPlayer, string player)
     {
-        GetAllPlayerObjects(FillListOfPlayers);
+        await GetAllPlayerObjects();
+        AddMissionToPlayer(missionPlayer, player);
 
-        foreach(string userId in listOfPlayers.Keys)
-        {
-            if (listOfPlayers[userId].GetUserName() == player)
-            {
-                listOfPlayers[userId].AddNewMission(userId, missionPlayer);
-            }
-        }
     }
 
     public void AddNewMissionDesigner(MissionDesigner missionDesigner, User user)
@@ -38,10 +33,10 @@ public class UserController
         designer.AddNewMission(missionDesigner);
     }
 
-    private void GetAllPlayerObjects(Action<Dictionary<string, Player>> callbackListOfPlayerObjects)
+    private async Task GetAllPlayerObjects()
     {
         Dictionary<string, Player> players = new Dictionary<string, Player>();
-        var DBTask = reference.Child("Users").GetValueAsync().ContinueWithOnMainThread(task =>
+        await reference.Child("Users").GetValueAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted)
             {
@@ -64,15 +59,24 @@ public class UserController
                         players[s.Key] = new Player(playerData);
                     }
                 }
+                listOfPlayers = players;
             }
-
-            callbackListOfPlayerObjects(players);
+            
         });
+
+        return;
     }
 
-    private void FillListOfPlayers(Dictionary<string, Player> listOfPlayers)
+    private void AddMissionToPlayer(MissionPlayer missionPlayer, string player)
     {
-        this.listOfPlayers = listOfPlayers;
+
+        foreach (string userId in listOfPlayers.Keys)
+        {
+            if (listOfPlayers[userId].GetUserName() == player)
+            {
+                listOfPlayers[userId].AddNewMission(userId, missionPlayer);
+            }
+        }
     }
 
     public void GetAllPlayerNames(Action<List<string>> callbackListOfPlayerNames)

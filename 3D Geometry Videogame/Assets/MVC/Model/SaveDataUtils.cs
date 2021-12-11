@@ -17,7 +17,7 @@ public class SaveDataPlayer
     public string email;
 
     [SerializeField]
-    public List<SaveDataMissionPlayer> listOfMissions;
+    public List<SaveDataMissionPlayer> listOfMissions = new List<SaveDataMissionPlayer>();
 
     public SaveDataPlayer(string username, string email, List<MissionPlayer> listOfMissions)
     {
@@ -141,9 +141,15 @@ public class SaveDataMinigame
 
     }
 
-    public Dictionary<int, bool> ToDictionary()
+    public Dictionary<int, bool> FiguresCollectedToDictionary()
     {
-        return new Dictionary<int, bool>();
+        Dictionary<int, bool> isFigureCollectedInWave =  new Dictionary<int, bool>();
+        foreach(SaveDataFigureInWave pair in this.isFigureCollectedInWave)
+        {
+            isFigureCollectedInWave[pair.waveNumber] = pair.isCollected;
+        }
+
+        return isFigureCollectedInWave;
     }
 
 }

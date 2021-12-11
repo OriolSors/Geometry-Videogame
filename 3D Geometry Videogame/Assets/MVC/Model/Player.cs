@@ -17,9 +17,10 @@ public class Player : User
 
     public Player(SaveDataPlayer dataPlayer): base (dataPlayer.username, dataPlayer.email)
     {
-        foreach(SaveDataMissionPlayer missionPlayerData in dataPlayer.listOfMissions)
+        listOfMissions = new List<MissionPlayer>();
+
+        foreach (SaveDataMissionPlayer missionPlayerData in dataPlayer.listOfMissions)
         {
-            listOfMissions = new List<MissionPlayer>();
             listOfMissions.Add(new MissionPlayer(missionPlayerData));
         }
     }

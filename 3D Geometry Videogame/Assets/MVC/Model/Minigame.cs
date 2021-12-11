@@ -15,6 +15,6 @@ public class Minigame
     public Minigame(SaveDataMinigame minigameData)
     {
         this.currentWave = minigameData.currentWave;
-        this.isFigureCollectedInWave = minigameData.ToDictionary();
+        this.isFigureCollectedInWave = minigameData.FiguresCollectedToDictionary();
     }
 }

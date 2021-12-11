@@ -20,7 +20,7 @@ public class Designer : User
 
     public override void WriteUserToLocalJSON()
     {
-        SaveDataDesigner saveDesignerDataToLocal = new SaveDataDesigner(username, listOfMissionsDesigned);
+        SaveDataDesigner saveDesignerDataToLocal = new SaveDataDesigner(username, email, listOfMissionsDesigned);
         File.WriteAllText(Application.persistentDataPath + "/currentuser.json", JsonUtility.ToJson(saveDesignerDataToLocal));
     }
 
@@ -29,7 +29,7 @@ public class Designer : User
         Firebase.Auth.FirebaseUser user = auth.CurrentUser;
         if (user != null)
         {
-            SaveDataDesigner saveDesignerDataToDB = new SaveDataDesigner(username, listOfMissionsDesigned);
+            SaveDataDesigner saveDesignerDataToDB = new SaveDataDesigner(username, email, listOfMissionsDesigned);
             reference.Child("Users").Child(user.UserId).SetRawJsonValueAsync(JsonUtility.ToJson(saveDesignerDataToDB));
         }
     }
@@ -39,7 +39,7 @@ public class Designer : User
         Firebase.Auth.FirebaseUser user = auth.CurrentUser;
         if (user != null)
         {
-            SaveDataDesigner saveDesignerDataToDB = new SaveDataDesigner(username, listOfMissionsDesigned);
+            SaveDataDesigner saveDesignerDataToDB = new SaveDataDesigner(username, email, listOfMissionsDesigned);
             reference.Child("Users").Child(user.UserId).SetRawJsonValueAsync(JsonUtility.ToJson(saveDesignerDataToDB));
         }
     }
