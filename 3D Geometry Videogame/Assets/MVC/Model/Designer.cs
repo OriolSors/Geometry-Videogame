@@ -55,14 +55,14 @@ public class Designer : User
         }
     }
 
-    public void UpdateMission(string playerEmail, string userId, MissionPlayer currentMissionPlayer)
+    public void UpdateMission(string username, string userId, MissionPlayer currentMissionPlayer)
     {
         int index = listOfMissionsDesigned.FindIndex(a => a.GetMissionName() == currentMissionPlayer.GetMissionName());
         
         if (index != -1)
         {
             Dictionary<string, MissionPlayer> playersDict = listOfMissionsDesigned[index].GetListOfPlayers();
-            playersDict[playerEmail] = currentMissionPlayer;
+            playersDict[username] = currentMissionPlayer;
             listOfMissionsDesigned[index].SetListOfPlayers(playersDict);
         }
 
