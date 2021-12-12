@@ -13,11 +13,6 @@ public class MissionListController
         auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
     }
 
-    public void RetrieveAllMissionUser(User currentUser, IEnumerable<DataSnapshot> listOfMissions)
-    {
-        currentUser.SetAllMissions(listOfMissions);
-    }
-
     public Dictionary<string, int[]> GetAllMissionPlayer(User currentUser)
     {
         Player currentPlayer = currentUser as Player;

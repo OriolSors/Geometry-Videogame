@@ -28,7 +28,5 @@ public abstract class User
     {
         return username;
     }
-
-    public abstract void SetAllMissions(IEnumerable<DataSnapshot> listOfMissions);
     
 }

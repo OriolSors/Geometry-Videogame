@@ -136,8 +136,6 @@ public sealed class AuthController
 
                     if (currentUser != null)
                     {
-                        missionListController.RetrieveAllMissionUser(currentUser, snapshot.Child("listOfMissions").Children);
-                        currentUser.WriteUserToLocalJSON();
                         ConfirmUserLogged(accountType);
                     }
 

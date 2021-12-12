@@ -102,30 +102,5 @@ public class Designer : User
         return userStatistics;
     }
 
-    public override void SetAllMissions(IEnumerable<DataSnapshot> listOfMissions)
-    {
-        foreach (DataSnapshot missionDesigner in listOfMissions)
-        {
-
-            MissionDesigner newMissionDesigner = missionDesigner.Value as MissionDesigner;
-
-            /*
-            string missionNameDesigned = missionDesigner.Child("missionName").Value.ToString();
-
-            int numberOfFiguresDesigned = Convert.ToInt32(missionDesigner.Child("missionName").Value);
-
-            Dictionary<string, MissionPlayer> listOfPlayers = missionDesigner.Child("listOfPlayers").Value as Dictionary<string, MissionPlayer>;
-            
-            //TODO: retrieve correctament les MissionPlayer del diccionari guardat a la Firebase
-
-
-            MissionDesigner newMissionDesigner = new MissionDesigner(missionNameDesigned, numberOfFiguresDesigned, listOfPlayers);
-
-            */
-
-            listOfMissionsDesigned.Add(newMissionDesigner);
-        }
-    }
-
     
 }
