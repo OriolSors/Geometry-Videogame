@@ -67,14 +67,18 @@ public class SaveDataMissionDesigner
     public string missionName;
 
     [SerializeField]
+    public string designerOfMission;
+
+    [SerializeField]
     public int numberOfFigures;
 
     [SerializeField]
     public List<SaveDataMissionPlayer> listOfPlayers = new List<SaveDataMissionPlayer>();
 
-    public SaveDataMissionDesigner(string missionName, int numberOfFigures, Dictionary<string, MissionPlayer> listOfPlayers)
+    public SaveDataMissionDesigner(string missionName, string designerOfMission, int numberOfFigures, Dictionary<string, MissionPlayer> listOfPlayers)
     {
         this.missionName = missionName;
+        this.designerOfMission = designerOfMission;
         this.numberOfFigures = numberOfFigures;
         foreach (string player in listOfPlayers.Keys)
         {
@@ -94,6 +98,9 @@ public class SaveDataMissionPlayer
     public string missionName;
 
     [SerializeField]
+    public string designerOfMission;
+
+    [SerializeField]
     public int numberOfFigures;
 
     [SerializeField]
@@ -107,11 +114,13 @@ public class SaveDataMissionPlayer
 
     [SerializeField]
     public SaveDataMinigame footballGame;
+    
 
-    public SaveDataMissionPlayer(string playerName, string missionName, int numberOfFigures, List<string> characteristics, int inventory, Tatami tatamiGame, Football footballGame)
+    public SaveDataMissionPlayer(string playerName, string missionName, string designerOfMission, int numberOfFigures, List<string> characteristics, int inventory, Tatami tatamiGame, Football footballGame)
     {
         this.playerName = playerName;
         this.missionName = missionName;
+        this.designerOfMission = designerOfMission;
         this.numberOfFigures = numberOfFigures;
         this.characteristics = characteristics;
         this.inventory = inventory;

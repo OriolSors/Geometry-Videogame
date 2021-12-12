@@ -5,12 +5,14 @@ using UnityEngine;
 public class MissionDesigner
 {
     private string missionName;
+    private string designerOfMission;
     private int numberOfFigures;
     private Dictionary<string, MissionPlayer> listOfPlayers;
 
-    public MissionDesigner(string missionName, int numberOfFigures, Dictionary<string, MissionPlayer> listOfPlayers)
+    public MissionDesigner(string missionName, string designerOfMission, int numberOfFigures, Dictionary<string, MissionPlayer> listOfPlayers)
     {
         this.missionName = missionName;
+        this.designerOfMission = designerOfMission;
         this.numberOfFigures = numberOfFigures;
         this.listOfPlayers = listOfPlayers;
     }
@@ -18,6 +20,7 @@ public class MissionDesigner
     public MissionDesigner(SaveDataMissionDesigner missionDesignerData)
     {
         this.missionName = missionDesignerData.missionName;
+        this.designerOfMission = missionDesignerData.designerOfMission;
         this.numberOfFigures = missionDesignerData.numberOfFigures;
         this.listOfPlayers = new Dictionary<string, MissionPlayer>();
         foreach(SaveDataMissionPlayer missionPlayerData in missionDesignerData.listOfPlayers)
@@ -41,9 +44,14 @@ public class MissionDesigner
         return listOfPlayers;
     }
 
+    public void SetListOfPlayers(Dictionary<string, MissionPlayer> listOfPlayers)
+    {
+        this.listOfPlayers = listOfPlayers;
+    }
+
     public SaveDataMissionDesigner WriteToDB()
     {
-        SaveDataMissionDesigner missionDesignerToDB = new SaveDataMissionDesigner(missionName, numberOfFigures, listOfPlayers);
+        SaveDataMissionDesigner missionDesignerToDB = new SaveDataMissionDesigner(missionName, designerOfMission, numberOfFigures, listOfPlayers);
         return missionDesignerToDB;
     }
 }

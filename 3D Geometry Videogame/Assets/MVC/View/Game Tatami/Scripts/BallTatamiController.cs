@@ -179,7 +179,7 @@ public class BallTatamiController : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         gameOverCanvas.enabled = false;
-        tatamiController.UpdateMissionPlayer();
+        tatamiController.UpdateMissionPlayer(spawnManagerScript.GetWaveCubes());
         SceneManager.LoadScene("Minigame Selection Screen");
     }
 
@@ -216,7 +216,7 @@ public class BallTatamiController : MonoBehaviour
 
     public void ExitGame()
     {
-        tatamiController.UpdateMissionPlayer();
+        tatamiController.UpdateMissionPlayer(spawnManagerScript.GetWaveCubes());
         SceneManager.LoadScene("Minigame Selection Screen");
     }
 

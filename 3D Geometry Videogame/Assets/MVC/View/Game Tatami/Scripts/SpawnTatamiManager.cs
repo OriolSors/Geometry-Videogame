@@ -62,6 +62,11 @@ public class SpawnTatamiManager : MonoBehaviour
         this.waveCubes = waveCubes;
     }
 
+    public Dictionary<int, bool> GetWaveCubes()
+    {
+        return waveCubes;
+    }
+
     public void PlayerReady()
     {
         ready = true;

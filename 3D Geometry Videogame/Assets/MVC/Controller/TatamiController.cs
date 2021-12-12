@@ -89,8 +89,9 @@ public class TatamiController
         return questions[index];
     }
 
-    public void UpdateMissionPlayer()
+    public void UpdateMissionPlayer(Dictionary<int,bool> waveCubes)
     {
+        MissionListController.Instance.GetCurrentMissionPlayer().GetTatami().SetFiguresInWaves(waveCubes);
         MissionListController.Instance.UpdateMissionPlayer();
     }
 }

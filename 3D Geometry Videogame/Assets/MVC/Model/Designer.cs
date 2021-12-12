@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Firebase.Database;
@@ -54,6 +55,22 @@ public class Designer : User
         }
     }
 
+    public void UpdateMission(string playerEmail, string userId, MissionPlayer currentMissionPlayer)
+    {
+        int index = listOfMissionsDesigned.FindIndex(a => a.GetMissionName() == currentMissionPlayer.GetMissionName());
+        
+        if (index != -1)
+        {
+            Dictionary<string, MissionPlayer> playersDict = listOfMissionsDesigned[index].GetListOfPlayers();
+            playersDict[playerEmail] = currentMissionPlayer;
+            listOfMissionsDesigned[index].SetListOfPlayers(playersDict);
+        }
+
+        SaveDataDesigner saveDesignerDataToDB = new SaveDataDesigner(username, email, listOfMissionsDesigned);
+        reference.Child("Users").Child(userId).SetRawJsonValueAsync(JsonUtility.ToJson(saveDesignerDataToDB));
+
+    }
+
     public void AddNewMission(MissionDesigner missionDesigner)
     {
         listOfMissionsDesigned.Add(missionDesigner);
@@ -90,7 +107,7 @@ public class Designer : User
                         }
                         else
                         {
-                            userStatistics[player] = (players[player].GetInventory() / players[player].GetNumberOfFigures()).ToString() + "%";
+                            userStatistics[player] = (players[player].GetInventory()*100 / players[player].GetNumberOfFigures()).ToString() + "%";
                         }
                     }
                 }
@@ -102,5 +119,4 @@ public class Designer : User
         return userStatistics;
     }
 
-    
 }

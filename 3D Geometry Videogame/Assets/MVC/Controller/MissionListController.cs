@@ -55,6 +55,8 @@ public sealed class MissionListController
     public void UpdateMissionPlayer()
     {
         (AuthController.Instance.GetCurrentUser() as Player).UpdateMission(currentMissionPlayer);
+        UserController userController = new UserController();
+        userController.ReplaceDesignerMission(currentMissionPlayer);
     }
 
     

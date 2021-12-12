@@ -16,7 +16,7 @@ public class AuthManager : MonoBehaviour
 
     public async Task RegisterAndCreateNewUser(string username, string email, string password, string accountType, Action<string> GetNegativeResultOfUserCreation)
     {
-        await authController.RegisterNewUser(email, password, GetNegativeResultOfUserCreation);
+        await authController.RegisterNewUser(username, email, password, GetNegativeResultOfUserCreation);
         authController.CreateNewUser(username, email, accountType);
         await authController.SetCurrentUser(email, ConfirmUserLogged);
         return;

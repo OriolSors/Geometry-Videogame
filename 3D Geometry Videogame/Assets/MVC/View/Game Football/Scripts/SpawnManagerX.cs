@@ -40,21 +40,13 @@ public class SpawnManagerX : MonoBehaviour
     private GameObject cubeToCollect;
 
     private bool ready = false;
-    private Dictionary<int, bool> waveCubes = new Dictionary<int, bool>();
-    private DatabaseReference reference;
-
-    private string username, mission;
+    private Dictionary<int, bool> waveCubes;
 
     private void Start()
     {
         playerScript = player.GetComponent<PlayerControllerX>();
         waveCanvas.enabled = false;
         gameOverCanvas.enabled = false;
-        reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
-
-        LoadUser();
-        LoadCurrentMission();
-        LoadWaveParameters(SetWaveCubes);
     }
 
     // Update is called once per frame
@@ -92,53 +84,15 @@ public class SpawnManagerX : MonoBehaviour
         waveCanvas.enabled = false;
     }
 
-    private void SetWaveCubes(Dictionary<int, bool> waveCubes)
+    public void SetWavesDict(Dictionary<int, bool> waveCubes)
     {
         this.waveCubes = waveCubes;
-
-        foreach (int waveCount in waveCubes.Keys)
-        {
-            if (!waveCubes[waveCount])
-            {
-                this.waveCount = waveCount-1;
-                break;
-            }
-        }
-
-        if (waveCount == -1) waveCount = 0;
     }
 
     public void PlayerReady()
     {
         ready = true;
         tutorialCanvas.enabled = false;
-    }
-
-    private void LoadWaveParameters(Action<Dictionary<int, bool>> callbackFunction)
-    {
-        Dictionary<int, bool> waveCubes = new Dictionary<int, bool>();
-        var DBTask = reference.Child("Users").Child(username).Child("Missions").Child(mission).Child("waveCubeSpawn").Child("football").GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                // Handle the error...
-            }
-            else if (task.Result.Value == null)
-            {
-                Debug.Log("No cubes");
-
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                foreach (DataSnapshot cubeWaveCollected in snapshot.Children)
-                {
-                    waveCubes[int.Parse(cubeWaveCollected.Key)] = (bool)cubeWaveCollected.Value;
-                }
-            }
-
-            callbackFunction(waveCubes);
-        });
     }
 
     public void NewGoalPlayer()
@@ -213,43 +167,5 @@ public class SpawnManagerX : MonoBehaviour
         return waveCubes;
     }
 
-    private void LoadUser()
-    {
-        string path = Application.persistentDataPath + "/saveuser.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            SaveDataUser data = JsonUtility.FromJson<SaveDataUser>(json);
-
-            username = data.username;
-        }
-    }
-
-    private void LoadCurrentMission()
-    {
-        string path = Application.persistentDataPath + "/savecurrentmission.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            SaveDataCurrentMission data = JsonUtility.FromJson<SaveDataCurrentMission>(json);
-
-            mission = data.mission;
-        }
-    }
-
-    [System.Serializable]
-    class SaveDataUser
-    {
-        public string username;
-
-    }
-
-    [System.Serializable]
-    class SaveDataCurrentMission
-    {
-        public string mission;
-        public int inventory;
-
-    }
 
 }

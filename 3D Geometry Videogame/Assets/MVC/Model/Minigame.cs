@@ -22,4 +22,9 @@ public class Minigame
     {
         return isFigureCollectedInWave;
     }
+
+    public void SetFiguresInWaves(Dictionary<int, bool> isFigureCollectedInWave)
+    {
+        this.isFigureCollectedInWave = isFigureCollectedInWave;
+    }
 }

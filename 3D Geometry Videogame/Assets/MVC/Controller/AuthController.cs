@@ -31,7 +31,7 @@ public sealed class AuthController
         }
     }
 
-    public async Task RegisterNewUser(string email, string password, Action<string> GetNegativeResultOfUserCreation)
+    public async Task RegisterNewUser(string username, string email, string password, Action<string> GetNegativeResultOfUserCreation)
     {
         await auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {
             if (task.IsCanceled)
@@ -49,6 +49,25 @@ public sealed class AuthController
 
             // Firebase user has been created.
             Firebase.Auth.FirebaseUser newUser = task.Result;
+            Firebase.Auth.UserProfile profile = new Firebase.Auth.UserProfile
+            {
+                DisplayName = username,
+                PhotoUrl = null,
+            };
+            newUser.UpdateUserProfileAsync(profile).ContinueWith(task => {
+                if (task.IsCanceled)
+                {
+                    Debug.LogError("UpdateUserProfileAsync was canceled.");
+                    return;
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.LogError("UpdateUserProfileAsync encountered an error: " + task.Exception);
+                    return;
+                }
+
+                Debug.Log("User profile updated successfully.");
+            });
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
         });

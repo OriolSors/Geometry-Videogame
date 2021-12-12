@@ -128,7 +128,7 @@ public class NewMissionManager : MonoBehaviour
     private void SetPlayersToDropdown(List<string> players)
     {
         this.players = players;
-        selectPlayer.AddOptions(players);
+        selectPlayer.AddOptions(this.players);
         if (players.Count != 0) createMission.interactable = true;
     }
 

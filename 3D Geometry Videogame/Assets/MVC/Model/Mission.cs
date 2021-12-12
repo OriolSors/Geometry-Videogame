@@ -24,7 +24,7 @@ public class Mission
         Dictionary<string, MissionPlayer> listOfPlayers = new Dictionary<string, MissionPlayer>();
         foreach(string player in playersDict.Keys)
         {
-            MissionPlayer missionPlayer = new MissionPlayer(missionName, numberOfFigures, playersDict[player], 0,
+            MissionPlayer missionPlayer = new MissionPlayer(missionName, designerOfMission, numberOfFigures, playersDict[player], 0,
                 new Tatami(0, new Dictionary<int, bool>(), numberOfFigures), new Football(0, new Dictionary<int, bool>(), numberOfFigures));
 
             listOfPlayers[player] = missionPlayer;
@@ -38,7 +38,7 @@ public class Mission
 
     public void CreateMissionDesigner(Dictionary<string, List<string>> playersDict)
     {
-        MissionDesigner missionDesigner = new MissionDesigner(missionName, numberOfFigures, CreateMissionPlayer(playersDict));
+        MissionDesigner missionDesigner = new MissionDesigner(missionName, designerOfMission, numberOfFigures, CreateMissionPlayer(playersDict));
         UserController userController = new UserController();
         userController.AddNewMissionDesigner(missionDesigner, AuthController.Instance.GetCurrentUser());
     }

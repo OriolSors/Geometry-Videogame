@@ -28,4 +28,9 @@ public abstract class User
     {
         return username;
     }
+
+    public string GetEmail()
+    {
+        return email;
+    }
 }

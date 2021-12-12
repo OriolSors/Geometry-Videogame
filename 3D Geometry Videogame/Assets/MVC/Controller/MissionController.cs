@@ -18,7 +18,7 @@ public class MissionController
 
     public void CreateNewMission(string missionName, User designerOfMission, int numberOfFigures, bool isDefaultMission, Dictionary<string, List<string>> playersDict)
     {
-        Mission mission = new Mission(missionName, designerOfMission.GetUserName(), numberOfFigures, isDefaultMission);
+        Mission mission = new Mission(missionName, designerOfMission.GetEmail(), numberOfFigures, isDefaultMission);
         mission.CreateMissionDesigner(playersDict);
     }
 
