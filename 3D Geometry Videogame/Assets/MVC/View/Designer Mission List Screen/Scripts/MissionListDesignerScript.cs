@@ -13,18 +13,15 @@ public class MissionListDesignerScript : MonoBehaviour
     public RectTransform userStatisticsScroll;
     public GameObject userView;
 
-    private MissionListController missionListController;
-
     void Start()
     {
         userStatistics.enabled = false;
-        missionListController = new MissionListController();
         FillMissionScroll();
     }
 
     private void FillMissionScroll()
     {
-        List<string> missions = missionListController.GetAllMissionDesigner(AuthController.Instance.GetCurrentUser());
+        List<string> missions = MissionListController.Instance.GetAllMissionDesigner(AuthController.Instance.GetCurrentUser());
         foreach (string mission in missions)
         {
             GameObject go = Instantiate(missionView);
@@ -39,7 +36,7 @@ public class MissionListDesignerScript : MonoBehaviour
     {
         userStatistics.enabled = true;
 
-        Dictionary<string, string> players = missionListController.GetAllUserStatisticsInMission(AuthController.Instance.GetCurrentUser(), mission);
+        Dictionary<string, string> players = MissionListController.Instance.GetAllUserStatisticsInMission(AuthController.Instance.GetCurrentUser(), mission);
 
         foreach (Transform child in userStatisticsScroll.transform)
         {

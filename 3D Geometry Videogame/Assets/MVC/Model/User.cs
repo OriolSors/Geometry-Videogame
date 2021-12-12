@@ -28,5 +28,4 @@ public abstract class User
     {
         return username;
     }
-    
 }

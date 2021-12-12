@@ -1,10 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Firebase.Database;
-using Firebase.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -27,8 +21,6 @@ public class BallTatamiController : MonoBehaviour
     public bool gameOver = false;
     public Canvas gameOverCanvas;
 
-    private List<string> characteristics;
-    private List<Question> questions;
     public Canvas questionCanvas;
     public TextMeshProUGUI questionText;
     public Button firstAnswer;
@@ -36,12 +28,8 @@ public class BallTatamiController : MonoBehaviour
     public Button thirdAnswer;
     public Button fourthAnswer;
 
-
-    private string username, mission;
-    private int inventory;
-
     private SpawnTatamiManager spawnManagerScript;
-    private DatabaseReference reference;
+    private TatamiController tatamiController;
 
     // Start is called before the first frame update
     void Start()
@@ -56,68 +44,15 @@ public class BallTatamiController : MonoBehaviour
         figureObtainedCanvas.enabled = false;
 
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnTatamiManager>();
+        tatamiController = new TatamiController();
+        spawnManagerScript.SetWavesDict(tatamiController.GetWavesDict());
 
-        reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
-
-        LoadUser();
-        LoadCurrentMission();
-        LoadCharacteristics();
-        LoadQuestions(SetQuestions);
+        LoadQuestions();
     }
 
-    private void SetQuestions(List<Question> questions)
+    private async void LoadQuestions()
     {
-        this.questions = questions;
-    }
-
-    private void LoadQuestions(Action<List<Question>> callbackFunction)
-    {
-        List<Question> questions = new List<Question>();
-        var DBTask = reference.Child("Questions").GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                // Handle the error...
-            }
-            else if (task.Result.Value == null)
-            {
-                Debug.Log("No questions");
-
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                foreach (DataSnapshot characteristic in snapshot.Children)
-                {
-                    if (characteristics.Contains(characteristic.Key.ToString()))
-                    {
-                        foreach (DataSnapshot question in characteristic.Children)
-                        {
-                            string q = question.Children.First().Key.ToString();
-                            string correct;
-
-                            string first = question.Children.First().Children.ElementAt(0).Key.ToString();
-                            string second = question.Children.First().Children.ElementAt(1).Key.ToString();
-                            string third = question.Children.First().Children.ElementAt(2).Key.ToString();
-                            string fourth = question.Children.First().Children.ElementAt(3).Key.ToString();
-
-                            if ((bool)question.Children.First().Children.ElementAt(0).Value) correct = first;
-                            else if ((bool)question.Children.First().Children.ElementAt(1).Value) correct = second;
-                            else if ((bool)question.Children.First().Children.ElementAt(2).Value) correct = third;
-                            else correct = fourth;
-
-                            questions.Add(new Question(q, first, second, third, fourth, correct));
-                        }
-                        
-                    }
-                }
-
-                callbackFunction(questions);
-                
-            }
-
-            
-        });
+        await tatamiController.LoadQuestions();
     }
 
     // Update is called once per frame
@@ -157,7 +92,7 @@ public class BallTatamiController : MonoBehaviour
         }
         else if (other.CompareTag("Cube"))
         {
-            inventory++;
+            tatamiController.IncreaseInventory();
             spawnManagerScript.SetCollectedCube();
             Destroy(other.gameObject);
             figureObtainedCanvas.enabled = true;
@@ -167,9 +102,8 @@ public class BallTatamiController : MonoBehaviour
 
     private void SetCurrentQuestion()
     {
-        var rand = new System.Random();
-        int index = rand.Next(questions.Count);
-        Question currentQuestion = questions[index];
+        
+        Question currentQuestion = tatamiController.RequestQuestion();
         questionText.text = currentQuestion.question;
         firstAnswer.GetComponentInChildren<TextMeshProUGUI>().text = currentQuestion.first;
         secondAnswer.GetComponentInChildren<TextMeshProUGUI>().text = currentQuestion.second;
@@ -245,7 +179,7 @@ public class BallTatamiController : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         gameOverCanvas.enabled = false;
-        SaveCurrentMission();
+        tatamiController.UpdateMissionPlayer();
         SceneManager.LoadScene("Minigame Selection Screen");
     }
 
@@ -282,98 +216,8 @@ public class BallTatamiController : MonoBehaviour
 
     public void ExitGame()
     {
-        SaveCurrentMission();
+        tatamiController.UpdateMissionPlayer();
         SceneManager.LoadScene("Minigame Selection Screen");
     }
 
-    private void LoadUser()
-    {
-        string path = Application.persistentDataPath + "/saveuser.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            SaveDataUser data = JsonUtility.FromJson<SaveDataUser>(json);
-
-            username = data.username;
-        }
-    }
-
-    private void LoadCharacteristics()
-    {
-        string path = Application.persistentDataPath + "/savecharacteristics.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            SaveDataCharacteristics data = JsonUtility.FromJson<SaveDataCharacteristics>(json);
-
-            characteristics = data.characteristics;
-        }
-    }
-
-    private void LoadCurrentMission()
-    {
-        string path = Application.persistentDataPath + "/savecurrentmission.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            SaveDataCurrentMission data = JsonUtility.FromJson<SaveDataCurrentMission>(json);
-
-            mission = data.mission;
-            inventory = data.inventory;
-        }
-    }
-
-    private void SaveCurrentMission()
-    {
-        SaveDataCurrentMission data = new SaveDataCurrentMission();
-        data.mission = mission;
-        data.inventory = inventory;
-        string json = JsonUtility.ToJson(data);
-
-        File.WriteAllText(Application.persistentDataPath + "/savecurrentmission.json", json);
-        reference.Child("Users").Child(username).Child("Missions").Child(mission).Child("inventory").SetValueAsync(inventory);
-        reference.Child("Missions").Child(mission).Child("playersDict").Child(username).Child("inventory").SetValueAsync(inventory);
-        reference.Child("Users").Child(username).Child("Missions").Child(mission).Child("waveCubeSpawn").Child("tatami").SetValueAsync(spawnManagerScript.GetWaveCubes());
-    }
-
-    [System.Serializable]
-    class SaveDataUser
-    {
-        public string username;
-
-    }
-
-    [System.Serializable]
-    class SaveDataCurrentMission
-    {
-        public string mission;
-        public int inventory;
-
-    }
-
-    [System.Serializable]
-    class SaveDataCharacteristics
-    {
-        public List<string> characteristics;
-    }
-
-    public class Question
-    {
-        public string question, first, second, third, fourth, correct;
-
-        public Question (string question, string first, string second, string third, string fourth, string correct)
-        {
-            this.question = question;
-            this.first = first;
-            this.second = second;
-            this.third = third;
-            this.fourth = fourth;
-            this.correct = correct;
-        }
-
-        public bool CheckCorrectAnswer(string text)
-        {
-            return correct == text;
-        }
-    }
 }

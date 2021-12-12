@@ -33,6 +33,11 @@ public class MissionPlayer
         this.footballGame = new Football(missionPlayerData.footballGame);
     }
 
+    public List<string> GetCharacteristics()
+    {
+        return characteristics;
+    }
+
     public string GetMissionName()
     {
         return missionName;
@@ -52,5 +57,15 @@ public class MissionPlayer
     {
         SaveDataMissionPlayer missionPlayerToDB = new SaveDataMissionPlayer(player, missionName, numberOfFigures, characteristics, inventory, tatamiGame, footballGame);
         return missionPlayerToDB;
+    }
+
+    public void IncreaseInventory()
+    {
+        inventory++;
+    }
+
+    public Tatami GetTatami()
+    {
+        return tatamiGame;
     }
 }

@@ -17,4 +17,9 @@ public class Minigame
         this.currentWave = minigameData.currentWave;
         this.isFigureCollectedInWave = minigameData.FiguresCollectedToDictionary();
     }
+
+    public Dictionary<int,bool> GetFiguresInWaves()
+    {
+        return isFigureCollectedInWave;
+    }
 }

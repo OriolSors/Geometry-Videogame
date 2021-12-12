@@ -2,15 +2,26 @@ using System;
 using System.Collections.Generic;
 using Firebase.Database;
 
-public class MissionListController
+public sealed class MissionListController
 {
-    private DatabaseReference reference;
-    private Firebase.Auth.FirebaseAuth auth;
+    private MissionPlayer currentMissionPlayer = null;
 
-    public MissionListController()
+    private MissionListController()
     {
-        reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
-        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+        
+    }
+
+    private static MissionListController instance = null;
+    public static MissionListController Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new MissionListController();
+            }
+            return instance;
+        }
     }
 
     public Dictionary<string, int[]> GetAllMissionPlayer(User currentUser)
@@ -31,9 +42,19 @@ public class MissionListController
         return currentDesigner.GetAllUserStatisticsInMission(mission);
     }
 
-    public void SaveCurrentMissionPlayer(string mission, int inventory)
+    public void SaveCurrentMissionPlayer(string mission)
     {
-        
+        currentMissionPlayer = (AuthController.Instance.GetCurrentUser() as Player).GetMissionByName(mission);
+    }
+
+    public MissionPlayer GetCurrentMissionPlayer()
+    {
+        return currentMissionPlayer;
+    }
+
+    public void UpdateMissionPlayer()
+    {
+        (AuthController.Instance.GetCurrentUser() as Player).UpdateMission(currentMissionPlayer);
     }
 
     

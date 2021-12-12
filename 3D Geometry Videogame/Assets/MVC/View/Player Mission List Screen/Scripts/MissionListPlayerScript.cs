@@ -18,11 +18,8 @@ public class MissionListPlayerScript : MonoBehaviour
     public TextMeshProUGUI inventoryCubeNumbers;
     public TextMeshProUGUI inventoryMissionStatus;
 
-    private MissionListController missionListController;
-
     void Start()
     {
-        missionListController = new MissionListController();
         FillMissionScroll();
         inventoryCanvas.enabled = false;
     }
@@ -35,7 +32,7 @@ public class MissionListPlayerScript : MonoBehaviour
 
     private void FillMissionScroll()
     {
-        Dictionary<string, int[]> missions = missionListController.GetAllMissionPlayer(AuthController.Instance.GetCurrentUser());
+        Dictionary<string, int[]> missions = MissionListController.Instance.GetAllMissionPlayer(AuthController.Instance.GetCurrentUser());
 
         if(missions.Count != 0)
         {
@@ -51,7 +48,7 @@ public class MissionListPlayerScript : MonoBehaviour
                     Button finishMission = go.transform.Find("Ready Button").GetComponent<Button>();
 
                     minigameMission.GetComponentInChildren<Text>().text = mission;
-                    minigameMission.onClick.AddListener(delegate { LoadMinigames(mission, missions[mission][0]); });
+                    minigameMission.onClick.AddListener(delegate { LoadMinigames(mission); });
                     finishMission.onClick.AddListener(delegate { GoToConstruct(); });
 
                     go.transform.SetParent(missionsScroll);
@@ -77,7 +74,7 @@ public class MissionListPlayerScript : MonoBehaviour
 
                     minigameMission.GetComponentInChildren<Text>().text = mission;
                     go.transform.Find("Progression Text").GetComponent<Text>().text = (100 * missions[mission][0] / missions[mission][1]).ToString() + "%";
-                    minigameMission.onClick.AddListener(delegate { LoadMinigames(mission, missions[mission][0]); });
+                    minigameMission.onClick.AddListener(delegate { LoadMinigames(mission); });
 
                     go.transform.SetParent(missionsScroll);
 
@@ -131,9 +128,9 @@ public class MissionListPlayerScript : MonoBehaviour
         SceneManager.LoadScene("3D Constructor");
     }
 
-    private void LoadMinigames(string mission, int inventory)
+    private void LoadMinigames(string mission)
     {
-        missionListController.SaveCurrentMissionPlayer(mission, inventory);
+        MissionListController.Instance.SaveCurrentMissionPlayer(mission);
         SceneManager.LoadScene("Minigame Selection Screen");
     }
 

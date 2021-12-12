@@ -10,16 +10,12 @@ public sealed class AuthController
     private DatabaseReference reference;
     private Firebase.Auth.FirebaseAuth auth;
 
-    private MissionListController missionListController;
-
     private User currentUser = null;
 
     private AuthController()
     {
         reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
         auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
-
-        missionListController = new MissionListController();
     }
 
     private static AuthController instance = null;

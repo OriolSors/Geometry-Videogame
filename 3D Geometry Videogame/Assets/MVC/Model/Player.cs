@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Firebase.Database;
@@ -40,6 +41,32 @@ public class Player : User
     {
         SaveDataPlayer savePlayerDataToLocal = new SaveDataPlayer(username, email, listOfMissions);
         File.WriteAllText(Application.persistentDataPath + "/currentuser.json", JsonUtility.ToJson(savePlayerDataToLocal));
+    }
+
+    public MissionPlayer GetMissionByName(string mission)
+    {
+        MissionPlayer currentMission = null;
+        foreach(MissionPlayer missionPlayer in listOfMissions)
+        {
+            if (missionPlayer.GetMissionName() == mission)
+            {
+                currentMission = missionPlayer;
+                break;
+            }
+        }
+        return currentMission;
+    }
+
+    public void UpdateMission(MissionPlayer currentMissionPlayer)
+    {
+        int index = listOfMissions.FindIndex(a => a.GetMissionName() == currentMissionPlayer.GetMissionName());
+        if (index != -1) listOfMissions[index] = currentMissionPlayer;
+
+        Firebase.Auth.FirebaseUser user = auth.CurrentUser;
+        if (user != null)
+        {
+            UpdateUserToDB(user.UserId);
+        }
     }
 
     public override void WriteNewUserToDB()
