@@ -85,6 +85,8 @@ public class PlayerController : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, -2);
         }
+
+        scoreStreakText.text = scoreStreak.ToString();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -115,7 +117,6 @@ public class PlayerController : MonoBehaviour
                 
             }
             
-            scoreStreakText.text = scoreStreak.ToString();
         }
 
         Destroy(other.gameObject);
