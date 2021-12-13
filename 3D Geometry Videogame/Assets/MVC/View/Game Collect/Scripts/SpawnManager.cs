@@ -10,11 +10,15 @@ public class SpawnManager : MonoBehaviour
     public GameObject[] prefabs;
     public Material goldMaterial;
     public float dynamicEdge { get; private set; }
-    private int counterCube = 0;
+    private bool isStreakAchieved = false;
+
+    private PlayerController playerController;
 
     // Start is called before the first frame update
     void Start()
     {
+        Physics.gravity = new Vector3(0, -1, 0);
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         InvokeRepeating("SpawnPrefabFigure", 1f, 1.5f);
     }
 
@@ -34,15 +38,15 @@ public class SpawnManager : MonoBehaviour
 
     private void SpawnPrefabFigure()
     {
-        //GameObject prefabInst = prefabs[1];
         GameObject prefabInst = prefabs[Random.Range(0, prefabs.Length)];
         if (prefabInst.CompareTag("Cube")) {
-            counterCube++;
-            if (counterCube == 4)
+            
+            if (isStreakAchieved)
             {
-                counterCube = 0;
+                isStreakAchieved = false;
                 GameObject goldInst = Instantiate(prefabInst, GenerateSpawnPosition(), prefabInst.transform.rotation);
                 goldInst.GetComponent<Renderer>().material = goldMaterial;
+                playerController.ResetStreak();
 
             }
             else
@@ -56,9 +60,11 @@ public class SpawnManager : MonoBehaviour
             Instantiate(prefabInst, GenerateSpawnPosition(), prefabInst.transform.rotation);
         }
             
-        
-        
     }
 
+    public void StreakAchieved()
+    {
+        isStreakAchieved = true;
+    }
 
 }

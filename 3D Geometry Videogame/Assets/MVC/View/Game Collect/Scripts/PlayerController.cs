@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Firebase.Database;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,19 +12,47 @@ public class PlayerController : MonoBehaviour
     public float speed = 10f;
     private float xRange = 5;
 
-    private string username, mission;
-    private int inventory;
+    public int scoreStreak = 0;
 
-    private DatabaseReference reference;
+    public TextMeshProUGUI goodChallenge, neutralChallenge, badChallenge;
+
+    private CollectController collectController;
+    private Dictionary<string, string> challenges;
+    private Dictionary<string, int> figureScore;
+
+    private SpawnManager spawnManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        reference = FirebaseDatabase.GetInstance("https://geometry-videog-default-rtdb.firebaseio.com/").RootReference;
-        LoadUser();
-        LoadCurrentMission();
+        spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
+
+        collectController = new CollectController();
+
+        challenges = collectController.ObtainChallenges(GetNamesOf(spawnManager.prefabs));
+        SetChallengesToDisplay();
+
+        figureScore = collectController.ObtainFigureScore();
+
     }
 
+    private void SetChallengesToDisplay()
+    {
+        goodChallenge.text = challenges["good"];
+        neutralChallenge.text = challenges["neutral"];
+        badChallenge.text = challenges["bad"];
+    }
+
+    private List<string> GetNamesOf(GameObject[] prefabs)
+    {
+        List<string> prefabNames = new List<string>();
+        foreach(GameObject prefab in prefabs)
+        {
+            prefabNames.Add(prefab.name);
+        }
+
+        return prefabNames;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -50,72 +80,31 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //TODO: Diferenciar figures bones, dolentes o neutres segons l'enunciat. Implementar bonus.
-        
+
         if (other.CompareTag("Cube") && other.gameObject.GetComponent<Renderer>().material.name == "Gold (Instance)")
         {
-            inventory++;
+            collectController.IncreaseInventory();
+        }else
+        {
+            scoreStreak += figureScore[other.gameObject.tag];
+            if (scoreStreak == 5) spawnManager.StreakAchieved();
+            else if (scoreStreak < 0) ExitGame();
         }
+
         Destroy(other.gameObject);
 
     }
 
+    public void ResetStreak()
+    {
+        scoreStreak = 0;
+    }
+
     public void ExitGame()
     {
-        SaveCurrentMission();
+        //SaveCurrentMission();
         SceneManager.LoadScene("Minigame Selection Screen");
     }
-
-    private void LoadUser()
-    {
-        string path = Application.persistentDataPath + "/saveuser.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            SaveDataUser data = JsonUtility.FromJson<SaveDataUser>(json);
-
-            username = data.username;
-        }
-    }
-
-    private void LoadCurrentMission()
-    {
-        string path = Application.persistentDataPath + "/savecurrentmission.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            SaveDataCurrentMission data = JsonUtility.FromJson<SaveDataCurrentMission>(json);
-
-            mission = data.mission;
-            inventory = data.inventory;
-        }
-    }
-
-    private void SaveCurrentMission()
-    {
-        SaveDataCurrentMission data = new SaveDataCurrentMission();
-        data.mission = mission;
-        data.inventory = inventory;
-        string json = JsonUtility.ToJson(data);
-
-        File.WriteAllText(Application.persistentDataPath + "/savecurrentmission.json", json);
-        reference.Child("Users").Child(username).Child("Missions").Child(mission).Child("inventory").SetValueAsync(inventory);
-        reference.Child("Missions").Child(mission).Child("playersDict").Child(username).Child("inventory").SetValueAsync(inventory);
-    }
-
-    [System.Serializable]
-    class SaveDataUser
-    {
-        public string username;
-
-    }
-
-    [System.Serializable]
-    class SaveDataCurrentMission
-    {
-        public string mission;
-        public int inventory;
-
-    }
+    
 
 }

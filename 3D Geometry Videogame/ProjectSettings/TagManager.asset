@@ -4,7 +4,15 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Capsule
   - Cube
+  - Cylinder
+  - Dodecahedron
+  - Fake
+  - Icosahedron
+  - Octahedron
+  - Prism
+  - Tetrahedron
   layers:
   - Default
   - TransparentFX
