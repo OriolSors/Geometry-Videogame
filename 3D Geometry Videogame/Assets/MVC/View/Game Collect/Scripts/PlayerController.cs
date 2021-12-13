@@ -15,6 +15,11 @@ public class PlayerController : MonoBehaviour
     public int scoreStreak = 0;
 
     public TextMeshProUGUI goodChallenge, neutralChallenge, badChallenge;
+    public TextMeshProUGUI scoreStreakText;
+
+    public Canvas figureObtainedCanvas;
+    public Canvas scoreStreakCanvas;
+    public Canvas gameOverCanvas;
 
     private CollectController collectController;
     private Dictionary<string, string> challenges;
@@ -26,6 +31,10 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
+
+        gameOverCanvas.enabled = false;
+        figureObtainedCanvas.enabled = false;
+        scoreStreakCanvas.enabled = false;
 
         collectController = new CollectController();
 
@@ -84,11 +93,29 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Cube") && other.gameObject.GetComponent<Renderer>().material.name == "Gold (Instance)")
         {
             collectController.IncreaseInventory();
-        }else
+            figureObtainedCanvas.enabled = true;
+            StartCoroutine(IndicatorFigureObtainedCoroutine());
+            ResetStreak();
+        }
+        else
         {
             scoreStreak += figureScore[other.gameObject.tag];
-            if (scoreStreak == 5) spawnManager.StreakAchieved();
-            else if (scoreStreak < 0) ExitGame();
+            if (scoreStreak < 0) scoreStreak = 0;
+            if (scoreStreak == 5)
+            {
+                spawnManager.StreakAchieved();
+                scoreStreakCanvas.enabled = true;
+                StartCoroutine(IndicatorScoreStreakCoroutine());
+
+            }
+            if (figureScore[other.gameObject.tag] < -500)
+            {
+                gameOverCanvas.enabled = true;
+                StartCoroutine(IndicatorGameOverCoroutine());
+                
+            }
+            
+            scoreStreakText.text = scoreStreak.ToString();
         }
 
         Destroy(other.gameObject);
@@ -100,9 +127,28 @@ public class PlayerController : MonoBehaviour
         scoreStreak = 0;
     }
 
+    IEnumerator IndicatorGameOverCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+        gameOverCanvas.enabled = false;
+        ExitGame();
+    }
+
+    IEnumerator IndicatorFigureObtainedCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+        figureObtainedCanvas.enabled = false;
+    }
+
+    IEnumerator IndicatorScoreStreakCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+        scoreStreakCanvas.enabled = false;
+    }
+
     public void ExitGame()
     {
-        //SaveCurrentMission();
+        collectController.SaveCurrentMission();
         SceneManager.LoadScene("Minigame Selection Screen");
     }
     

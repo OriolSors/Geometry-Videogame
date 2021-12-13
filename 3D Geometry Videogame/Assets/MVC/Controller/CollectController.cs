@@ -39,6 +39,11 @@ public class CollectController
         MissionListController.Instance.GetCurrentMissionPlayer().IncreaseInventory();
     }
 
+    public void SaveCurrentMission()
+    {
+        MissionListController.Instance.UpdateMissionPlayer();
+    }
+
     class ChallengesList
     {
         private List<string> characteristics, prefabNames;
@@ -230,4 +235,6 @@ public class CollectController
             return thereIsSubset;
         }
     }
+
+    
 }

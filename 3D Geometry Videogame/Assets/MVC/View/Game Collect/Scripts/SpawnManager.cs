@@ -12,6 +12,9 @@ public class SpawnManager : MonoBehaviour
     public float dynamicEdge { get; private set; }
     private bool isStreakAchieved = false;
 
+    public Canvas tutorialCanvas;
+    private bool ready = false;
+
     private PlayerController playerController;
 
     // Start is called before the first frame update
@@ -28,6 +31,12 @@ public class SpawnManager : MonoBehaviour
         
     }
 
+    public void PlayerReady()
+    {
+        ready = true;
+        tutorialCanvas.enabled = false;
+    }
+
     private Vector3 GenerateSpawnPosition()
     {
         float spawnPosX = Random.Range(-5, 5);
@@ -38,26 +47,30 @@ public class SpawnManager : MonoBehaviour
 
     private void SpawnPrefabFigure()
     {
-        GameObject prefabInst = prefabs[Random.Range(0, prefabs.Length)];
-        if (prefabInst.CompareTag("Cube")) {
-            
+        if (ready)
+        {
             if (isStreakAchieved)
             {
                 isStreakAchieved = false;
-                GameObject goldInst = Instantiate(prefabInst, GenerateSpawnPosition(), prefabInst.transform.rotation);
-                goldInst.GetComponent<Renderer>().material = goldMaterial;
-                playerController.ResetStreak();
 
+                GameObject goldInst;
+
+                foreach (GameObject prefab in prefabs)
+                {
+                    if (prefab.CompareTag("Cube"))
+                    {
+                        goldInst = Instantiate(prefab, GenerateSpawnPosition(), prefab.transform.rotation);
+                        goldInst.GetComponent<Renderer>().material = goldMaterial;
+                        break;
+                    }
+                }
             }
+
             else
             {
+                GameObject prefabInst = prefabs[Random.Range(0, prefabs.Length)];
                 Instantiate(prefabInst, GenerateSpawnPosition(), prefabInst.transform.rotation);
             }
-            
-        }
-        else
-        {
-            Instantiate(prefabInst, GenerateSpawnPosition(), prefabInst.transform.rotation);
         }
             
     }

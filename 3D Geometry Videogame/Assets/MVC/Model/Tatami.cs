@@ -20,7 +20,7 @@ public class Tatami : Minigame
 
     private void SetWaveNumberToSpawn(int numberOfFigures)
     {
-        int quotient_down = Convert.ToInt32(Math.Floor((float)numberOfFigures / 2f)); //TODO: tenir en compte el joc Collect Game, aixi que s'haura de modificar aixo
+        int quotient_down = Convert.ToInt32(Math.Floor((float)numberOfFigures / 3f)); //TODO: tenir en compte el joc Collect Game, aixi que s'haura de modificar aixo
         int waveSpawnNumber = quotient_down;
 
         var rand = new System.Random();
