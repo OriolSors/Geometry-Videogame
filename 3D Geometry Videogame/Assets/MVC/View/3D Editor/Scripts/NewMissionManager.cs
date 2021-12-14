@@ -18,6 +18,15 @@ public class NewMissionManager : MonoBehaviour
     public Button createMission;
     private bool isDefaultMission = false;
 
+    public TextMeshProUGUI chosenPlayer;
+
+    public RectTransform playersPanel;
+    public RectTransform settingsPanel;
+    public RectTransform createPanel;
+
+    public RectTransform playersScroll;
+    public GameObject playerView;
+
     public Canvas confirmPlayerCanvas;
     public Canvas noPlayerCanvas;
 
@@ -35,6 +44,37 @@ public class NewMissionManager : MonoBehaviour
         createMission.interactable = false;
 
         LoadPlayers(SetPlayersToDropdown);
+    }
+
+    private void Update()
+    {
+        chosenPlayer.text = selectPlayer.options[selectPlayer.value].text;
+    }
+
+    public void PlayersAsLastSibling()
+    {
+        playersPanel.SetAsLastSibling();
+    }
+
+    public void SettingsAsLastSibling()
+    {
+        settingsPanel.SetAsLastSibling();
+    }
+
+    public void CreateAsLastSibling()
+    {
+        FillPlayersListChecking();
+        createPanel.SetAsLastSibling();
+    }
+
+    public void FillPlayersListChecking()
+    {
+        foreach (string player in playersDict.Keys)
+        {
+            GameObject go = Instantiate(playerView);
+            go.transform.Find("Username Text").GetComponent<TextMeshProUGUI>().text = player;
+            go.transform.SetParent(playersScroll);
+        }
     }
 
 
