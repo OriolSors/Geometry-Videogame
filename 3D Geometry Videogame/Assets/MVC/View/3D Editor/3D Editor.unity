@@ -9100,7 +9100,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 423077265}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.8333333
+  m_Size: 0.41666666
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -12869,9 +12869,9 @@ MonoBehaviour:
   addNewPlayer: {fileID: 640396081}
   createMission: {fileID: 1819255660}
   chosenPlayer: {fileID: 2017535659}
-  playersPanel: {fileID: 1783168187}
-  settingsPanel: {fileID: 659206367}
-  createPanel: {fileID: 1465746779}
+  playersPanel: {fileID: 1783168186}
+  settingsPanel: {fileID: 659206368}
+  createPanel: {fileID: 1465746780}
   playersScroll: {fileID: 1517131100}
   playerView: {fileID: 1073319907449952339, guid: 25509a7bd4beb4089ae7e24d51fdf209, type: 3}
   confirmPlayerCanvas: {fileID: 1616006456}

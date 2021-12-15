@@ -63,12 +63,18 @@ public class NewMissionManager : MonoBehaviour
 
     public void CreateAsLastSibling()
     {
+        
         FillPlayersListChecking();
         createPanel.SetAsLastSibling();
     }
 
     public void FillPlayersListChecking()
     {
+        foreach (Transform child in playersScroll.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
         foreach (string player in playersDict.Keys)
         {
             GameObject go = Instantiate(playerView);
