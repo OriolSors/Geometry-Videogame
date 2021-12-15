@@ -27,4 +27,9 @@ public class MissionController
         userController.GetAllPlayerNames(callbackListOfPlayerNames);
     }
 
+    public bool CheckValidCharacteristics(List<string> characteristics)
+    {
+        ChallengesListController challengesListController = new ChallengesListController(characteristics);
+        return challengesListController.CheckValidCharacteristics();
+    }
 }

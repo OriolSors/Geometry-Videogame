@@ -104,6 +104,16 @@ public class NewMissionManager : MonoBehaviour
             confirmPlayerCanvas.enabled = true;
             confirmPlayerCanvas.GetComponentInChildren<TextMeshProUGUI>().text = player + " has already been assigned!";
         }
+        else if (characteristics.Count < 3)
+        {
+            confirmPlayerCanvas.enabled = true;
+            confirmPlayerCanvas.GetComponentInChildren<TextMeshProUGUI>().text = "Pick 3 characteristics minimum.";
+        }
+        else if (!missionController.CheckValidCharacteristics(characteristics))
+        {
+            confirmPlayerCanvas.enabled = true;
+            confirmPlayerCanvas.GetComponentInChildren<TextMeshProUGUI>().text = "Incompatible characteristics. Try another selection or add more.";
+        }
         else if (player == "All players")
         {
             confirmPlayerCanvas.enabled = true;
