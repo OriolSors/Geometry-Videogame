@@ -139,14 +139,14 @@ public class ChallengesListController
     {
         var rand = new System.Random();
         bool found = false;
+        int attemptCount = 1000;
 
         Dictionary<string, List<string>> chosenChallenges = new Dictionary<string, List<string>>();
 
-        while (!found && characteristics.Count != 0)
+        while (!found && attemptCount != 0)
         {
             chosenChallenges = new Dictionary<string, List<string>>();
             IEnumerable<string> chosenCharacteristics = characteristics.OrderBy(x => rand.Next()).Take(3);
-            characteristics.RemoveAll(i => chosenCharacteristics.Contains(i));
             List<List<string>> figuresToCompare = new List<List<string>>();
 
             foreach (string characteristic in chosenCharacteristics)
@@ -156,6 +156,7 @@ public class ChallengesListController
                 figuresToCompare.Add(challenge.Value);
             }
             if (!ThereIsSubset(figuresToCompare)) found = true;
+            attemptCount--;
         }
 
         currentChallenges["good"] = chosenChallenges.ElementAt(0).Key;
@@ -178,14 +179,14 @@ public class ChallengesListController
     {
         var rand = new System.Random();
         bool found = false;
+        int attemptCount = 1000;
 
         Dictionary<string, List<string>> chosenChallenges = new Dictionary<string, List<string>>();
 
-        while (!found && characteristics.Count != 0)
+        while (!found && attemptCount != 0)
         {
             chosenChallenges = new Dictionary<string, List<string>>();
             IEnumerable<string> chosenCharacteristics = characteristics.OrderBy(x => rand.Next()).Take(3);
-            characteristics.RemoveAll(i => chosenCharacteristics.Contains(i));
             List<List<string>> figuresToCompare = new List<List<string>>();
 
             foreach (string characteristic in chosenCharacteristics)
@@ -195,6 +196,7 @@ public class ChallengesListController
                 figuresToCompare.Add(challenge.Value);
             }
             if (!ThereIsSubset(figuresToCompare)) found = true;
+            attemptCount--;
         }
 
         return found;

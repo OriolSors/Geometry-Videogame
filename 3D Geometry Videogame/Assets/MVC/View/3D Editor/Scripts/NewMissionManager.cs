@@ -28,6 +28,7 @@ public class NewMissionManager : MonoBehaviour
     public GameObject playerView;
 
     public Canvas confirmPlayerCanvas;
+    private bool isAcceptedPlayer = false;
     public Canvas noPlayerCanvas;
 
     private MissionController missionController;
@@ -63,9 +64,12 @@ public class NewMissionManager : MonoBehaviour
 
     public void CreateAsLastSibling()
     {
-        
-        FillPlayersListChecking();
-        createPanel.SetAsLastSibling();
+        if (isAcceptedPlayer)
+        {
+            FillPlayersListChecking();
+            createPanel.SetAsLastSibling();
+            isAcceptedPlayer = false;
+        }
     }
 
     public void FillPlayersListChecking()
@@ -120,8 +124,9 @@ public class NewMissionManager : MonoBehaviour
             confirmPlayerCanvas.GetComponentInChildren<TextMeshProUGUI>().text = "Mission assigned to all players!";
             foreach (string player_aux in players)
             {
-                playersDict.Add(player_aux, characteristics);
+                if(!playersDict.ContainsKey(player_aux)) playersDict.Add(player_aux, characteristics);
             }
+            isAcceptedPlayer = true;
         }
 
         else if (player == "Default mission")
@@ -130,8 +135,9 @@ public class NewMissionManager : MonoBehaviour
             confirmPlayerCanvas.GetComponentInChildren<TextMeshProUGUI>().text = "Mission assigned by default!";
             foreach (string player_aux in players)
             {
-                playersDict.Add(player_aux, characteristics);
+                if (!playersDict.ContainsKey(player_aux)) playersDict.Add(player_aux, characteristics);
             }
+            isAcceptedPlayer = true;
             isDefaultMission = true;
         }
 
@@ -140,6 +146,7 @@ public class NewMissionManager : MonoBehaviour
             confirmPlayerCanvas.enabled = true;
             confirmPlayerCanvas.GetComponentInChildren<TextMeshProUGUI>().text = "Mission assigned to " + player + "!";
             playersDict.Add(player, characteristics);
+            isAcceptedPlayer = true;
         }
         
         

@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     public float speed = 10f;
     private float xRange = 5;
 
-    public int scoreStreak = 0;
+    private int scoreStreak = 0;
 
     public TextMeshProUGUI goodChallenge, neutralChallenge, badChallenge;
     public TextMeshProUGUI scoreStreakText;
@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public Canvas figureObtainedCanvas;
     public Canvas scoreStreakCanvas;
     public Canvas gameOverCanvas;
+    public Canvas cubeLostCanvas;
 
     private CollectController collectController;
     private Dictionary<string, string> challenges;
@@ -35,6 +36,7 @@ public class PlayerController : MonoBehaviour
         gameOverCanvas.enabled = false;
         figureObtainedCanvas.enabled = false;
         scoreStreakCanvas.enabled = false;
+        cubeLostCanvas.enabled = false;
 
         collectController = new CollectController();
 
@@ -101,21 +103,25 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            scoreStreak += figureScore[other.gameObject.tag];
-            if (scoreStreak < 0) scoreStreak = 0;
-            if (scoreStreak == 5)
+            if(scoreStreak != 5)
             {
-                spawnManager.StreakAchieved();
-                scoreStreakCanvas.enabled = true;
-                StartCoroutine(IndicatorScoreStreakCoroutine());
+                scoreStreak += figureScore[other.gameObject.tag];
+                if (scoreStreak < 0) scoreStreak = 0;
+                if (scoreStreak == 5)
+                {
+                    spawnManager.StreakAchieved();
+                    scoreStreakCanvas.enabled = true;
+                    StartCoroutine(IndicatorScoreStreakCoroutine());
 
+                }
+                if (figureScore[other.gameObject.tag] < -500)
+                {
+                    gameOverCanvas.enabled = true;
+                    StartCoroutine(IndicatorGameOverCoroutine());
+
+                }
             }
-            if (figureScore[other.gameObject.tag] < -500)
-            {
-                gameOverCanvas.enabled = true;
-                StartCoroutine(IndicatorGameOverCoroutine());
-                
-            }
+            
             
         }
 
@@ -126,6 +132,20 @@ public class PlayerController : MonoBehaviour
     public void ResetStreak()
     {
         scoreStreak = 0;
+    }
+
+    public void IndicateCubeLost()
+    {
+        cubeLostCanvas.enabled = true;
+        ResetStreak();
+        StartCoroutine(IndicatorCubeLostCoroutine());
+    }
+
+
+    IEnumerator IndicatorCubeLostCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+        cubeLostCanvas.enabled = false;
     }
 
     IEnumerator IndicatorGameOverCoroutine()

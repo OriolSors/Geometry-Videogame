@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class Collectable : MonoBehaviour
 {
-    // Start is called before the first frame update
+    
+    private PlayerController playerController;
+
     void Start()
     {
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         
     }
 
@@ -16,6 +19,12 @@ public class Collectable : MonoBehaviour
         if (transform.position.y < -15)
         {
             Destroy(gameObject);
+            if (gameObject.CompareTag("Cube") && gameObject.GetComponent<Renderer>().material.name == "Gold (Instance)")
+            {
+                playerController.IndicateCubeLost();
+
+            }
         }
     }
+
 }
