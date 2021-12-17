@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 3917369234169631966}
   - component: {fileID: 9092073028510916556}
   - component: {fileID: 4330299688918133926}
-  - component: {fileID: 6524917579557011093}
   - component: {fileID: 2904910152120917972}
   m_Layer: 0
   m_Name: Cylinder
@@ -115,19 +114,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &6524917579557011093
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1264267685699304881}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.0000005, y: 2.0000005, z: 1.0000006}
-  m_Center: {x: -0.0000004172325, y: -0.0000001192093, z: -0.00000008940698}
 --- !u!114 &2904910152120917972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,4 +126,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7feac3bb6fe9d6c4ba959cd569da0eaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cubeLostCanvas: {fileID: 0}

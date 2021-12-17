@@ -31,10 +31,16 @@ public class SpawnManager : MonoBehaviour
         
     }
 
+    public bool IsPlayerReady()
+    {
+        return ready;
+    }
+
     public void PlayerReady()
     {
         ready = true;
         tutorialCanvas.enabled = false;
+        playerController.HideChallengeCanvas();
     }
 
     private Vector3 GenerateSpawnPosition()

@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
 
     private int scoreStreak = 0;
 
+    public Canvas goodChallengeCanvas, neutralChallengeCanvas, badChallengeCanvas;
+    public TextMeshProUGUI tabIndicator;
     public TextMeshProUGUI goodChallenge, neutralChallenge, badChallenge;
     public TextMeshProUGUI scoreStreakText;
 
@@ -37,6 +39,8 @@ public class PlayerController : MonoBehaviour
         figureObtainedCanvas.enabled = false;
         scoreStreakCanvas.enabled = false;
         cubeLostCanvas.enabled = false;
+
+        ShowChallengeCanvas();
 
         collectController = new CollectController();
 
@@ -89,6 +93,31 @@ public class PlayerController : MonoBehaviour
         }
 
         scoreStreakText.text = scoreStreak.ToString();
+
+        if (Input.GetKey(KeyCode.Tab) || !spawnManager.IsPlayerReady())
+        {
+            ShowChallengeCanvas();
+        }
+        else
+        {
+            HideChallengeCanvas();
+        }
+    }
+
+    public void ShowChallengeCanvas()
+    {
+        goodChallengeCanvas.enabled = true;
+        neutralChallengeCanvas.enabled = true;
+        badChallengeCanvas.enabled = true;
+        tabIndicator.enabled = false;
+    }
+
+    public void HideChallengeCanvas()
+    {
+        goodChallengeCanvas.enabled = false;
+        neutralChallengeCanvas.enabled = false;
+        badChallengeCanvas.enabled = false;
+        tabIndicator.enabled = true;
     }
 
     private void OnTriggerEnter(Collider other)
