@@ -19,6 +19,13 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI goodChallenge, neutralChallenge, badChallenge;
     public TextMeshProUGUI scoreStreakText;
 
+    public RectTransform figuresFeed;
+    public GameObject goldenFigureView;
+    public GameObject goodFigureView;
+    public GameObject neutralFigureView;
+    public GameObject noNeutralFigureView;
+    public GameObject badFigureView;
+
     public Canvas figureObtainedCanvas;
     public Canvas scoreStreakCanvas;
     public Canvas gameOverCanvas;
@@ -125,6 +132,7 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("Cube") && other.gameObject.GetComponent<Renderer>().material.name == "Gold (Instance)")
         {
+            UpdateGoldenFeed();
             collectController.IncreaseInventory();
             figureObtainedCanvas.enabled = true;
             StartCoroutine(IndicatorFigureObtainedCoroutine());
@@ -149,13 +157,44 @@ public class PlayerController : MonoBehaviour
                     StartCoroutine(IndicatorGameOverCoroutine());
 
                 }
+
+                UpdateFeed(other.gameObject.tag, figureScore[other.gameObject.tag]);
             }
             
             
         }
 
         Destroy(other.gameObject);
+        
 
+    }
+    private void UpdateGoldenFeed()
+    {
+        GameObject go = Instantiate(goldenFigureView);
+        go.transform.Find("Figure Score Text").GetComponent<TextMeshProUGUI>().text = "Golden Figure";
+        go.transform.SetParent(figuresFeed);
+    }
+
+    private void UpdateFeed(string tag, int score)
+    {
+        GameObject go = null;
+        switch (score)
+        {
+            case 1:
+                go = Instantiate(goodFigureView);
+                break;
+            case 0:
+                go = Instantiate(neutralFigureView);
+                break;
+            case -1:
+                go = Instantiate(noNeutralFigureView);
+                break;
+            case -999:
+                go = Instantiate(badFigureView);
+                break;
+        }
+        go.transform.Find("Figure Score Text").GetComponent<TextMeshProUGUI>().text = tag + ": " + score;
+        go.transform.SetParent(figuresFeed);
     }
 
     public void ResetStreak()
