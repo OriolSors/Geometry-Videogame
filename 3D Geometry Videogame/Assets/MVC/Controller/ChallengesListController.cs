@@ -169,8 +169,6 @@ public class ChallengesListController
             else if (chosenChallenges.ElementAt(1).Value.Contains(figure)) scores[figure] = 0;
             else if (chosenChallenges.ElementAt(0).Value.Contains(figure)) scores[figure] = 1;
             else scores[figure] = -1;
-
-            Debug.Log(figure + ": " + scores[figure]);
         }
 
     }

@@ -6,6 +6,7 @@ using Firebase.Database;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI goodChallenge, neutralChallenge, badChallenge;
     public TextMeshProUGUI scoreStreakText;
 
+    public ScrollRect scrollRect; 
     public RectTransform figuresFeed;
     public GameObject goldenFigureView;
     public GameObject goodFigureView;
@@ -41,6 +43,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
+
+        scrollRect = GameObject.Find("Feed Scroll View").GetComponent<ScrollRect>();
 
         gameOverCanvas.enabled = false;
         figureObtainedCanvas.enabled = false;
@@ -109,6 +113,9 @@ public class PlayerController : MonoBehaviour
         {
             HideChallengeCanvas();
         }
+
+        scrollRect.verticalNormalizedPosition = 0;
+
     }
 
     public void ShowChallengeCanvas()
@@ -173,6 +180,7 @@ public class PlayerController : MonoBehaviour
         GameObject go = Instantiate(goldenFigureView);
         go.transform.Find("Figure Score Text").GetComponent<TextMeshProUGUI>().text = "Golden Figure";
         go.transform.SetParent(figuresFeed);
+
     }
 
     private void UpdateFeed(string tag, int score)
@@ -195,6 +203,7 @@ public class PlayerController : MonoBehaviour
         }
         go.transform.Find("Figure Score Text").GetComponent<TextMeshProUGUI>().text = tag + ": " + score;
         go.transform.SetParent(figuresFeed);
+
     }
 
     public void ResetStreak()
