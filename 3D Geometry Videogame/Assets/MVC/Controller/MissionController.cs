@@ -16,9 +16,10 @@ public class MissionController
         userController = new UserController();
     }
 
-    public void CreateNewMission(string missionName, User designerOfMission, int numberOfFigures, bool isDefaultMission, Dictionary<string, List<string>> playersDict)
+    public void CreateNewMission(string missionName, User designerOfMission, List<Vector3> cubePositions, bool isDefaultMission, Dictionary<string, List<string>> playersDict)
     {
-        Mission mission = new Mission(missionName, designerOfMission.GetEmail(), numberOfFigures, isDefaultMission);
+        int numberOfFigures = cubePositions.Count;
+        Mission mission = new Mission(missionName, designerOfMission.GetEmail(), numberOfFigures, cubePositions, isDefaultMission);
         mission.CreateMissionDesigner(playersDict);
     }
 

@@ -7,7 +7,7 @@ using System;
 
 public class NewMissionManager : MonoBehaviour
 {
-    private int objectsNumber;
+    private List<Vector3> cubePositions;
     private Dictionary<string, List<string>> playersDict = new Dictionary<string, List<string>>();
 
     private List<string> players;
@@ -88,9 +88,9 @@ public class NewMissionManager : MonoBehaviour
     }
 
 
-    public void SetUp(int objectsNumber)
+    public void SetUp(List<Vector3> cubePositions)
     {
-        this.objectsNumber = objectsNumber;
+        this.cubePositions = cubePositions;
     }
 
     public void AddNewPlayer()
@@ -172,11 +172,33 @@ public class NewMissionManager : MonoBehaviour
         else
         {
             string date = DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss");
-            missionController.CreateNewMission(date, AuthController.Instance.GetCurrentUser(), objectsNumber, isDefaultMission, playersDict);
+
+            List<Vector3> roundedCubePositions = new List<Vector3>();
+
+            foreach(Vector3 cubePosition in cubePositions)
+            {
+                roundedCubePositions.Add(Round(cubePosition, 2));
+            }
+            
+            missionController.CreateNewMission(date, AuthController.Instance.GetCurrentUser(), roundedCubePositions, isDefaultMission, playersDict);
             SceneManager.LoadScene("Designer Mission List Screen");
         }
         
     }
+
+    public static Vector3 Round(Vector3 vector3, int decimalPlaces = 2)
+    {
+        float multiplier = 1;
+        for (int i = 0; i < decimalPlaces; i++)
+        {
+            multiplier *= 10f;
+        }
+        return new Vector3(
+            Mathf.Round(vector3.x * multiplier) / multiplier,
+            Mathf.Round(vector3.y * multiplier) / multiplier,
+            Mathf.Round(vector3.z * multiplier) / multiplier);
+    }
+
 
     public void ExitScreen()
     {

@@ -49,7 +49,7 @@ public class MissionListPlayerScript : MonoBehaviour
 
                     minigameMission.GetComponentInChildren<Text>().text = mission;
                     minigameMission.onClick.AddListener(delegate { LoadMinigames(mission); });
-                    finishMission.onClick.AddListener(delegate { GoToConstruct(); });
+                    finishMission.onClick.AddListener(delegate { GoToConstruct(mission); });
 
                     go.transform.SetParent(missionsScroll);
 
@@ -123,8 +123,9 @@ public class MissionListPlayerScript : MonoBehaviour
         }
     }
 
-    private void GoToConstruct()
+    private void GoToConstruct(string mission)
     {
+        MissionListController.Instance.SaveCurrentMissionPlayer(mission);
         SceneManager.LoadScene("3D Constructor");
     }
 

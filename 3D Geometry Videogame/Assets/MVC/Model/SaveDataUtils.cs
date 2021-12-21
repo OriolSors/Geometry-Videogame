@@ -73,13 +73,17 @@ public class SaveDataMissionDesigner
     public int numberOfFigures;
 
     [SerializeField]
+    public List<Vector3> cubePositions;
+
+    [SerializeField]
     public List<SaveDataMissionPlayer> listOfPlayers = new List<SaveDataMissionPlayer>();
 
-    public SaveDataMissionDesigner(string missionName, string designerOfMission, int numberOfFigures, Dictionary<string, MissionPlayer> listOfPlayers)
+    public SaveDataMissionDesigner(string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions, Dictionary<string, MissionPlayer> listOfPlayers)
     {
         this.missionName = missionName;
         this.designerOfMission = designerOfMission;
         this.numberOfFigures = numberOfFigures;
+        this.cubePositions = cubePositions;
         foreach (string player in listOfPlayers.Keys)
         {
             this.listOfPlayers.Add(listOfPlayers[player].WriteToDB(player));
@@ -104,6 +108,9 @@ public class SaveDataMissionPlayer
     public int numberOfFigures;
 
     [SerializeField]
+    public List<Vector3> cubePositions;
+
+    [SerializeField]
     public List<string> characteristics;
 
     [SerializeField]
@@ -116,12 +123,13 @@ public class SaveDataMissionPlayer
     public SaveDataMinigame footballGame;
     
 
-    public SaveDataMissionPlayer(string playerName, string missionName, string designerOfMission, int numberOfFigures, List<string> characteristics, int inventory, Tatami tatamiGame, Football footballGame)
+    public SaveDataMissionPlayer(string playerName, string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions, List<string> characteristics, int inventory, Tatami tatamiGame, Football footballGame)
     {
         this.playerName = playerName;
         this.missionName = missionName;
         this.designerOfMission = designerOfMission;
         this.numberOfFigures = numberOfFigures;
+        this.cubePositions = cubePositions;
         this.characteristics = characteristics;
         this.inventory = inventory;
         this.tatamiGame = tatamiGame.WriteToDB();

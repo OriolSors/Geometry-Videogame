@@ -8,13 +8,15 @@ public class Mission
     private string missionName;
     private string designerOfMission;
     private int numberOfFigures;
+    private List<Vector3> cubePositions;
     private bool isDefaultMission;
 
-    public Mission(string missionName, string designerOfMission, int numberOfFigures, bool isDefaultMission)
+    public Mission(string missionName, string designerOfMission, int numberOfFigures, List<Vector3>cubePositions, bool isDefaultMission)
     {
         this.missionName = missionName;
         this.designerOfMission = designerOfMission;
         this.numberOfFigures = numberOfFigures;
+        this.cubePositions = cubePositions;
         this.isDefaultMission = isDefaultMission;
     }
 
@@ -24,7 +26,7 @@ public class Mission
         Dictionary<string, MissionPlayer> listOfPlayers = new Dictionary<string, MissionPlayer>();
         foreach(string player in playersDict.Keys)
         {
-            MissionPlayer missionPlayer = new MissionPlayer(missionName, designerOfMission, numberOfFigures, playersDict[player], 0,
+            MissionPlayer missionPlayer = new MissionPlayer(missionName, designerOfMission, numberOfFigures, cubePositions, playersDict[player], 0,
                 new Tatami(0, new Dictionary<int, bool>(), numberOfFigures), new Football(0, new Dictionary<int, bool>(), numberOfFigures));
 
             listOfPlayers[player] = missionPlayer;
@@ -38,7 +40,7 @@ public class Mission
 
     public void CreateMissionDesigner(Dictionary<string, List<string>> playersDict)
     {
-        MissionDesigner missionDesigner = new MissionDesigner(missionName, designerOfMission, numberOfFigures, CreateMissionPlayer(playersDict));
+        MissionDesigner missionDesigner = new MissionDesigner(missionName, designerOfMission, numberOfFigures, cubePositions, CreateMissionPlayer(playersDict));
         UserController userController = new UserController();
         userController.AddNewMissionDesigner(missionDesigner, AuthController.Instance.GetCurrentUser());
     }
