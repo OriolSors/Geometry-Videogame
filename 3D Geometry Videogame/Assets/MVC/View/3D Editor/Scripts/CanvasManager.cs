@@ -68,18 +68,9 @@ public class CanvasManager : MonoBehaviour
     {
         labelsCanvas.enabled = true;
         missionManager.SetUp(cubePositions);
-        /*
-        Mission mission = new Mission(username, cubePositions.Count);
-        string json = JsonUtility.ToJson(mission);
-        reference.Child("Users").Child(username).Child("Missions").Child(DateTime.Now.ToString()).SetRawJsonValueAsync(json); //TODO: Change to Push
-        {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#endif
-            Application.Quit();
-        }
+        gameObject.SetActive(false);
 
-        */
+        //TODO: check valid figure: no manifolds, no alone cube in space
     }
 
 }
