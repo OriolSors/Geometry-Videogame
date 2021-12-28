@@ -300,9 +300,9 @@ GameObject:
   - component: {fileID: 3787731107379543792}
   - component: {fileID: 3787731107379543793}
   - component: {fileID: 3787731107379543798}
-  - component: {fileID: 3787731107379543799}
   - component: {fileID: 3787731107379543796}
-  - component: {fileID: 3787731107379543797}
+  - component: {fileID: 1962317833181771233}
+  - component: {fileID: 399245977278333594}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -392,21 +392,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3787731107379543799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3787731107379543786}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77648acfb2477b749926dc1d91863839, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cubePrefab: {fileID: 3787731107379543786}
-  boundaryBox: {fileID: 4964726100442245983, guid: 21dc2dbd0ac00ba40b44c450ac04773b, type: 3}
-  defaultMaterial: {fileID: 2100000, guid: 46b0ee14fbff40b4c99d04384c1ee066, type: 2}
 --- !u!54 &3787731107379543796
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -423,7 +408,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &3787731107379543797
+--- !u!114 &1962317833181771233
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -432,7 +417,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 3787731107379543786}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd649fd5442233a4ea9a1567405882a5, type: 3}
+  m_Script: {fileID: 11500000, guid: d28afc94afb544b12943832f3e2c6d9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cubePrefab: {fileID: 3787731107379543786}
+  boundaryBox: {fileID: 0}
+--- !u!114 &399245977278333594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3787731107379543786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e983aefe9b4ee4458b6b64cb2a59a810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   highlightGreenMaterial: {fileID: 2100000, guid: 55f6e9b3552e7714bbf29910a2d20339, type: 2}

@@ -40,11 +40,16 @@ public class ConstructionHighlightFace : MonoBehaviour
                     gameObject.GetComponent<MeshRenderer>().material = highlightRedMaterial;
                 }
 
-            }else
+            }
+            else
             {
                 gameObject.GetComponent<MeshRenderer>().material = defaultMaterial;
             }
 
+        }
+        else
+        {
+            gameObject.GetComponent<MeshRenderer>().material = defaultMaterial;
         }
     }
 }

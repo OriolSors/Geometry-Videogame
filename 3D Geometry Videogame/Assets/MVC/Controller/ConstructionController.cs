@@ -135,19 +135,27 @@ public class ConstructionController
 
     }
 
-    public float Round(float pos_float, int decimalPlaces = 2)
+    public static Vector3 Round(Vector3 vector3, int decimalPlaces = 2)
     {
         float multiplier = 1;
         for (int i = 0; i < decimalPlaces; i++)
         {
             multiplier *= 10f;
         }
-        return Mathf.Round(pos_float * multiplier) / multiplier;
+        return new Vector3(
+            Mathf.Round(vector3.x * multiplier) / multiplier,
+            Mathf.Round(vector3.y * multiplier) / multiplier,
+            Mathf.Round(vector3.z * multiplier) / multiplier);
     }
 
     public bool CheckCubePositions(List<Vector3> cubePositions)
     {
-        return cubePositions.Except(this.cubePositions).Count() == 0 && cubePositions.Count() == this.cubePositions.Count();
+        List<Vector3> roundedCubePositions = new List<Vector3>();
+        foreach (Vector3 cubePosition in cubePositions)
+        {
+            roundedCubePositions.Add(Round(cubePosition, 2));
+        }
+        return roundedCubePositions.Except(this.cubePositions).Count() == 0 && roundedCubePositions.Count() == this.cubePositions.Count();
     }
 
 

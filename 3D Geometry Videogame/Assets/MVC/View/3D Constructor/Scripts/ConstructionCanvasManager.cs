@@ -30,7 +30,7 @@ public class ConstructionCanvasManager : MonoBehaviour
         constructionController = ConstructionController.Instance;
         constructionController.SetUpValues();
         constructionController.LoadTargetFigure();
-        objectsLeft.text = constructionController.GetNumberOfCubes().ToString();
+        objectsLeft.text = (constructionController.GetNumberOfCubes()-1).ToString();
 
     }
 
