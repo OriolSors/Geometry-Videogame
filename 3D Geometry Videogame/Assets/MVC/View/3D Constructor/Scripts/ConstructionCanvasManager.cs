@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using System.IO;
 using System.Collections;
+using System;
 
 public class ConstructionCanvasManager : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class ConstructionCanvasManager : MonoBehaviour
 
     private ConstructionController constructionController;
 
+    private ConstructionGridManager constructionGridManager;
+
     void Start()
     {
 
@@ -28,15 +31,22 @@ public class ConstructionCanvasManager : MonoBehaviour
         constructionIncorrectCanvas.enabled = false;
 
         constructionController = ConstructionController.Instance;
-        constructionController.SetUpValues();
         constructionController.LoadTargetFigure();
         objectsLeft.text = (constructionController.GetNumberOfCubes()-1).ToString();
 
+        constructionGridManager = GameObject.Find("Matrix Grid").GetComponent<ConstructionGridManager>();
+        constructionGridManager.SpawnTiles();
     }
+
 
     public void ResetConstruction()
     {
         SceneManager.LoadScene("3D Constructor");
+    }
+
+    public void ExitConstruction()
+    {
+        SceneManager.LoadScene("Player Mission List Screen");
     }
 
     public void AddNewObject(Vector3 position)

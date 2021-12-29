@@ -11,9 +11,9 @@ public class ConstructionController
     private float max_pos_x, max_pos_y, max_pos_z;
     private float min_pos_x, min_pos_y, min_pos_z;
     private float max_value, min_value;
-    private int N;
+    public int N;
 
-    private int[,] M_x_y, M_z_y, M_x_z;
+    public int[,] M_x_y, M_z_y, M_x_z;
 
     private ConstructionController()
     {
@@ -69,58 +69,64 @@ public class ConstructionController
     {
         for(int y = 0; y < N; y++)
         {
+            float m_y = y / 2f + min_value;
+
             for (int x = 0; x < N; x++)
             {
                 int sum_z = 0;
 
+                float m_x = x / 2f + min_value;
+                
                 foreach (Vector3 pos in cubePositions)
                 {
-                    float m_x = x / 2f + min_value;
-                    float m_y = y / 2f + min_value;
-
+                    
                     if (pos.x == m_x && pos.y == m_y)
                     {
                         sum_z++;
                     }
                 }
 
-                M_x_y[x, y] = sum_z;
-                Debug.Log("M" + x + y + " = " + sum_z);
+                M_x_y[N-y-1, x] = sum_z;
+                Debug.Log("xyM" + (N - y - 1) + x + " = " + sum_z);
             }
         }
 
         for (int y = 0; y < N; y++)
         {
+            float m_y = y / 2f + min_value;
+
             for (int z = 0; z < N; z++)
             {
                 int sum_x = 0;
 
+                float m_z = z / 2f + min_value;
+
                 foreach (Vector3 pos in cubePositions)
                 {
-                    float m_z = z / 2f + min_value;
-                    float m_y = y / 2f + min_value;
 
-                    if (pos.z == m_z && pos.y == m_y)
+                    if (pos.y == m_y && pos.z == m_z)
                     {
                         sum_x++;
                     }
                 }
 
-                M_z_y[z, y] = sum_x;
-                Debug.Log("M" + z + y + " = " + sum_x);
+                M_z_y[N - y - 1, z] = sum_x;
+                Debug.Log("zyM" + (N - y - 1) + z + " = " + sum_x);
             }
         }
 
         for (int z = 0; z < N; z++)
         {
+            float m_z = z / 2f + min_value;
+
             for (int x = 0; x < N; x++)
             {
                 int sum_y = 0;
 
+                float m_x = x / 2f + min_value;
+
                 foreach (Vector3 pos in cubePositions)
                 {
-                    float m_x = x / 2f + min_value;
-                    float m_z = z / 2f + min_value;
 
                     if (pos.x == m_x && pos.z == m_z)
                     {
@@ -128,8 +134,8 @@ public class ConstructionController
                     }
                 }
 
-                M_x_z[x, z] = sum_y;
-                Debug.Log("M" + x + z + " = " + sum_y);
+                M_x_z[N - z - 1, x] = sum_y;
+                Debug.Log("xzM" + (N - z - 1) + x + " = " + sum_y);
             }
         }
 

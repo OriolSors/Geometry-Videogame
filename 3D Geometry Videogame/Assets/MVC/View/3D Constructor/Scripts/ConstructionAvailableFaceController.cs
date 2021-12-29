@@ -13,7 +13,7 @@ public class ConstructionAvailableFaceController : MonoBehaviour
 
     public GameObject boundaryBox; //Parent Bounding Box that englobes all the construction
 
-    private CameraController scriptCamera; //The Main Camera script
+    private ConstructionCameraController scriptCamera; //The Main Camera script
 
     private ConstructionCanvasManager canvasManager; //The Construction script
 
@@ -24,7 +24,7 @@ public class ConstructionAvailableFaceController : MonoBehaviour
     void Start()
     {
 
-        scriptCamera = GameObject.Find("Main Camera").GetComponent<CameraController>();
+        scriptCamera = GameObject.Find("Main Camera").GetComponent<ConstructionCameraController>();
         canvasManager = GameObject.Find("Boundary Box").GetComponent<ConstructionCanvasManager>();
 
     }
