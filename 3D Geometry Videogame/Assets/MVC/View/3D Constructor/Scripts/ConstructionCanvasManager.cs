@@ -18,6 +18,7 @@ public class ConstructionCanvasManager : MonoBehaviour
 
     private ConstructionController constructionController;
 
+    public GameObject matricesPanel;
     private ConstructionGridManager constructionGridManager;
 
     void Start()
@@ -34,10 +35,18 @@ public class ConstructionCanvasManager : MonoBehaviour
         constructionController.LoadTargetFigure();
         objectsLeft.text = (constructionController.GetNumberOfCubes()-1).ToString();
 
-        constructionGridManager = GameObject.Find("Matrix Grid").GetComponent<ConstructionGridManager>();
+        constructionGridManager = matricesPanel.GetComponent<ConstructionGridManager>();
         constructionGridManager.SpawnTiles();
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+
+        if (Input.GetKey(KeyCode.Tab)) matricesPanel.SetActive(true);
+        else matricesPanel.SetActive(false);
+
+    }
 
     public void ResetConstruction()
     {
