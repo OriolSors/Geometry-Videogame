@@ -32,10 +32,13 @@ public class ConstructionCanvasManager : MonoBehaviour
         constructionIncorrectCanvas.enabled = false;
 
         constructionController = ConstructionController.Instance;
-        constructionController.LoadTargetFigure();
+        constructionController.SetUpValues();
+        constructionController.GetTargetTileMatrices();
+        constructionController.GetUserTileMatrices(cubePositions);
         objectsLeft.text = (constructionController.GetNumberOfCubes()-1).ToString();
 
         constructionGridManager = matricesPanel.GetComponent<ConstructionGridManager>();
+        constructionGridManager.InitializeValues();
         constructionGridManager.SpawnTiles();
     }
 
@@ -58,17 +61,27 @@ public class ConstructionCanvasManager : MonoBehaviour
         SceneManager.LoadScene("Player Mission List Screen");
     }
 
+    private void UpdateUserTiles()
+    {
+        constructionController.GetUserTileMatrices(cubePositions);
+        constructionGridManager.UpdateUserTiles();
+
+    }
+
     public void AddNewObject(Vector3 position)
     {
 
-        cubePositions.Add(position);
+        cubePositions.Add(Round(position));
+        UpdateUserTiles();
         objectsLeft.text = (int.Parse(objectsLeft.text) - 1).ToString();
         SetColor();
     }
 
+
     public void RemoveObject(Vector3 position)
     {
-        cubePositions.Remove(position);
+        cubePositions.Remove(Round(position));
+        UpdateUserTiles();
         objectsLeft.text = (int.Parse(objectsLeft.text) + 1).ToString();
         SetColor();
     }
@@ -120,6 +133,19 @@ public class ConstructionCanvasManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         constructionIncorrectCanvas.enabled = false;
+    }
+
+    public static Vector3 Round(Vector3 vector3, int decimalPlaces = 2)
+    {
+        float multiplier = 1;
+        for (int i = 0; i < decimalPlaces; i++)
+        {
+            multiplier *= 10f;
+        }
+        return new Vector3(
+            Mathf.Round(vector3.x * multiplier) / multiplier,
+            Mathf.Round(vector3.y * multiplier) / multiplier,
+            Mathf.Round(vector3.z * multiplier) / multiplier);
     }
 
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ConstructionController 
 {
-    private List<Vector3> cubePositions = new List<Vector3>();
+    public List<Vector3> targetCubePositions = new List<Vector3>();
 
     private float max_pos_x, max_pos_y, max_pos_z;
     private float min_pos_x, min_pos_y, min_pos_z;
@@ -14,12 +14,7 @@ public class ConstructionController
     public int N;
 
     public int[,] M_x_y, M_z_y, M_x_z;
-
-    private ConstructionController()
-    {
-        cubePositions = MissionListController.Instance.GetCurrentMissionPlayer().GetCubePositions();
-        SetUpValues();
-    }
+    public int[,] uM_x_y, uM_z_y, uM_x_z;
 
     private static ConstructionController instance = null;
     public static ConstructionController Instance
@@ -30,26 +25,29 @@ public class ConstructionController
             {
                 instance = new ConstructionController();
             }
+            
             return instance;
         }
     }
 
     public int GetNumberOfCubes()
     {
-        return cubePositions.Count();
+        return targetCubePositions.Count();
     }
 
 
     public void SetUpValues()
     {
-        max_pos_x = cubePositions.Max(v => v.x);
-        min_pos_x = cubePositions.Min(v => v.x);
+        targetCubePositions = MissionListController.Instance.GetCurrentMissionPlayer().GetCubePositions();
 
-        max_pos_y = cubePositions.Max(v => v.y);
-        min_pos_y = cubePositions.Min(v => v.y);
+        max_pos_x = targetCubePositions.Max(v => v.x);
+        min_pos_x = targetCubePositions.Min(v => v.x);
 
-        max_pos_z = cubePositions.Max(v => v.z);
-        min_pos_z = cubePositions.Min(v => v.z);
+        max_pos_y = targetCubePositions.Max(v => v.y);
+        min_pos_y = targetCubePositions.Min(v => v.y);
+
+        max_pos_z = targetCubePositions.Max(v => v.z);
+        min_pos_z = targetCubePositions.Min(v => v.z);
 
         max_value = (new float[] { max_pos_x, max_pos_y, max_pos_z }).Max();
         min_value = (new float[] { min_pos_x, min_pos_y, min_pos_z }).Min();
@@ -63,9 +61,13 @@ public class ConstructionController
         M_x_y = new int[N, N];
         M_z_y = new int[N, N];
         M_x_z = new int[N, N];
+
+        uM_x_y = new int[N, N];
+        uM_z_y = new int[N, N];
+        uM_x_z = new int[N, N];
     }
 
-    public void LoadTargetFigure()
+    public void GetTargetTileMatrices()
     {
         for(int y = 0; y < N; y++)
         {
@@ -77,7 +79,7 @@ public class ConstructionController
 
                 float m_x = x / 2f + min_value;
                 
-                foreach (Vector3 pos in cubePositions)
+                foreach (Vector3 pos in targetCubePositions)
                 {
                     
                     if (pos.x == m_x && pos.y == m_y)
@@ -101,7 +103,7 @@ public class ConstructionController
 
                 float m_z = z / 2f + min_value;
 
-                foreach (Vector3 pos in cubePositions)
+                foreach (Vector3 pos in targetCubePositions)
                 {
 
                     if (pos.y == m_y && pos.z == m_z)
@@ -125,7 +127,7 @@ public class ConstructionController
 
                 float m_x = x / 2f + min_value;
 
-                foreach (Vector3 pos in cubePositions)
+                foreach (Vector3 pos in targetCubePositions)
                 {
 
                     if (pos.x == m_x && pos.z == m_z)
@@ -141,27 +143,85 @@ public class ConstructionController
 
     }
 
-    public static Vector3 Round(Vector3 vector3, int decimalPlaces = 2)
+    public void GetUserTileMatrices(List<Vector3> userCubePositions)
     {
-        float multiplier = 1;
-        for (int i = 0; i < decimalPlaces; i++)
+        for (int y = 0; y < N; y++)
         {
-            multiplier *= 10f;
+            float m_y = y / 2f + min_value;
+
+            for (int x = 0; x < N; x++)
+            {
+                int sum_z = 0;
+
+                float m_x = x / 2f + min_value;
+
+                foreach (Vector3 pos in userCubePositions)
+                {
+
+                    if (pos.x == m_x && pos.y == m_y)
+                    {
+                        sum_z++;
+                    }
+                }
+
+                uM_x_y[N - y - 1, x] = sum_z;
+                
+            }
         }
-        return new Vector3(
-            Mathf.Round(vector3.x * multiplier) / multiplier,
-            Mathf.Round(vector3.y * multiplier) / multiplier,
-            Mathf.Round(vector3.z * multiplier) / multiplier);
+
+        for (int y = 0; y < N; y++)
+        {
+            float m_y = y / 2f + min_value;
+
+            for (int z = 0; z < N; z++)
+            {
+                int sum_x = 0;
+
+                float m_z = z / 2f + min_value;
+
+                foreach (Vector3 pos in userCubePositions)
+                {
+
+                    if (pos.y == m_y && pos.z == m_z)
+                    {
+                        sum_x++;
+                    }
+                }
+
+                uM_z_y[N - y - 1, z] = sum_x;
+                
+            }
+        }
+
+        for (int z = 0; z < N; z++)
+        {
+            float m_z = z / 2f + min_value;
+
+            for (int x = 0; x < N; x++)
+            {
+                int sum_y = 0;
+
+                float m_x = x / 2f + min_value;
+
+                foreach (Vector3 pos in userCubePositions)
+                {
+
+                    if (pos.x == m_x && pos.z == m_z)
+                    {
+                        sum_y++;
+                    }
+                }
+
+                uM_x_z[N - z - 1, x] = sum_y;
+                
+            }
+        }
+
     }
 
-    public bool CheckCubePositions(List<Vector3> cubePositions)
+    public bool CheckCubePositions(List<Vector3> userCubePositions)
     {
-        List<Vector3> roundedCubePositions = new List<Vector3>();
-        foreach (Vector3 cubePosition in cubePositions)
-        {
-            roundedCubePositions.Add(Round(cubePosition, 2));
-        }
-        return roundedCubePositions.Except(this.cubePositions).Count() == 0 && roundedCubePositions.Count() == this.cubePositions.Count();
+        return userCubePositions.Except(targetCubePositions).Count() == 0 && userCubePositions.Count() == targetCubePositions.Count();
     }
 
 
