@@ -11,11 +11,9 @@ public class ConstructionAvailableFaceController : MonoBehaviour
 
     public GameObject cubePrefab; //Cube prefab
 
-    private GameObject boundaryBox; //Parent Bounding Box that englobes all the construction
+    private ConstructionCanvasManager canvasManager; //The Canvas script
 
-    private ConstructionCameraController scriptCamera; //The Main Camera script
-
-    private ConstructionCanvasManager canvasManager; //The Construction script
+    private ConstructionBoundaryBoxController boundaryBoxController; //The Boundary Box controller
 
 
     // ------------------------------------------------ INITIALIZATIONS ------------------------------------------------
@@ -24,9 +22,8 @@ public class ConstructionAvailableFaceController : MonoBehaviour
     void Start()
     {
 
-        scriptCamera = GameObject.Find("Main Camera").GetComponent<ConstructionCameraController>();
-        canvasManager = GameObject.Find("Boundary Box").GetComponent<ConstructionCanvasManager>();
-        boundaryBox = GameObject.Find("Boundary Box");
+        canvasManager = GameObject.Find("Canvas").GetComponent<ConstructionCanvasManager>();
+        boundaryBoxController = GameObject.Find("Boundary Box").GetComponent<ConstructionBoundaryBoxController>();
 
     }
 
@@ -52,19 +49,19 @@ public class ConstructionAvailableFaceController : MonoBehaviour
 
                     GameObject newCube = Instantiate(cubePrefab, hit.transform.position + 0.5f*hit.normal, Quaternion.identity) as GameObject; //TODO: for all the other Platonic Solids, create new methods to scale and position the object
 
-                    Vector3 newCubePosition = newCube.transform.position;
+                    Vector3 newCubePosition = Round(newCube.transform.position);
 
-                    if (!canvasManager.cubePositions.Contains(newCubePosition)) 
+                    if (!boundaryBoxController.cubePositions.Contains(newCubePosition)) 
                     {
 
                         //If there is not an object at the new position, we add it
 
-                        canvasManager.AddNewObject(newCubePosition);
-                        newCube.transform.parent = boundaryBox.transform; 
+                        boundaryBoxController.AddNewObject(newCubePosition, newCube.transform);
+                        canvasManager.AddNewObject();
 
                         //Sending Bounding Box bounds and VRP to the Camera Controller
 
-                        SendBounds();
+                        boundaryBoxController.SendBounds();
 
                     }
                     else
@@ -85,71 +82,34 @@ public class ConstructionAvailableFaceController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            if (canvasManager.cubePositions.Count > 1)
+            if (boundaryBoxController.cubePositions.Count > 1)
             {
-                canvasManager.RemoveObject(gameObject.transform.position);
+                boundaryBoxController.RemoveObject(Round(gameObject.transform.position));
+                canvasManager.RemoveObject();
                 Destroy(gameObject);
             }
-            
+
 
             //Sending Bounding Box bounds and VRP to the Camera Controller+
 
-            SendBounds();
+            boundaryBoxController.SendBounds();
 
         }
         
 
     }
 
-
-    // ------------------------------------------------ BOUNDS SETTER ------------------------------------------------
-
-
-    private void SendBounds()
+    public static Vector3 Round(Vector3 vector3, int decimalPlaces = 2)
     {
-        Bounds bounds = GetBounds(boundaryBox);
-        scriptCamera.currentVRP = bounds.center;
-        scriptCamera.boxBounds = bounds;
-    }
-
-
-    // ------------------------------------------------ BOUNDS GENERATORS ------------------------------------------------
-
-
-    private Bounds GetBounds(GameObject boundaryBox)
-    {
-        Bounds bounds;
-        Renderer childRender;
-        bounds = GetRenderBounds(boundaryBox);
-        if (bounds.extents.x == 0)
+        float multiplier = 1;
+        for (int i = 0; i < decimalPlaces; i++)
         {
-            bounds = new Bounds(boundaryBox.transform.position, Vector3.zero);
-            foreach (Transform child in boundaryBox.transform)
-            {
-                childRender = child.GetComponent<Renderer>();
-                if (childRender)
-                {
-                    bounds.Encapsulate(childRender.bounds);
-                }
-                else
-                {
-                    bounds.Encapsulate(GetBounds(child.gameObject));
-                }
-            }
+            multiplier *= 10f;
         }
-        return bounds;
+        return new Vector3(
+            Mathf.Round(vector3.x * multiplier) / multiplier,
+            Mathf.Round(vector3.y * multiplier) / multiplier,
+            Mathf.Round(vector3.z * multiplier) / multiplier);
     }
-
-    private Bounds GetRenderBounds(GameObject boundaryBox)
-    {
-        Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
-        Renderer render = boundaryBox.GetComponent<Renderer>();
-        if (render != null)
-        {
-            return render.bounds;
-        }
-        return bounds;
-    }
-
 
 }

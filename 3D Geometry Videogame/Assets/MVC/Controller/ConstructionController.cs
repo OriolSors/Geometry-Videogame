@@ -10,10 +10,9 @@ public class ConstructionController
 
     private float max_pos_x, max_pos_y, max_pos_z;
     private float min_pos_x, min_pos_y, min_pos_z;
-    private float max_value, min_value;
     private float max_diff;
-    public int N;
 
+    public int N;
     public int[,] M_x_y, M_z_y, M_x_z;
     public int[,] uM_x_y, uM_z_y, uM_x_z;
 
@@ -50,12 +49,9 @@ public class ConstructionController
         max_pos_z = targetCubePositions.Max(v => v.z);
         min_pos_z = targetCubePositions.Min(v => v.z);
 
-        max_value = (new float[] { max_pos_x, max_pos_y, max_pos_z }).Max();
-        min_value = (new float[] { min_pos_x, min_pos_y, min_pos_z }).Min();
         max_diff = (new float[] { max_pos_x-min_pos_x, max_pos_y-min_pos_y, max_pos_z-min_pos_z}).Max();
 
         N = Convert.ToInt32(max_diff*2 + 1);
-        Debug.Log("N: " + N);
 
         M_x_y = new int[N, N];
         M_z_y = new int[N, N];
@@ -88,7 +84,7 @@ public class ConstructionController
                 }
 
                 M_x_y[N-y-1, x] = sum_z;
-                Debug.Log("xyM" + (N - y - 1) + x + " = " + sum_z);
+                
             }
         }
 
@@ -112,7 +108,7 @@ public class ConstructionController
                 }
 
                 M_z_y[N - y - 1, z] = sum_x;
-                Debug.Log("zyM" + (N - y - 1) + z + " = " + sum_x);
+                
             }
         }
 
@@ -136,7 +132,7 @@ public class ConstructionController
                 }
 
                 M_x_z[N - z - 1, x] = sum_y;
-                Debug.Log("xzM" + (N - z - 1) + x + " = " + sum_y);
+
             }
         }
 

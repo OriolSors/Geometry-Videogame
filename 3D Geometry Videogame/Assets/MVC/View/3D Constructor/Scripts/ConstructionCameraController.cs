@@ -12,6 +12,7 @@ public class ConstructionCameraController : MonoBehaviour
 
     [SerializeField]
     private float speed; //Orbital rotation speed
+
     public Vector3 currentVRP { get; set; } //View reference point of the Main Camera
     public Bounds boxBounds { get; set; } //Bounds of the Bounding Box that englobes all the construction
 
@@ -28,17 +29,13 @@ public class ConstructionCameraController : MonoBehaviour
     void Start()
     {
 
-        //currentVRP = new Vector3(0, 0, 0);
         boxBounds = new Bounds();
-        cameraPos = new Vector3(0, 0, 0);
-        closestPoint = new Vector3(0, 0, 0);
 
     }
 
-    public void SetStartedCameraPos(Vector3 newCameraPos)
+    public void SetStartingCameraPos(Vector3 newCameraPos, Vector3 offset)
     {
-        transform.position = newCameraPos;
-        currentVRP = newCameraPos + new Vector3(0, 0, 3);
+        transform.position = newCameraPos + offset;
         ready = true;
     }
 
@@ -52,7 +49,6 @@ public class ConstructionCameraController : MonoBehaviour
 
         if(ready) RecalculatePos();
 
-        Debug.Log(boxBounds.center);
     }
 
     private void FixedUpdate()

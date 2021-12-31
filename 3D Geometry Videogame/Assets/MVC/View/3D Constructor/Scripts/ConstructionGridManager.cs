@@ -16,18 +16,12 @@ public class ConstructionGridManager : MonoBehaviour
     public Transform matrixGridXY, matrixGridZY, matrixGridXZ;
     public Transform uMatrixGridXY, uMatrixGridZY, uMatrixGridXZ;
 
-
-    void Start()
+    public void InitializeValues()
     {
-
-        var rectTransform = transform.Find("Matrix Grid XY").GetComponent<RectTransform>();
+        var rectTransform = matrixGridXY.GetComponent<RectTransform>();
         width = rectTransform.sizeDelta.x;
         height = rectTransform.sizeDelta.y;
 
-    }
-
-    public void InitializeValues()
-    {
         N = ConstructionController.Instance.N;
 
         M_x_y = ConstructionController.Instance.M_x_y;

@@ -17,7 +17,7 @@ public class ConstructionHighlightFace : MonoBehaviour
 
     private void Start()
     {
-        canvasManager = GameObject.Find("Boundary Box").GetComponent<ConstructionCanvasManager>();
+        canvasManager = GameObject.Find("Canvas").GetComponent<ConstructionCanvasManager>();
     }
 
     private void Update()

@@ -10,49 +10,31 @@ using System.Linq;
 public class ConstructionCanvasManager : MonoBehaviour
 {
 
-    public List<Vector3> cubePositions;
     public TextMeshProUGUI objectsLeft;
-    public GameObject cubePrefab;
     private Color preColor;
 
     public Canvas constructionCorrectCanvas;
     public Canvas constructionIncorrectCanvas;
 
-    private ConstructionController constructionController;
-
     public GameObject matricesPanel;
     private ConstructionGridManager constructionGridManager;
 
-    private ConstructionCameraController scriptCamera;
+    private ConstructionBoundaryBoxController boundaryBoxController;
 
     void Start()
     {
-        scriptCamera = GameObject.Find("Main Camera").GetComponent<ConstructionCameraController>();
+
+        preColor = objectsLeft.color;
 
         constructionCorrectCanvas.enabled = false;
         constructionIncorrectCanvas.enabled = false;
 
-        constructionController = ConstructionController.Instance;
-        constructionController.SetUpValues();
-        constructionController.GetTargetTileMatrices();
-        
-        cubePositions = new List<Vector3>();
-        var random = new System.Random();
-        Vector3 randomStartPos = constructionController.targetCubePositions[random.Next(constructionController.targetCubePositions.Count())];
-        cubePositions.Add(randomStartPos);
-        transform.position = randomStartPos;
-        GameObject newCube = Instantiate(cubePrefab, randomStartPos, Quaternion.identity);
-        newCube.transform.parent = gameObject.transform;
-        preColor = objectsLeft.color;
-
-        scriptCamera.SetStartedCameraPos(randomStartPos + new Vector3(0, 0, -3));
-
-        constructionController.GetUserTileMatrices(cubePositions);
-        objectsLeft.text = (constructionController.GetNumberOfCubes() - 1).ToString();
-
         constructionGridManager = matricesPanel.GetComponent<ConstructionGridManager>();
         constructionGridManager.InitializeValues();
         constructionGridManager.SpawnTiles();
+
+        boundaryBoxController = GameObject.Find("Boundary Box").GetComponent<ConstructionBoundaryBoxController>();
+        objectsLeft.text = boundaryBoxController.GetCubesLeft().ToString();
     }
 
     // Update is called once per frame
@@ -61,7 +43,7 @@ public class ConstructionCanvasManager : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Tab)) matricesPanel.SetActive(true);
         else matricesPanel.SetActive(false);
-
+        
     }
 
     public void ResetConstruction()
@@ -74,39 +56,31 @@ public class ConstructionCanvasManager : MonoBehaviour
         SceneManager.LoadScene("Player Mission List Screen");
     }
 
-    private void UpdateUserTiles()
+
+
+    public void AddNewObject()
     {
-        constructionController.GetUserTileMatrices(cubePositions);
         constructionGridManager.UpdateUserTiles();
-
-    }
-
-    public void AddNewObject(Vector3 position)
-    {
-
-        cubePositions.Add(Round(position));
-        UpdateUserTiles();
-        objectsLeft.text = (int.Parse(objectsLeft.text) - 1).ToString();
+        objectsLeft.text = boundaryBoxController.GetCubesLeft().ToString();
         SetColor();
     }
 
 
-    public void RemoveObject(Vector3 position)
+    public void RemoveObject()
     {
-        cubePositions.Remove(Round(position));
-        UpdateUserTiles();
-        objectsLeft.text = (int.Parse(objectsLeft.text) + 1).ToString();
+        constructionGridManager.UpdateUserTiles();
+        objectsLeft.text = boundaryBoxController.GetCubesLeft().ToString();
         SetColor();
     }
 
     public bool ObjectsAvailables()
     {
-        return int.Parse(objectsLeft.text) > 0;
+        return boundaryBoxController.GetCubesLeft() > 0;
     }
 
     private void SetColor()
     {
-        if (int.Parse(objectsLeft.text) == 0)
+        if (boundaryBoxController.GetCubesLeft() == 0)
         {
             objectsLeft.color = Color.red;
         }
@@ -120,7 +94,7 @@ public class ConstructionCanvasManager : MonoBehaviour
     public void CheckConstruction()
     {
 
-        if (constructionController.CheckCubePositions(cubePositions))
+        if (boundaryBoxController.CheckCubePositions())
         {
             constructionCorrectCanvas.enabled = true;
             StartCoroutine(IndicatorCorrectConstructionCoroutine());
@@ -146,19 +120,6 @@ public class ConstructionCanvasManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         constructionIncorrectCanvas.enabled = false;
-    }
-
-    public static Vector3 Round(Vector3 vector3, int decimalPlaces = 2)
-    {
-        float multiplier = 1;
-        for (int i = 0; i < decimalPlaces; i++)
-        {
-            multiplier *= 10f;
-        }
-        return new Vector3(
-            Mathf.Round(vector3.x * multiplier) / multiplier,
-            Mathf.Round(vector3.y * multiplier) / multiplier,
-            Mathf.Round(vector3.z * multiplier) / multiplier);
     }
 
 }
