@@ -8,9 +8,9 @@ public class ConstructionController
 {
     public List<Vector3> targetCubePositions = new List<Vector3>();
 
-    private float max_pos_x, max_pos_y, max_pos_z;
-    private float min_pos_x, min_pos_y, min_pos_z;
-    private float max_diff;
+    public float max_pos_x, max_pos_y, max_pos_z;
+    public float min_pos_x, min_pos_y, min_pos_z;
+    public float max_diff;
 
     public int N;
     public int[,] M_x_y, M_z_y, M_x_z;
