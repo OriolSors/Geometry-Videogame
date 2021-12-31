@@ -5,12 +5,14 @@ using TMPro;
 using System.IO;
 using System.Collections;
 using System;
+using System.Linq;
 
 public class ConstructionCanvasManager : MonoBehaviour
 {
 
     public List<Vector3> cubePositions;
     public TextMeshProUGUI objectsLeft;
+    public GameObject cubePrefab;
     private Color preColor;
 
     public Canvas constructionCorrectCanvas;
@@ -21,12 +23,11 @@ public class ConstructionCanvasManager : MonoBehaviour
     public GameObject matricesPanel;
     private ConstructionGridManager constructionGridManager;
 
+    private ConstructionCameraController scriptCamera;
+
     void Start()
     {
-
-        cubePositions = new List<Vector3>();
-        cubePositions.Add(Vector3.zero);
-        preColor = objectsLeft.color;
+        scriptCamera = GameObject.Find("Main Camera").GetComponent<ConstructionCameraController>();
 
         constructionCorrectCanvas.enabled = false;
         constructionIncorrectCanvas.enabled = false;
@@ -34,8 +35,20 @@ public class ConstructionCanvasManager : MonoBehaviour
         constructionController = ConstructionController.Instance;
         constructionController.SetUpValues();
         constructionController.GetTargetTileMatrices();
+        
+        cubePositions = new List<Vector3>();
+        var random = new System.Random();
+        Vector3 randomStartPos = constructionController.targetCubePositions[random.Next(constructionController.targetCubePositions.Count())];
+        cubePositions.Add(randomStartPos);
+        transform.position = randomStartPos;
+        GameObject newCube = Instantiate(cubePrefab, randomStartPos, Quaternion.identity);
+        newCube.transform.parent = gameObject.transform;
+        preColor = objectsLeft.color;
+
+        scriptCamera.SetStartedCameraPos(randomStartPos + new Vector3(0, 0, -3));
+
         constructionController.GetUserTileMatrices(cubePositions);
-        objectsLeft.text = (constructionController.GetNumberOfCubes()-1).ToString();
+        objectsLeft.text = (constructionController.GetNumberOfCubes() - 1).ToString();
 
         constructionGridManager = matricesPanel.GetComponent<ConstructionGridManager>();
         constructionGridManager.InitializeValues();

@@ -11,7 +11,7 @@ public class ConstructionAvailableFaceController : MonoBehaviour
 
     public GameObject cubePrefab; //Cube prefab
 
-    public GameObject boundaryBox; //Parent Bounding Box that englobes all the construction
+    private GameObject boundaryBox; //Parent Bounding Box that englobes all the construction
 
     private ConstructionCameraController scriptCamera; //The Main Camera script
 
@@ -26,6 +26,7 @@ public class ConstructionAvailableFaceController : MonoBehaviour
 
         scriptCamera = GameObject.Find("Main Camera").GetComponent<ConstructionCameraController>();
         canvasManager = GameObject.Find("Boundary Box").GetComponent<ConstructionCanvasManager>();
+        boundaryBox = GameObject.Find("Boundary Box");
 
     }
 

@@ -11,6 +11,7 @@ public class ConstructionController
     private float max_pos_x, max_pos_y, max_pos_z;
     private float min_pos_x, min_pos_y, min_pos_z;
     private float max_value, min_value;
+    private float max_diff;
     public int N;
 
     public int[,] M_x_y, M_z_y, M_x_z;
@@ -51,11 +52,9 @@ public class ConstructionController
 
         max_value = (new float[] { max_pos_x, max_pos_y, max_pos_z }).Max();
         min_value = (new float[] { min_pos_x, min_pos_y, min_pos_z }).Min();
+        max_diff = (new float[] { max_pos_x-min_pos_x, max_pos_y-min_pos_y, max_pos_z-min_pos_z}).Max();
 
-        Debug.Log("max: " + max_value);
-        Debug.Log("min: " + min_value);
-
-        N = Convert.ToInt32((max_value - min_value )*2 + 1);
+        N = Convert.ToInt32(max_diff*2 + 1);
         Debug.Log("N: " + N);
 
         M_x_y = new int[N, N];
@@ -71,13 +70,13 @@ public class ConstructionController
     {
         for(int y = 0; y < N; y++)
         {
-            float m_y = y / 2f + min_value;
+            float m_y = y / 2f + min_pos_y;
 
             for (int x = 0; x < N; x++)
             {
                 int sum_z = 0;
 
-                float m_x = x / 2f + min_value;
+                float m_x = x / 2f + min_pos_x;
                 
                 foreach (Vector3 pos in targetCubePositions)
                 {
@@ -95,13 +94,13 @@ public class ConstructionController
 
         for (int y = 0; y < N; y++)
         {
-            float m_y = y / 2f + min_value;
+            float m_y = y / 2f + min_pos_y;
 
             for (int z = 0; z < N; z++)
             {
                 int sum_x = 0;
 
-                float m_z = z / 2f + min_value;
+                float m_z = z / 2f + min_pos_z;
 
                 foreach (Vector3 pos in targetCubePositions)
                 {
@@ -119,13 +118,13 @@ public class ConstructionController
 
         for (int z = 0; z < N; z++)
         {
-            float m_z = z / 2f + min_value;
+            float m_z = z / 2f + min_pos_z;
 
             for (int x = 0; x < N; x++)
             {
                 int sum_y = 0;
 
-                float m_x = x / 2f + min_value;
+                float m_x = x / 2f + min_pos_x;
 
                 foreach (Vector3 pos in targetCubePositions)
                 {
@@ -147,13 +146,13 @@ public class ConstructionController
     {
         for (int y = 0; y < N; y++)
         {
-            float m_y = y / 2f + min_value;
+            float m_y = y / 2f + min_pos_y;
 
             for (int x = 0; x < N; x++)
             {
                 int sum_z = 0;
 
-                float m_x = x / 2f + min_value;
+                float m_x = x / 2f + min_pos_x;
 
                 foreach (Vector3 pos in userCubePositions)
                 {
@@ -171,13 +170,13 @@ public class ConstructionController
 
         for (int y = 0; y < N; y++)
         {
-            float m_y = y / 2f + min_value;
+            float m_y = y / 2f + min_pos_y;
 
             for (int z = 0; z < N; z++)
             {
                 int sum_x = 0;
 
-                float m_z = z / 2f + min_value;
+                float m_z = z / 2f + min_pos_z;
 
                 foreach (Vector3 pos in userCubePositions)
                 {
@@ -195,13 +194,13 @@ public class ConstructionController
 
         for (int z = 0; z < N; z++)
         {
-            float m_z = z / 2f + min_value;
+            float m_z = z / 2f + min_pos_z;
 
             for (int x = 0; x < N; x++)
             {
                 int sum_y = 0;
 
-                float m_x = x / 2f + min_value;
+                float m_x = x / 2f + min_pos_x;
 
                 foreach (Vector3 pos in userCubePositions)
                 {

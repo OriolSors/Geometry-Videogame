@@ -19,6 +19,8 @@ public class ConstructionCameraController : MonoBehaviour
 
     private Vector3 closestPoint; //Closest point of the Bounding Box to the Main Camera position
 
+    private bool ready = false;
+
 
     // ------------------------------------------------ INITIALIZATIONS ------------------------------------------------
 
@@ -26,11 +28,18 @@ public class ConstructionCameraController : MonoBehaviour
     void Start()
     {
 
-        currentVRP = new Vector3(0, 0, 0);
+        //currentVRP = new Vector3(0, 0, 0);
         boxBounds = new Bounds();
         cameraPos = new Vector3(0, 0, 0);
         closestPoint = new Vector3(0, 0, 0);
 
+    }
+
+    public void SetStartedCameraPos(Vector3 newCameraPos)
+    {
+        transform.position = newCameraPos;
+        currentVRP = newCameraPos + new Vector3(0, 0, 3);
+        ready = true;
     }
 
 
@@ -41,8 +50,9 @@ public class ConstructionCameraController : MonoBehaviour
     {
         //Recalculate the Main Camera position and local rotation at each frame
 
-        RecalculatePos(); 
+        if(ready) RecalculatePos();
 
+        Debug.Log(boxBounds.center);
     }
 
     private void FixedUpdate()

@@ -49,7 +49,7 @@ public class AvailableFaceController : MonoBehaviour
                 {
                     //Adds new Cube prefab to the normal direction of face clicked
 
-                    GameObject newCube = Instantiate(cubePrefab, hit.transform.position + 0.5f*hit.normal, Quaternion.identity) as GameObject; //TODO: for all the other Platonic Solids, create new methods to scale and position the object
+                    GameObject newCube = Instantiate(cubePrefab, hit.transform.position + 0.5f*hit.normal, Quaternion.identity) as GameObject; 
 
                     Vector3 newCubePosition = newCube.transform.position;
 
