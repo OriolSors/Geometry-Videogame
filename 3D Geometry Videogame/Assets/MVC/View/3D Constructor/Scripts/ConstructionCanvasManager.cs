@@ -15,6 +15,7 @@ public class ConstructionCanvasManager : MonoBehaviour
 
     public Canvas constructionCorrectCanvas;
     public Canvas constructionIncorrectCanvas;
+    public Canvas invalidPositionIndicator;
 
     public GameObject matricesPanel;
     private ConstructionGridManager constructionGridManager;
@@ -28,6 +29,7 @@ public class ConstructionCanvasManager : MonoBehaviour
 
         constructionCorrectCanvas.enabled = false;
         constructionIncorrectCanvas.enabled = false;
+        invalidPositionIndicator.enabled = false;
 
         constructionGridManager = matricesPanel.GetComponent<ConstructionGridManager>();
         constructionGridManager.InitializeValues();
@@ -73,6 +75,12 @@ public class ConstructionCanvasManager : MonoBehaviour
         SetColor();
     }
 
+    public void ShowInvalidPositionIndicator()
+    {
+        invalidPositionIndicator.enabled = true;
+        StartCoroutine(IndicatorInvalidPositionCubeCoroutine());
+    }
+
     public bool ObjectsAvailables()
     {
         return boundaryBoxController.GetCubesLeft() > 0;
@@ -106,6 +114,12 @@ public class ConstructionCanvasManager : MonoBehaviour
         }
         
 
+    }
+
+    IEnumerator IndicatorInvalidPositionCubeCoroutine()
+    {
+        yield return new WaitForSeconds(0.85f);
+        invalidPositionIndicator.enabled = false;
     }
 
     IEnumerator IndicatorCorrectConstructionCoroutine()

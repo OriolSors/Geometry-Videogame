@@ -51,7 +51,7 @@ public class ConstructionAvailableFaceController : MonoBehaviour
 
                     Vector3 newCubePosition = Round(newCube.transform.position);
 
-                    if (!boundaryBoxController.cubePositions.Contains(newCubePosition)) 
+                    if (!boundaryBoxController.cubePositions.Contains(newCubePosition) && ConstructionController.Instance.IsValidPosition(newCubePosition)) 
                     {
 
                         //If there is not an object at the new position, we add it
@@ -64,13 +64,18 @@ public class ConstructionAvailableFaceController : MonoBehaviour
                         boundaryBoxController.SendBounds();
 
                     }
-                    else
+                    else if(boundaryBoxController.cubePositions.Contains(newCubePosition))
                     {
 
                         //If there is an object at the new position, we destroy it instantly
 
                         Destroy(newCube); 
 
+                    }
+                    else
+                    {
+                        Destroy(newCube);
+                        canvasManager.ShowInvalidPositionIndicator();
                     }
                     
                 }

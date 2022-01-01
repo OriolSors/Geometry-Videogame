@@ -62,6 +62,13 @@ public class ConstructionController
         uM_x_z = new int[N, N];
     }
 
+    public bool IsValidPosition(Vector3 newCubePosition)
+    {
+        return (min_pos_x <= newCubePosition.x && newCubePosition.x <= max_pos_x) &&
+            (min_pos_y <= newCubePosition.y && newCubePosition.y <= max_pos_y) &&
+            (min_pos_z <= newCubePosition.z && newCubePosition.z <= max_pos_z);
+    }
+
     public void GetTargetTileMatrices()
     {
         for(int y = 0; y < N; y++)
