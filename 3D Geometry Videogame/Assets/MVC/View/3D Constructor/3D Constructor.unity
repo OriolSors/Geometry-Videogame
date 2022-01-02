@@ -3581,7 +3581,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 910083be288094683909728f21f14a3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  matrixTile: {fileID: 3588300224846697289, guid: 73822a99449fc46609bd92531d18b4d3, type: 3}
+  doneMatrixTile: {fileID: 3588300224846697289, guid: 1822617dd25ec4669bafbc824df10cad, type: 3}
+  workingMatrixTile: {fileID: 3588300224846697289, guid: 73822a99449fc46609bd92531d18b4d3, type: 3}
+  wrongMatrixTile: {fileID: 3588300224846697289, guid: bfec4770cf3b8493e91ea8b805f7d9dd, type: 3}
+  overflowMatrixTile: {fileID: 3588300224846697289, guid: cf3d53020b9134db595c26194bab3ef8, type: 3}
+  noMatrixTile: {fileID: 3588300224846697289, guid: 3fd0cc041c5f147c5b4bd0162a8cddb5, type: 3}
   matrixGridXY: {fileID: 1484524917}
   matrixGridZY: {fileID: 1863740674}
   matrixGridXZ: {fileID: 807556972}

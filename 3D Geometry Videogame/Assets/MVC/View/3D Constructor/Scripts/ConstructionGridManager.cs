@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,7 +7,7 @@ using UnityEngine.UI;
 
 public class ConstructionGridManager : MonoBehaviour
 {
-    public GameObject matrixTile;
+    public GameObject doneMatrixTile, workingMatrixTile, wrongMatrixTile, overflowMatrixTile, noMatrixTile;
     private float width, height;
 
     private int N;
@@ -40,13 +41,13 @@ public class ConstructionGridManager : MonoBehaviour
         {
             for (int j = 0; j < N; j++)
             {
-                SpawnConcreteTile(i, j, M_x_y[i, j], "xy");
-                SpawnConcreteTile(i, j, M_z_y[i, j], "zy");
-                SpawnConcreteTile(i, j, M_x_z[i, j], "xz");
+                SpawnTargetTile(i, j, M_x_y[i, j], "xy");
+                SpawnTargetTile(i, j, M_z_y[i, j], "zy");
+                SpawnTargetTile(i, j, M_x_z[i, j], "xz");
 
-                SpawnConcreteTile(i, j, uM_x_y[i, j], "u_xy");
-                SpawnConcreteTile(i, j, uM_z_y[i, j], "u_zy");
-                SpawnConcreteTile(i, j, uM_x_z[i, j], "u_xz");
+                SpawnCurrentTile(i, j, uM_x_y[i, j], "u_xy");
+                SpawnCurrentTile(i, j, uM_z_y[i, j], "u_zy");
+                SpawnCurrentTile(i, j, uM_x_z[i, j], "u_xz");
             }
         }
     }
@@ -57,17 +58,17 @@ public class ConstructionGridManager : MonoBehaviour
         {
             for (int j = 0; j < N; j++)
             {
-                SpawnConcreteTile(i, j, uM_x_y[i, j], "u_xy");
-                SpawnConcreteTile(i, j, uM_z_y[i, j], "u_zy");
-                SpawnConcreteTile(i, j, uM_x_z[i, j], "u_xz");
+                SpawnCurrentTile(i, j, uM_x_y[i, j], "u_xy");
+                SpawnCurrentTile(i, j, uM_z_y[i, j], "u_zy");
+                SpawnCurrentTile(i, j, uM_x_z[i, j], "u_xz");
             }
         }
     }
 
-    private void SpawnConcreteTile(int i, int j, int sum_k, string projection)
+    private void SpawnTargetTile(int i, int j, int sum_k, string projection)
     {
         Transform currentMatrix = null;
-        GameObject go = Instantiate(matrixTile);
+        GameObject go = Instantiate(doneMatrixTile);
         go.GetComponent<RectTransform>().sizeDelta = new Vector2(width / N, height / N);
         float tile_width = go.GetComponent<RectTransform>().sizeDelta.x;
         float tile_height = go.GetComponent<RectTransform>().sizeDelta.y;
@@ -83,15 +84,6 @@ public class ConstructionGridManager : MonoBehaviour
             case "xz":
                 currentMatrix = matrixGridXZ;
                 break;
-            case "u_xy":
-                currentMatrix = uMatrixGridXY;
-                break;
-            case "u_zy":
-                currentMatrix = uMatrixGridZY;
-                break;
-            case "u_xz":
-                currentMatrix = uMatrixGridXZ;
-                break;
         }
 
         
@@ -99,6 +91,63 @@ public class ConstructionGridManager : MonoBehaviour
         go.transform.localPosition = new Vector2(-width/2 + tile_width/2 + tile_width*j, height/2 - tile_height / 2 - tile_height * i);
         go.GetComponentInChildren<TextMeshProUGUI>().text = sum_k.ToString();
         if (sum_k == 0) go.GetComponent<Image>().color = new Color(219, 215, 231);
+    }
+
+    private void SpawnCurrentTile(int i, int j, int sum_k, string projection)
+    {
+        Transform currentMatrix = null;
+        GameObject go = null;
+        switch (projection)
+        {
+            case "u_xy":
+                currentMatrix = uMatrixGridXY;
+                go = ChooseTileStyle(i, j, sum_k, M_x_y, go);
+                break;
+            case "u_zy":
+                currentMatrix = uMatrixGridZY;
+                go = ChooseTileStyle(i, j, sum_k, M_z_y, go);
+                break;
+            case "u_xz":
+                currentMatrix = uMatrixGridXZ;
+                go = ChooseTileStyle(i, j, sum_k, M_x_z, go);
+                break;
+        }
+
+        go.GetComponent<RectTransform>().sizeDelta = new Vector2(width / N, height / N);
+        float tile_width = go.GetComponent<RectTransform>().sizeDelta.x;
+        float tile_height = go.GetComponent<RectTransform>().sizeDelta.y;
+
+       
+        go.transform.SetParent(currentMatrix);
+        go.transform.localPosition = new Vector2(-width / 2 + tile_width / 2 + tile_width * j, height / 2 - tile_height / 2 - tile_height * i);
+        go.GetComponentInChildren<TextMeshProUGUI>().text = sum_k.ToString();
+    }
+
+    private GameObject ChooseTileStyle(int i, int j, int sum_k, int[,] m, GameObject go)
+    {
+
+        if (m[i, j] == 0 && sum_k != 0)
+        {
+            go = Instantiate(wrongMatrixTile);
+        }
+        else if (sum_k == 0)
+        {
+            go = Instantiate(noMatrixTile);
+        }
+        else if (m[i, j] == sum_k)
+        {
+            go = Instantiate(doneMatrixTile);
+        }
+        else if (m[i, j] > sum_k)
+        {
+            go = Instantiate(workingMatrixTile);
+        }
+        else if (m[i, j] < sum_k)
+        {
+            go = Instantiate(overflowMatrixTile);
+        }
+
+        return go;
     }
 
     public void UpdateUserTiles()

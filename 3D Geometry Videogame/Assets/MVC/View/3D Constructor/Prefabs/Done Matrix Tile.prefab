@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 3588300224846697300}
   - component: {fileID: 3588300224846697291}
   m_Layer: 5
-  m_Name: Matrix Tile
+  m_Name: Done Matrix Tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.39286894, g: 0.24096651, b: 0.8962264, a: 1}
+  m_Color: {r: 0.23803464, g: 0.8867924, b: 0.17150229, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
