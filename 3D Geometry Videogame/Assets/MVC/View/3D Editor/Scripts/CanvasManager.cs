@@ -10,7 +10,6 @@ public class CanvasManager : MonoBehaviour
 {
 
     public List<Vector3> cubePositions;
-    List<List<Vector3>> edges;
 
     public TextMeshProUGUI objectsLeft;
     private Color preColor;
@@ -27,7 +26,6 @@ public class CanvasManager : MonoBehaviour
         labelsCanvas.enabled = false;
         invalidGraphIndicator.enabled = false;
         cubePositions = new List<Vector3>();
-        edges = new List<List<Vector3>>();
         cubePositions.Add(Vector3.zero);
         preColor = objectsLeft.color;
 
@@ -38,11 +36,9 @@ public class CanvasManager : MonoBehaviour
         SceneManager.LoadScene("3D Editor");
     }
 
-    public void AddNewObject(Vector3 newPosition, Vector3 oldPosition)
+    public void AddNewObject(Vector3 newPosition)
     {
-
         cubePositions.Add(Round(newPosition));
-        edges.Add(new List<Vector3>() { Round(newPosition), Round(oldPosition) });
         objectsLeft.text = (int.Parse(objectsLeft.text) - 1).ToString();
         SetColor();
     }
@@ -51,11 +47,6 @@ public class CanvasManager : MonoBehaviour
     {
         Vector3 roundedPosition = Round(position);
         cubePositions.Remove(roundedPosition);
-        List < List < Vector3 > > copyEdges = edges;
-        foreach(List<Vector3> edge in copyEdges)
-        {
-            if (edge.Contains(roundedPosition)) edges.Remove(edge);
-        }
         objectsLeft.text = (int.Parse(objectsLeft.text) + 1).ToString();
         SetColor();
     }
@@ -97,7 +88,7 @@ public class CanvasManager : MonoBehaviour
 
     private bool IsValidGraph()
     {
-        Graph g = new Graph(cubePositions, edges);
+        Graph g = new Graph(cubePositions);
         return g.IsValidGraph();
     }
 

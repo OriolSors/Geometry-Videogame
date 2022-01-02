@@ -58,7 +58,7 @@ public class AvailableFaceController : MonoBehaviour
 
                         //If there is not an object at the new position, we add it
 
-                        canvasManager.AddNewObject(newCubePosition, hit.transform.position);
+                        canvasManager.AddNewObject(newCubePosition);
                         newCube.transform.parent = boundaryBox.transform; 
 
                         //Sending Bounding Box bounds and VRP to the Camera Controller
