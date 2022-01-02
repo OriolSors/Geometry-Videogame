@@ -172,32 +172,13 @@ public class NewMissionManager : MonoBehaviour
         else
         {
             string date = DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss");
-
-            List<Vector3> roundedCubePositions = new List<Vector3>();
-
-            foreach(Vector3 cubePosition in cubePositions)
-            {
-                roundedCubePositions.Add(Round(cubePosition, 2));
-            }
-            
-            missionController.CreateNewMission(date, AuthController.Instance.GetCurrentUser(), roundedCubePositions, isDefaultMission, playersDict);
+            missionController.CreateNewMission(date, AuthController.Instance.GetCurrentUser(), cubePositions, isDefaultMission, playersDict);
             SceneManager.LoadScene("Designer Mission List Screen");
         }
         
     }
 
-    public static Vector3 Round(Vector3 vector3, int decimalPlaces = 2)
-    {
-        float multiplier = 1;
-        for (int i = 0; i < decimalPlaces; i++)
-        {
-            multiplier *= 10f;
-        }
-        return new Vector3(
-            Mathf.Round(vector3.x * multiplier) / multiplier,
-            Mathf.Round(vector3.y * multiplier) / multiplier,
-            Mathf.Round(vector3.z * multiplier) / multiplier);
-    }
+
 
 
     public void ExitScreen()
