@@ -44,20 +44,20 @@ public class ConstructionAxisXYZ : MonoBehaviour
         //Draw X axis
         GL.Color(Color.red);
         GL.Vertex3(minPosX, minPosY, minPosZ);
-        GL.Vertex3(5.0f + minPosX, minPosY, minPosZ);
-        GameObject.Find("X Axis Text").transform.position = new Vector3(5.0f + minPosX, minPosY, minPosZ - 0.5f);
+        GL.Vertex3(2.5f + minPosX, minPosY, minPosZ);
+        GameObject.Find("X Axis Text").transform.position = new Vector3(3f + minPosX, minPosY, minPosZ);
 
         //Draw Y axis
         GL.Color(Color.green);
         GL.Vertex3(minPosX, minPosY, minPosZ);
-        GL.Vertex3(minPosX, 5.0f + minPosY, minPosZ);
-        GameObject.Find("Y Axis Text").transform.position = new Vector3(minPosX + 0.5f, 5.0f + minPosY, minPosZ);
+        GL.Vertex3(minPosX, 1.5f + minPosY, minPosZ);
+        GameObject.Find("Y Axis Text").transform.position = new Vector3(minPosX, 2f + minPosY, minPosZ);
 
         //Draw Z axis
         GL.Color(Color.blue);
         GL.Vertex3(minPosX, minPosY, minPosZ);
-        GL.Vertex3(minPosX, minPosY, 5.0f + minPosZ);
-        GameObject.Find("Z Axis Text").transform.position = new Vector3(minPosX + 0.5f, minPosY, 5.0f + minPosZ);
+        GL.Vertex3(minPosX, minPosY, 2.5f + minPosZ);
+        GameObject.Find("Z Axis Text").transform.position = new Vector3(minPosX, minPosY, 3f + minPosZ);
 
         GL.End();
         GL.PopMatrix();

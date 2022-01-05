@@ -45,7 +45,7 @@ public class ConstructionBoundaryBoxController : MonoBehaviour
         GameObject newCube = Instantiate(cubePrefab, randomStartPos, Quaternion.identity);
         newCube.transform.parent = gameObject.transform;
 
-        scriptCamera.SetStartingCameraPos(randomStartPos, new Vector3(0, 0, -3));
+        scriptCamera.SetStartingCameraPos(randomStartPos, new Vector3(0, 0, -3.5f));
         SendBounds();
     }
 

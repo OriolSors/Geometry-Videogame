@@ -22,7 +22,7 @@ public class Graph
             {
                 if (vertex == vertexAdj) continue;
 
-                if (Vector3.Distance(vertex, vertexAdj) == 0.5f) edges.Add(new List<Vector3>() { vertex, vertexAdj });
+                if (Vector3.Distance(vertex, vertexAdj) == 0.5f) edges.Add(new List<Vector3>() { vertex, vertexAdj }); //assegurar comparacio de floats
             }
         }
     }

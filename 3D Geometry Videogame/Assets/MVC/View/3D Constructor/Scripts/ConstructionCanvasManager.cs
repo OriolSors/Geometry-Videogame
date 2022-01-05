@@ -42,9 +42,10 @@ public class ConstructionCanvasManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        /*
         if (Input.GetKey(KeyCode.Tab)) matricesPanel.SetActive(true);
         else matricesPanel.SetActive(false);
+        */
         
     }
 
