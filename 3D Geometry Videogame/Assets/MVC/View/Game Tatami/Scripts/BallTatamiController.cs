@@ -56,7 +56,7 @@ public class BallTatamiController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (transform.position.y < -5)
         {

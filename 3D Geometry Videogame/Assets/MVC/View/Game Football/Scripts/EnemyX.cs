@@ -21,11 +21,11 @@ public class EnemyX : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         // Set enemy direction towards player goal and move there
         Vector3 lookDirection = (playerGoal.transform.position - transform.position).normalized;
-        if(!stopped)enemyRb.AddForce(lookDirection * speed * Time.deltaTime);
+        if(!stopped)enemyRb.AddForce(lookDirection * speed * Time.fixedDeltaTime);
         else enemyRb.AddForce(Vector3.zero);
 
     }

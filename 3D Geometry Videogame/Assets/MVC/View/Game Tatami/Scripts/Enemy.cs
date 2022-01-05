@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Vector3 lookDirection = (player.transform.position - transform.position).normalized;
         if (!stopped) enemyRb.AddForce(lookDirection * speed);

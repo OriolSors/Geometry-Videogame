@@ -61,20 +61,20 @@ public class PlayerControllerX : MonoBehaviour
 
     
 
-    void Update()
+    void FixedUpdate()
     {
         
         if (Input.GetKeyDown(KeyCode.Space))
         {
             dirtParticle.gameObject.transform.position = transform.position;
             dirtParticle.Play();
-            playerRb.AddForce(focalPoint.transform.forward * speed * 2 * Time.deltaTime, ForceMode.Impulse);
+            playerRb.AddForce(focalPoint.transform.forward * speed * 2 * Time.fixedDeltaTime, ForceMode.Impulse);
         }
         
         
         // Add force to player in direction of the focal point (and camera)
         float verticalInput = Input.GetAxis("Vertical");
-        if (!stopped) playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime); 
+        if (!stopped) playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.fixedDeltaTime); 
 
         // Set powerup indicator position to beneath player
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
