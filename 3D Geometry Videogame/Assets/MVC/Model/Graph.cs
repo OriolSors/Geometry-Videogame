@@ -27,6 +27,34 @@ public class Graph
         }
     }
 
+    private bool NonManifold()
+    {
+        bool isNonManifold = false;
+        foreach (Vector3 vertex in vertices)
+        {
+            foreach (Vector3 vertexAdj in vertices)
+            {
+                if (vertex == vertexAdj) continue;
+
+                if (Mathf.Approximately(Vector3.Distance(vertex, vertexAdj), Mathf.Sqrt(0.5f)))
+                {
+                    isNonManifold = true;
+                    foreach (Vector3 intermediate in vertices)
+                    {
+                        if (intermediate == vertexAdj || intermediate == vertex) continue;
+                        if(ExistsEdge(intermediate,vertex) && ExistsEdge(intermediate, vertexAdj))
+                        {
+                            isNonManifold = false;
+                            break;
+                        }
+                    }
+                }
+                if (isNonManifold) return true;
+            }
+        }
+        return isNonManifold;
+    }
+
     private bool ExistsEdge(Vector3 firstVertex, Vector3 secondVertex)
     {
         return edges.Any(c => c.SequenceEqual(new List<Vector3>() { firstVertex, secondVertex })) ||
@@ -35,6 +63,7 @@ public class Graph
 
     public bool IsValidGraph()
     {
+        if (NonManifold()) return false;
         if (edges.Count == 0) return false;
 
         Dictionary<Vector3, bool> visited = new Dictionary<Vector3, bool>();
