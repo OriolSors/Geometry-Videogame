@@ -49,6 +49,29 @@ public class Graph
                         }
                     }
                 }
+
+                if (Mathf.Approximately(Vector3.Distance(vertex, vertexAdj), Mathf.Sqrt(0.75f)))
+                {
+                    isNonManifold = true;
+                    foreach (Vector3 intermediate in vertices)
+                    {
+                        if (intermediate == vertexAdj || intermediate == vertex) continue;
+
+                        foreach (Vector3 intermediate2 in vertices)
+                        {
+                            if (intermediate2 == vertexAdj || intermediate2 == vertex || intermediate2 == intermediate) continue;
+                            if (ExistsEdge(intermediate, vertex) && ExistsEdge(intermediate2, vertexAdj) && ExistsEdge(intermediate,intermediate2))
+                            {
+                                isNonManifold = false;
+                                break;
+                            }
+                        }
+
+                        
+                    }
+                }
+
+
                 if (isNonManifold) return true;
             }
         }
