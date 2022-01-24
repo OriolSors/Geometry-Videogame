@@ -223,7 +223,13 @@ public class ConstructionController
 
     public bool CheckCubePositions(List<Vector3> userCubePositions)
     {
-        return userCubePositions.Except(targetCubePositions).Count() == 0 && userCubePositions.Count() == targetCubePositions.Count();
+        //return userCubePositions.Except(targetCubePositions).Count() == 0 && userCubePositions.Count() == targetCubePositions.Count();
+        return CompareMatrices(M_x_y,uM_x_y) && CompareMatrices(M_z_y,uM_z_y) && CompareMatrices(M_x_z,uM_x_z);
+    }
+
+    private bool CompareMatrices(int[,] data1, int[,] data2)
+    {
+        return data1.Rank == data2.Rank && Enumerable.Range(0, data1.Rank).All(dimension => data1.GetLength(dimension) == data2.GetLength(dimension)) && data1.Cast<int>().SequenceEqual(data2.Cast<int>());
     }
 
 
