@@ -86,6 +86,11 @@ public class CanvasManager : MonoBehaviour
         
     }
 
+    public void ExitGame()
+    {
+        SceneManager.LoadScene("Designer Mission List Screen");
+    }
+
     private bool IsValidGraph()
     {
         Graph g = new Graph(cubePositions);
