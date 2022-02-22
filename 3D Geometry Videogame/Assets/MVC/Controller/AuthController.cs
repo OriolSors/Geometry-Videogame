@@ -31,7 +31,7 @@ public sealed class AuthController
         }
     }
 
-    public async Task RegisterNewUser(string username, string email, string password, Action<string> GetNegativeResultOfUserCreation)
+    public async Task RegisterNewUser(string username, string email, string password, string accountType, Action<string> GetNegativeResultOfUserCreation)
     {
         await auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {
             if (task.IsCanceled)
@@ -70,8 +70,11 @@ public sealed class AuthController
             });
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
+            CreateNewUser(username, email, accountType);
+
         });
         return;
+
     }
 
     public async Task LoginUser(string email, string password, Action<string> GetNegativeResultOfUserLogged)
@@ -95,6 +98,7 @@ public sealed class AuthController
                 newUser.DisplayName, newUser.UserId);
         });
         return;
+
     }
 
     public void CreateNewUser(string username, string email, string accountType)
@@ -159,6 +163,7 @@ public sealed class AuthController
             });
             return;
         }
+
         
     }
 

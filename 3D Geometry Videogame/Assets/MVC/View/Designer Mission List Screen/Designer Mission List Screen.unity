@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.57481617, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -647,7 +647,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 2, y: -104}
-  m_SizeDelta: {x: 400, y: 600}
+  m_SizeDelta: {x: 500, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &488577681
 MonoBehaviour:
@@ -662,13 +662,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 676102353}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 16
   m_Viewport: {fileID: 495220061}
   m_HorizontalScrollbar: {fileID: 1379292791}
   m_VerticalScrollbar: {fileID: 688338267}
@@ -969,7 +969,6 @@ MonoBehaviour:
   userStatistics: {fileID: 59056736}
   userStatisticsScroll: {fileID: 676102353}
   userView: {fileID: 3767780168434132735, guid: f653b67e95734414a8de82764bcc4df0, type: 3}
-  font: {fileID: 12800000, guid: 3a70ad0bbaee8473c80840c8766769c1, type: 3}
 --- !u!1 &608438488
 GameObject:
   m_ObjectHideFlags: 0
@@ -1975,13 +1974,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 1822979950}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 16
   m_Viewport: {fileID: 2035725701}
   m_HorizontalScrollbar: {fileID: 1063974130}
   m_VerticalScrollbar: {fileID: 2099063864}

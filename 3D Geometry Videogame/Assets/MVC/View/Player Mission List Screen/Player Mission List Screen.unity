@@ -529,13 +529,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 1721830439}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 16
   m_Viewport: {fileID: 1833416321}
   m_HorizontalScrollbar: {fileID: 710277416}
   m_VerticalScrollbar: {fileID: 91039406}
@@ -2290,7 +2290,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 2, y: 10}
-  m_SizeDelta: {x: 400, y: 600}
+  m_SizeDelta: {x: 450, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1250574717
 MonoBehaviour:
@@ -2305,13 +2305,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 2061913748}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 16
   m_Viewport: {fileID: 943811216}
   m_HorizontalScrollbar: {fileID: 1538018274}
   m_VerticalScrollbar: {fileID: 1769045874}
@@ -2724,7 +2724,6 @@ MonoBehaviour:
   inventoryMissionView: {fileID: 1927894189589949422, guid: 7783caee90002d249931c4407d7476ac, type: 3}
   inventoryCubeNumbers: {fileID: 1047613743}
   inventoryMissionStatus: {fileID: 899437460}
-  font: {fileID: 12800000, guid: 3a70ad0bbaee8473c80840c8766769c1, type: 3}
 --- !u!1 &1676396235
 GameObject:
   m_ObjectHideFlags: 0

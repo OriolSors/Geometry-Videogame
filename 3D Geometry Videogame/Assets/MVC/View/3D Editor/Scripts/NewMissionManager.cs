@@ -31,6 +31,9 @@ public class NewMissionManager : MonoBehaviour
     private bool isAcceptedPlayer = false;
     public Canvas noPlayerCanvas;
 
+    public Canvas setMissionNameCanvas;
+    public Canvas noValidMissionNameCanvas;
+
     private MissionController missionController;
 
     private void Start()
@@ -41,6 +44,8 @@ public class NewMissionManager : MonoBehaviour
 
         confirmPlayerCanvas.enabled = false;
         noPlayerCanvas.enabled = false;
+        setMissionNameCanvas.enabled = false;
+        noValidMissionNameCanvas.enabled = false;
 
         createMission.interactable = false;
 
@@ -163,6 +168,12 @@ public class NewMissionManager : MonoBehaviour
         noPlayerCanvas.enabled = false;
     }
 
+    public void ConfirmNoValidMissionName()
+    {
+        noValidMissionNameCanvas.enabled = false;
+        setMissionNameCanvas.enabled = true;
+    }
+
     public void CreateMission()
     {
         if (playersDict.Count == 0)
@@ -171,9 +182,26 @@ public class NewMissionManager : MonoBehaviour
         }
         else
         {
-            string date = DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss");
-            missionController.CreateNewMission(date, AuthController.Instance.GetCurrentUser(), cubePositions, isDefaultMission, playersDict);
+            setMissionNameCanvas.enabled = true;
+
+        }
+        
+    }
+
+    public void SaveNewMission()
+    {
+        string missionName = setMissionNameCanvas.GetComponentInChildren<TMP_InputField>().text;
+        if (!string.IsNullOrWhiteSpace(missionName))
+        {
+            string date = DateTime.Now.ToString("dd-MM-yyyy");
+            missionName += " " + date;
+            missionController.CreateNewMission(missionName, AuthController.Instance.GetCurrentUser(), cubePositions, isDefaultMission, playersDict);
             SceneManager.LoadScene("Designer Mission List Screen");
+        }
+        else
+        {
+            noValidMissionNameCanvas.enabled = true;
+            setMissionNameCanvas.enabled = false;
         }
         
     }
