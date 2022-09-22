@@ -15,6 +15,7 @@ public class CanvasManager : MonoBehaviour
     private Color preColor;
 
     public Canvas labelsCanvas;
+    //public Canvas missionForPlayersCanvas declared
     public Canvas invalidGraphIndicator;
 
     private NewMissionManager missionManager;
@@ -22,7 +23,7 @@ public class CanvasManager : MonoBehaviour
     void Start()
     {
         missionManager = labelsCanvas.GetComponent<NewMissionManager>();
-
+        //missionForPlayersManager instantiated
         labelsCanvas.enabled = false;
         invalidGraphIndicator.enabled = false;
         cubePositions = new List<Vector3>();
@@ -71,6 +72,8 @@ public class CanvasManager : MonoBehaviour
 
     public void SaveConstruction()
     {
+
+        //ACTIVATE NEW CONTROLLER FOR PLAYER-USER CREATING THE NEW CONSTRUCTION INSTEAD OF NewMissionManager.cs SCRIPT
 
         if (IsValidGraph()) //TODO: check graph in progress to indicate invalid graph at real time
         {
