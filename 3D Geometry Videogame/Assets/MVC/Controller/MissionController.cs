@@ -23,6 +23,13 @@ public class MissionController
         mission.CreateMissionDesigner(playersDict);
     }
 
+    public void CreateNewMissionByPlayer(string missionName, User designerOfMission, List<Vector3> cubePositions)
+    {
+        int numberOfFigures = cubePositions.Count;
+        Mission mission = new Mission(missionName, designerOfMission.GetEmail(), numberOfFigures, cubePositions, false);
+        mission.CreateChallengeByPlayer();
+    }
+
     public void GetAllPlayerNames(Action<List<string>> callbackListOfPlayerNames)
     {
         userController.GetAllPlayerNames(callbackListOfPlayerNames);

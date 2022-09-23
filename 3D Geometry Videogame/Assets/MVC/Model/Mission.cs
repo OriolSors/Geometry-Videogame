@@ -44,4 +44,14 @@ public class Mission
         UserController userController = new UserController();
         userController.AddNewMissionDesigner(missionDesigner, AuthController.Instance.GetCurrentUser());
     }
+
+    public void CreateChallengeByPlayer()
+    {
+        
+    }
+
+    public void CreateChallengeToPlayer()
+    {
+
+    }
 }

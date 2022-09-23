@@ -15,15 +15,16 @@ public class CanvasManager : MonoBehaviour
     private Color preColor;
 
     public Canvas labelsCanvas;
-    //public Canvas missionForPlayersCanvas declared
+    public Canvas missionByStudentCanvas;
     public Canvas invalidGraphIndicator;
 
     private NewMissionManager missionManager;
+    private MissionByStudentManager missionByStudentManager;
 
     void Start()
     {
         missionManager = labelsCanvas.GetComponent<NewMissionManager>();
-        //missionForPlayersManager instantiated
+        missionByStudentManager = missionByStudentCanvas.GetComponent<MissionByStudentManager>();
         labelsCanvas.enabled = false;
         invalidGraphIndicator.enabled = false;
         cubePositions = new List<Vector3>();
@@ -72,13 +73,18 @@ public class CanvasManager : MonoBehaviour
 
     public void SaveConstruction()
     {
+        
 
-        //ACTIVATE NEW CONTROLLER FOR PLAYER-USER CREATING THE NEW CONSTRUCTION INSTEAD OF NewMissionManager.cs SCRIPT
-
-        if (IsValidGraph()) //TODO: check graph in progress to indicate invalid graph at real time
+        if (IsValidGraph() && AuthController.Instance.GetCurrentUser() is Designer) //TODO: check graph in progress to indicate invalid graph at real time
         {
             labelsCanvas.enabled = true;
             missionManager.SetUp(cubePositions);
+            gameObject.SetActive(false);
+        }
+        else if (IsValidGraph() && AuthController.Instance.GetCurrentUser() is Player)
+        {
+            missionByStudentCanvas.enabled = true;
+            missionByStudentManager.SetUp(cubePositions);
             gameObject.SetActive(false);
         }
         else

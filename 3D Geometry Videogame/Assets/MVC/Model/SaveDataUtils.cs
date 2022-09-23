@@ -139,6 +139,82 @@ public class SaveDataMissionPlayer
 }
 
 [System.Serializable]
+public class SaveDataChallengeCreator
+{
+    [SerializeField]
+    public string playerName;
+
+    [SerializeField]
+    public string missionName;
+
+    [SerializeField]
+    public string designerOfMission;
+
+    [SerializeField]
+    public int numberOfFigures;
+
+    [SerializeField]
+    public List<Vector3> cubePositions;
+
+    [SerializeField]
+    public List<SaveDataChallengePlayer> listOfPlayers;
+
+    public SaveDataChallengeCreator(string playerName, string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions, Dictionary<string, ChallengePlayer> listOfPlayers)
+    {
+        this.playerName = playerName;
+        this.missionName = missionName;
+        this.designerOfMission = designerOfMission;
+        this.numberOfFigures = numberOfFigures;
+        this.cubePositions = cubePositions;
+        foreach (string player in listOfPlayers.Keys)
+        {
+            this.listOfPlayers.Add(listOfPlayers[player].WriteToDB(player));
+        }
+    }
+}
+
+[System.Serializable]
+public class SaveDataChallengePlayer
+{
+    [SerializeField]
+    public string playerName;
+
+    [SerializeField]
+    public string missionName;
+
+    [SerializeField]
+    public string designerOfMission;
+
+    [SerializeField]
+    public int numberOfFigures;
+
+    [SerializeField]
+    public List<Vector3> cubePositions;
+
+    [SerializeField]
+    public Time timeToComplete;
+
+    [SerializeField]
+    public bool completed;
+
+    [SerializeField]
+    public bool likeOrDislike;
+
+
+    public SaveDataChallengePlayer(string playerName, string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions, Time timeToComplete, bool completed, bool likeOrDislike)
+    {
+        this.playerName = playerName;
+        this.missionName = missionName;
+        this.designerOfMission = designerOfMission;
+        this.numberOfFigures = numberOfFigures;
+        this.cubePositions = cubePositions;
+        this.timeToComplete = timeToComplete;
+        this.completed = completed;
+        this.likeOrDislike = likeOrDislike;
+    }
+}
+
+[System.Serializable]
 public class SaveDataMinigame
 {
     [SerializeField]
