@@ -129,6 +129,11 @@ public class MissionListPlayerScript : MonoBehaviour
         SceneManager.LoadScene("3D Constructor");
     }
 
+    public void GoToEdit()
+    {
+        SceneManager.LoadScene("3D Editor");
+    }
+
     private void LoadMinigames(string mission)
     {
         MissionListController.Instance.SaveCurrentMissionPlayer(mission);

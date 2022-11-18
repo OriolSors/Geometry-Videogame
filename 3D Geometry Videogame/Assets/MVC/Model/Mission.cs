@@ -47,7 +47,9 @@ public class Mission
 
     public void CreateChallengeByPlayer()
     {
-        
+        ChallengeCreator challengeCreator = new ChallengeCreator(missionName, designerOfMission, numberOfFigures, cubePositions);
+        UserController userController = new UserController();
+        userController.AddNewChallengeCreator(challengeCreator, AuthController.Instance.GetCurrentUser());
     }
 
     public void CreateChallengeToPlayer()

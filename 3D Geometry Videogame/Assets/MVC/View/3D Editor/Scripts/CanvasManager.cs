@@ -26,6 +26,7 @@ public class CanvasManager : MonoBehaviour
         missionManager = labelsCanvas.GetComponent<NewMissionManager>();
         missionByStudentManager = missionByStudentCanvas.GetComponent<MissionByStudentManager>();
         labelsCanvas.enabled = false;
+        missionByStudentCanvas.enabled = false;
         invalidGraphIndicator.enabled = false;
         cubePositions = new List<Vector3>();
         cubePositions.Add(Vector3.zero);

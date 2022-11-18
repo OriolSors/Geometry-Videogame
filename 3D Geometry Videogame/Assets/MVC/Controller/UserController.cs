@@ -35,6 +35,12 @@ public class UserController
         designer.AddNewMission(missionDesigner);
     }
 
+    public void AddNewChallengeCreator(ChallengeCreator challengeCreator, User user)
+    {
+        Player player = user as Player;
+        player.SaveNewChallengeCreator(challengeCreator);
+    }
+
     private async Task GetAllPlayerObjects()
     {
         Dictionary<string, Player> players = new Dictionary<string, Player>();

@@ -92,5 +92,10 @@ public class Player : User
         reference.Child("Users").Child(userId).SetRawJsonValueAsync(JsonUtility.ToJson(savePlayerDataToDB));
     }
 
+    public void SaveNewChallengeCreator(ChallengeCreator challengeCreator)
+    {
+        SaveDataChallengeCreator challengeCreatorDataToDB = challengeCreator.WriteToDB();
+        reference.Child("Challenges").Child(challengeCreatorDataToDB.missionName).SetRawJsonValueAsync(JsonUtility.ToJson(challengeCreatorDataToDB));
+    }
    
 }
