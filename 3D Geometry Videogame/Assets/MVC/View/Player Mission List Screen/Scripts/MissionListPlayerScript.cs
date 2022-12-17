@@ -33,6 +33,7 @@ public class MissionListPlayerScript : MonoBehaviour
     private void FillMissionScroll()
     {
         Dictionary<string, int[]> missions = MissionListController.Instance.GetAllMissionPlayer(AuthController.Instance.GetCurrentUser());
+        Dictionary<string, string> challenges = MissionListController.Instance.GetAllChallengePlayer(AuthController.Instance.GetCurrentUser());
 
         if(missions.Count != 0)
         {
@@ -101,7 +102,40 @@ public class MissionListPlayerScript : MonoBehaviour
                 SetInventoryMission(firstMission, (100 * missions[firstMission][0] / missions[firstMission][1]).ToString() + "%", missions[firstMission][0].ToString());
             }
         }
+        else if (challenges.Count != 0)
+        {
+            foreach (string challenge in challenges.Keys)
+            {
+                GameObject go = Instantiate(missionReadyView);
+                Button minigameMission = go.transform.Find("Mission Button").GetComponent<Button>();
+                Button finishMission = go.transform.Find("Ready Button").GetComponent<Button>();
 
+                minigameMission.GetComponentInChildren<Text>().text = challenge;
+
+                if (challenges[challenge] == "N/A")
+                {
+                    //---------- MAIN LIST MISSIONS ----------
+
+                    
+                    minigameMission.onClick.AddListener(delegate { GoToConstruct(challenge, isChallenge:true); });
+                    finishMission.GetComponentInChildren<Text>().text = "N/A";
+                    finishMission.interactable = false;
+                    go.transform.SetParent(missionsScroll);
+
+                }
+                else
+                {
+                    //---------- MAIN LIST MISSIONS ----------
+
+                    minigameMission.interactable = false;
+                    finishMission.GetComponentInChildren<Text>().text = challenges[challenge];
+                    finishMission.interactable = false;
+                    go.transform.SetParent(missionsScroll);
+
+                }
+
+            }
+        }
 
     }
 
@@ -123,9 +157,10 @@ public class MissionListPlayerScript : MonoBehaviour
         }
     }
 
-    private void GoToConstruct(string mission)
+    private void GoToConstruct(string mission, bool isChallenge = false)
     {
-        MissionListController.Instance.SaveCurrentMissionPlayer(mission);
+        if(!isChallenge)MissionListController.Instance.SaveCurrentMissionPlayer(mission);
+        else MissionListController.Instance.SaveCurrentChallengePlayer(mission);
         SceneManager.LoadScene("3D Constructor");
     }
 

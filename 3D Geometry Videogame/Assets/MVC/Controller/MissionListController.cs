@@ -31,6 +31,12 @@ public sealed class MissionListController
         return currentPlayer.GetAllMissionPlayer();
     }
 
+    public Dictionary<string, string> GetAllChallengePlayer(User currentUser)
+    {
+        Player currentPlayer = currentUser as Player;
+        return currentPlayer.GetAllChallengePlayer();
+    }
+
     public List<string> GetAllMissionDesigner(User currentUser)
     {
         Designer currentDesigner = currentUser as Designer;

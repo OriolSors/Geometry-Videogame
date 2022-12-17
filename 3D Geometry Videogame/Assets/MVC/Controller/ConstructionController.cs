@@ -38,7 +38,14 @@ public class ConstructionController
 
     public void SetUpValues()
     {
-        targetCubePositions = MissionListController.Instance.GetCurrentMissionPlayer().GetCubePositions();
+        if (MissionListController.Instance.GetCurrentMissionPlayer() != null)
+        {
+            targetCubePositions = MissionListController.Instance.GetCurrentMissionPlayer().GetCubePositions();
+        }else
+        {
+            targetCubePositions = MissionListController.Instance.GetCurrentChallengePlayer().GetCubePositions();
+        }
+       
 
         max_pos_x = targetCubePositions.Max(v => v.x);
         min_pos_x = targetCubePositions.Min(v => v.x);

@@ -59,10 +59,16 @@ public class ChallengePlayer
     {
         return timeToComplete;
     }
+    public bool IsCompleted()
+    {
+        return completed;
+    }
 
     public SaveDataChallengePlayer WriteToDB(string player)
     {
         SaveDataChallengePlayer challengePlayerToDB = new SaveDataChallengePlayer(player, missionName, designerOfMission, numberOfFigures, cubePositions, timeToComplete, completed, like);
         return challengePlayerToDB;
     }
+
+    
 }
