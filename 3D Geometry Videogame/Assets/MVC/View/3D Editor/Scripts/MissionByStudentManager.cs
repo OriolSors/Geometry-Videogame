@@ -17,7 +17,6 @@ public class MissionByStudentManager : MonoBehaviour
     {
         missionController = new MissionController();
         noValidMissionNameCanvas.enabled = false;
-        setMissionNameCanvas.enabled = false;
     }
 
     // Update is called once per frame

@@ -10,7 +10,7 @@ public class ChallengePlayer
     private string designerOfMission;
     private int numberOfFigures;
     private List<Vector3> cubePositions;
-    private Time timeToComplete;
+    private float timeToComplete;
     private bool completed = false;
     private bool like;
 
@@ -53,6 +53,11 @@ public class ChallengePlayer
     public List<Vector3> GetCubePositions()
     {
         return cubePositions;
+    }
+
+    public float GetTimeCompleted()
+    {
+        return timeToComplete;
     }
 
     public SaveDataChallengePlayer WriteToDB(string player)

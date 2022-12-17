@@ -41,7 +41,23 @@ public class UserController
         player.SaveNewChallengeCreator(challengeCreator);
     }
 
-    private async Task GetAllPlayerObjects()
+    
+    public async void AddNewChallengePlayer(ChallengePlayer challengePlayer, Player player)
+    {
+        await GetAllPlayerObjects();
+        foreach (string userId in listOfPlayers.Keys)
+        {
+            if (listOfPlayers[userId].GetUserName() == player.GetUserName())
+            {
+                listOfPlayers[userId].AddNewChallengePlayer(userId, challengePlayer);
+            }
+        }
+
+    }
+
+    
+
+    public async Task GetAllPlayerObjects()
     {
         Dictionary<string, Player> players = new Dictionary<string, Player>();
         await reference.Child("Users").GetValueAsync().ContinueWithOnMainThread(task =>
@@ -73,6 +89,16 @@ public class UserController
         });
 
         return;
+    }
+
+    public Dictionary<string, Player> GetPlayers()
+    {
+        return listOfPlayers;
+    }
+
+    public void ReplaceCreatorChallenge(ChallengePlayer currentChallengePlayer)
+    {
+        //TODO: MODIFICAR DIRECTAMENT EL CHALLENGE CREATOR
     }
 
     public async void ReplaceDesignerMission(MissionPlayer currentMissionPlayer)
@@ -127,6 +153,7 @@ public class UserController
             }
         }
     }
+
 
     public void GetAllPlayerNames(Action<List<string>> callbackListOfPlayerNames)
     {

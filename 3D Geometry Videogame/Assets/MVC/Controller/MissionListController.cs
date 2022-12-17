@@ -5,6 +5,7 @@ using Firebase.Database;
 public sealed class MissionListController
 {
     private MissionPlayer currentMissionPlayer = null;
+    private ChallengePlayer currentChallengePlayer = null;
 
     private MissionListController()
     {
@@ -47,9 +48,19 @@ public sealed class MissionListController
         currentMissionPlayer = (AuthController.Instance.GetCurrentUser() as Player).GetMissionByName(mission);
     }
 
+    public void SaveCurrentChallengePlayer(string mission)
+    {
+        currentChallengePlayer = (AuthController.Instance.GetCurrentUser() as Player).GetChallengeByName(mission);
+    }
+
     public MissionPlayer GetCurrentMissionPlayer()
     {
         return currentMissionPlayer;
+    }
+
+    public ChallengePlayer GetCurrentChallengePlayer()
+    {
+        return currentChallengePlayer;
     }
 
     public void UpdateMissionPlayer()
@@ -59,5 +70,12 @@ public sealed class MissionListController
         userController.ReplaceDesignerMission(currentMissionPlayer);
     }
 
-    
+    public void UpdateChallengePlayer()
+    {
+        (AuthController.Instance.GetCurrentUser() as Player).UpdateChallenge(currentChallengePlayer);
+        UserController userController = new UserController();
+        userController.ReplaceCreatorChallenge(currentChallengePlayer);
+    }
+
+
 }

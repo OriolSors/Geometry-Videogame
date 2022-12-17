@@ -10,19 +10,28 @@ public class Player : User
 
     private List<MissionPlayer> listOfMissions;
 
+    private List<ChallengePlayer> listOfChallenges;
+
     public Player(string username, string email): base (username, email)
     {
     
         listOfMissions = new List<MissionPlayer>();
+        listOfChallenges = new List<ChallengePlayer>();
     }
 
     public Player(SaveDataPlayer dataPlayer): base (dataPlayer.username, dataPlayer.email)
     {
         listOfMissions = new List<MissionPlayer>();
+        listOfChallenges = new List<ChallengePlayer>();
 
         foreach (SaveDataMissionPlayer missionPlayerData in dataPlayer.listOfMissions)
         {
             listOfMissions.Add(new MissionPlayer(missionPlayerData));
+        }
+
+        foreach (SaveDataChallengePlayer challengePlayerData in dataPlayer.listOfChallenges)
+        {
+            listOfChallenges.Add(new ChallengePlayer(challengePlayerData));
         }
     }
 
@@ -37,10 +46,26 @@ public class Player : User
         return dictMission;
     }
 
+    
+
     public override void WriteUserToLocalJSON()
     {
-        SaveDataPlayer savePlayerDataToLocal = new SaveDataPlayer(username, email, listOfMissions);
+        SaveDataPlayer savePlayerDataToLocal = new SaveDataPlayer(username, email, listOfMissions, listOfChallenges);
         File.WriteAllText(Application.persistentDataPath + "/currentuser.json", JsonUtility.ToJson(savePlayerDataToLocal));
+    }
+
+    public ChallengePlayer GetChallengeByName(string mission)
+    {
+        ChallengePlayer currentChallenge = null;
+        foreach (ChallengePlayer challengePlayer in listOfChallenges)
+        {
+            if (challengePlayer.GetMissionName() == mission)
+            {
+                currentChallenge = challengePlayer;
+                break;
+            }
+        }
+        return currentChallenge;
     }
 
     public MissionPlayer GetMissionByName(string mission)
@@ -55,6 +80,18 @@ public class Player : User
             }
         }
         return currentMission;
+    }
+
+    public void UpdateChallenge(ChallengePlayer currentChallengePlayer)
+    {
+        int index = listOfChallenges.FindIndex(a => a.GetMissionName() == currentChallengePlayer.GetMissionName());
+        if (index != -1) listOfChallenges[index] = currentChallengePlayer;
+
+        Firebase.Auth.FirebaseUser user = auth.CurrentUser;
+        if (user != null)
+        {
+            UpdateUserToDB(user.UserId);
+        }
     }
 
     public void UpdateMission(MissionPlayer currentMissionPlayer)
@@ -74,7 +111,7 @@ public class Player : User
         Firebase.Auth.FirebaseUser user = auth.CurrentUser;
         if (user != null)
         {
-            SaveDataPlayer savePlayerDataToDB = new SaveDataPlayer(username, email, listOfMissions);
+            SaveDataPlayer savePlayerDataToDB = new SaveDataPlayer(username, email, listOfMissions, listOfChallenges);
             reference.Child("Users").Child(user.UserId).SetRawJsonValueAsync(JsonUtility.ToJson(savePlayerDataToDB));
         }
         
@@ -86,9 +123,15 @@ public class Player : User
         UpdateUserToDB(userId);
     }
 
+    public void AddNewChallengePlayer(string userId, ChallengePlayer challengePlayer)
+    {
+        listOfChallenges.Add(challengePlayer);
+        UpdateUserToDB(userId);
+    }
+
     private void UpdateUserToDB(string userId)
     {
-        SaveDataPlayer savePlayerDataToDB = new SaveDataPlayer(username, email, listOfMissions);
+        SaveDataPlayer savePlayerDataToDB = new SaveDataPlayer(username, email, listOfMissions, listOfChallenges);
         reference.Child("Users").Child(userId).SetRawJsonValueAsync(JsonUtility.ToJson(savePlayerDataToDB));
     }
 
@@ -97,5 +140,7 @@ public class Player : User
         SaveDataChallengeCreator challengeCreatorDataToDB = challengeCreator.WriteToDB();
         reference.Child("Challenges").Child(challengeCreatorDataToDB.missionName).SetRawJsonValueAsync(JsonUtility.ToJson(challengeCreatorDataToDB));
     }
-   
+
+    
+
 }

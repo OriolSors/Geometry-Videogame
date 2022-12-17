@@ -18,8 +18,10 @@ public class SaveDataPlayer
 
     [SerializeField]
     public List<SaveDataMissionPlayer> listOfMissions = new List<SaveDataMissionPlayer>();
+    [SerializeField]
+    public List<SaveDataChallengePlayer> listOfChallenges = new List<SaveDataChallengePlayer>();
 
-    public SaveDataPlayer(string username, string email, List<MissionPlayer> listOfMissions)
+    public SaveDataPlayer(string username, string email, List<MissionPlayer> listOfMissions, List<ChallengePlayer> listOfChallenges)
     {
         this.username = username;
         account = "Player";
@@ -27,6 +29,10 @@ public class SaveDataPlayer
         foreach (MissionPlayer mission in listOfMissions)
         {
             this.listOfMissions.Add(mission.WriteToDB(username));
+        }
+        foreach (ChallengePlayer challenge in listOfChallenges)
+        {
+            this.listOfChallenges.Add(challenge.WriteToDB(username));
         }
 
     }
@@ -154,14 +160,30 @@ public class SaveDataChallengeCreator
     public List<Vector3> cubePositions;
 
     [SerializeField]
-    public List<SaveDataChallengePlayer> listOfPlayers;
+    public List<SaveDataChallengePlayer> listOfPlayers = new List<SaveDataChallengePlayer>();
 
-    public SaveDataChallengeCreator(string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions, Dictionary<string, ChallengePlayer> listOfPlayers)
+    [SerializeField]
+    public int likes;
+
+    [SerializeField]
+    public int dislikes;
+
+    [SerializeField]
+    public float ratioLikesDislikes;
+
+    [SerializeField]
+    public float averageTimeSolved;
+
+    public SaveDataChallengeCreator(string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions, Dictionary<string, ChallengePlayer> listOfPlayers, int likes, int dislikes, float ratioLikesDislikes, float averageTimeSolved)
     {
         this.missionName = missionName;
         this.designerOfMission = designerOfMission;
         this.numberOfFigures = numberOfFigures;
         this.cubePositions = cubePositions;
+        this.likes = likes;
+        this.dislikes = dislikes;
+        this.ratioLikesDislikes = ratioLikesDislikes;
+        this.averageTimeSolved = averageTimeSolved;
         foreach (string player in listOfPlayers.Keys)
         {
             this.listOfPlayers.Add(listOfPlayers[player].WriteToDB(player));
@@ -188,7 +210,7 @@ public class SaveDataChallengePlayer
     public List<Vector3> cubePositions;
 
     [SerializeField]
-    public Time timeToComplete;
+    public float timeToComplete;
 
     [SerializeField]
     public bool completed;
@@ -197,7 +219,7 @@ public class SaveDataChallengePlayer
     public bool like;
 
 
-    public SaveDataChallengePlayer(string playerName, string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions, Time timeToComplete, bool completed, bool like)
+    public SaveDataChallengePlayer(string playerName, string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions, float timeToComplete, bool completed, bool like)
     {
         this.playerName = playerName;
         this.missionName = missionName;
