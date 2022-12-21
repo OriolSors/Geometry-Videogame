@@ -153,6 +153,7 @@ public sealed class AuthController
                             currentUser = new Player(playerData);
 
                             //LOG
+                            Globals.logBuffer.Clear();
                             Globals.logBuffer.Append("User: " + currentUser.GetUserName() + "\n");
                             Globals.logBuffer.Append("Email: " + currentUser.GetEmail());
                             Globals.logBuffer.Append("\n");

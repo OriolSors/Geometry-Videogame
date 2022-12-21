@@ -47,7 +47,7 @@ public class ConstructionCanvasManager : MonoBehaviour
         //LOG
         Globals.Reset();
         Globals.cubeCount = boundaryBoxController.GetCubesLeft();
-        Globals.logBuffer.Append("Challenge started. Cubes left: " + Globals.cubeCount + "\n");
+        Globals.logBuffer.Append("Challenge started.\nCubes left: " + Globals.cubeCount + "\n");
         Globals.logBuffer.Append("\n");
     }
 
@@ -68,7 +68,7 @@ public class ConstructionCanvasManager : MonoBehaviour
 
         //LOG
         Globals.logIntents += 1;
-        Globals.logBuffer.Append("Challenge restarted. Intents: " + Globals.logIntents + "\n");
+        Globals.logBuffer.Append("Challenge restarted.\nIntents: " + Globals.logIntents + "\n");
         Globals.logBuffer.Append("\n");
         
     }
@@ -92,7 +92,7 @@ public class ConstructionCanvasManager : MonoBehaviour
 
         //LOG
         Globals.cubeCount = boundaryBoxController.GetCubesLeft();
-        Globals.logBuffer.Append("Cube added. Cubes left: " + Globals.cubeCount + "\n");
+        Globals.logBuffer.Append("Cube added.\nCubes left: " + Globals.cubeCount + "\n");
         Globals.logBuffer.Append("\n");
     }
 
@@ -105,7 +105,7 @@ public class ConstructionCanvasManager : MonoBehaviour
 
         //LOG
         Globals.cubeCount = boundaryBoxController.GetCubesLeft();
-        Globals.logBuffer.Append("Cube removed. Cubes left: " + Globals.cubeCount + "\n");
+        Globals.logBuffer.Append("Cube removed.\nCubes left: " + Globals.cubeCount + "\n");
         Globals.logBuffer.Append("\n");
     }
 
@@ -148,15 +148,15 @@ public class ConstructionCanvasManager : MonoBehaviour
 
             //LOG
             Globals.logBuffer.Append("\n");
-            Globals.logBuffer.Append("Construction completed check: " + "\n");
-            Globals.logBuffer.Append("Time spent: " + finalSeconds + "\n");
+            Globals.logBuffer.Append("Construction completed check." + "\n");
+            Globals.logBuffer.Append("Time spent: " + finalSeconds +" seconds" +"\n");
             Globals.logBuffer.Append("Wrong positions: " + Globals.wrongPositionCount + "\n");
             Globals.logBuffer.Append("Invalid positions: " + Globals.invalidPositionCount + "\n");
             Globals.logBuffer.Append("Overflow positions: " + Globals.overflowPositionCount + "\n");
             Globals.logBuffer.Append("Restarting intents: " + Globals.logIntents + "\n");
             Globals.logBuffer.Append("\n");
 
-            File.AppendAllText("C:/Users/oriol/source/repos/" + "log.txt", Globals.logBuffer.ToString());
+            File.AppendAllText("C:/Users/oriol/source/repos/" + (AuthController.Instance.GetCurrentUser() as Player).GetUserName() +"_log.txt", Globals.logBuffer.ToString());
             Globals.logBuffer.Clear();
         }
         else
@@ -165,7 +165,8 @@ public class ConstructionCanvasManager : MonoBehaviour
             StartCoroutine(IndicatorIncorrectConstructionCoroutine());
 
             //LOG
-            Globals.logBuffer.Append("Wrong check: " + "\n");
+            Globals.logChecks += 1;
+            Globals.logBuffer.Append("Wrong check. Count: " + Globals.logChecks + "\n");
             Globals.logBuffer.Append("\n");
         }
         

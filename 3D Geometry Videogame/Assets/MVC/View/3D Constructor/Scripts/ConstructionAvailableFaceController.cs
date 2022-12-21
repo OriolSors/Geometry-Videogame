@@ -90,7 +90,7 @@ public class ConstructionAvailableFaceController : MonoBehaviour
             }
 
             //LOG
-            File.AppendAllText("C:/Users/oriol/source/repos/" + "log.txt", Globals.logBuffer.ToString());
+            File.AppendAllText("C:/Users/oriol/source/repos/" + (AuthController.Instance.GetCurrentUser() as Player).GetUserName() + "_log.txt", Globals.logBuffer.ToString());
             Globals.logBuffer.Clear();
 
         }
@@ -112,7 +112,7 @@ public class ConstructionAvailableFaceController : MonoBehaviour
             boundaryBoxController.SendBounds();
 
             //LOG
-            File.AppendAllText("C:/Users/oriol/source/repos/" + "log.txt", Globals.logBuffer.ToString());
+            File.AppendAllText("C:/Users/oriol/source/repos/" + (AuthController.Instance.GetCurrentUser() as Player).GetUserName() + "_log.txt", Globals.logBuffer.ToString());
             Globals.logBuffer.Clear();
         }
         
