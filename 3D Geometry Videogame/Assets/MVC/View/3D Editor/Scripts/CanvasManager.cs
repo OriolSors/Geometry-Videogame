@@ -98,7 +98,8 @@ public class CanvasManager : MonoBehaviour
 
     public void ExitGame()
     {
-        SceneManager.LoadScene("Designer Mission List Screen");
+        if (AuthController.Instance.GetCurrentUser() is Designer) SceneManager.LoadScene("Designer Mission List Screen");
+        else SceneManager.LoadScene("Player Mission List Screen");
     }
 
     private bool IsValidGraph()

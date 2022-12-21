@@ -96,9 +96,16 @@ public class UserController
         return listOfPlayers;
     }
 
-    public void ReplaceCreatorChallenge(ChallengePlayer currentChallengePlayer)
+    public async void ReplaceCreatorChallenge(ChallengePlayer currentChallengePlayer)
     {
-        //TODO: MODIFICAR DIRECTAMENT EL CHALLENGE CREATOR
+        ChallengeCreator challengeCreator = await GetChallengeCreatorByName(currentChallengePlayer.GetMissionName());
+        Dictionary<string, ChallengePlayer> listOfPlayers = challengeCreator.GetListOfPlayers();
+        listOfPlayers[auth.CurrentUser.DisplayName] = currentChallengePlayer;
+        challengeCreator.SetListOfPlayers(listOfPlayers);
+        challengeCreator.UpdateGeneralStats();
+
+        this.listOfPlayers[auth.CurrentUser.UserId].SaveNewChallengeCreator(challengeCreator);
+
     }
 
     public async void ReplaceDesignerMission(MissionPlayer currentMissionPlayer)
@@ -140,6 +147,41 @@ public class UserController
         });
 
         return missionDesigner;
+    }
+
+    public async Task<ChallengeCreator> GetChallengeCreatorByName(string challengeName)
+    {
+        ChallengeCreator challengeCreator = null;
+        await reference.Child("Challenges").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.Result.Value == null)
+            {
+                Debug.Log("No players");
+
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                foreach (DataSnapshot s in snapshot.Children)
+                {
+                    if (s.Key.ToString() == challengeName)
+                    {
+                        string json = s.GetRawJsonValue();
+                        SaveDataChallengeCreator challengeCreatorFromDB = JsonUtility.FromJson<SaveDataChallengeCreator>(json);
+                        challengeCreator = new ChallengeCreator(challengeCreatorFromDB);
+                        break;
+                    }
+                }
+
+            }
+
+        });
+
+        return challengeCreator;
     }
 
     private void AddMissionToPlayer(MissionPlayer missionPlayer, string player)

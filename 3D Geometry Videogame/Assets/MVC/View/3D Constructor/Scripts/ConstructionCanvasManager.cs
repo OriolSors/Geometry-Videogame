@@ -16,11 +16,16 @@ public class ConstructionCanvasManager : MonoBehaviour
     public Canvas constructionCorrectCanvas;
     public Canvas constructionIncorrectCanvas;
     public Canvas invalidPositionIndicator;
+    public Canvas likeAndDislikeCanvas;
 
     public GameObject matricesPanel;
     private ConstructionGridManager constructionGridManager;
 
     private ConstructionBoundaryBoxController boundaryBoxController;
+
+    private float timer = 0.0f;
+    private int finalSeconds = 0;
+    private bool like = false;
 
     void Start()
     {
@@ -30,6 +35,7 @@ public class ConstructionCanvasManager : MonoBehaviour
         constructionCorrectCanvas.enabled = false;
         constructionIncorrectCanvas.enabled = false;
         invalidPositionIndicator.enabled = false;
+        likeAndDislikeCanvas.enabled = false;
 
         constructionGridManager = matricesPanel.GetComponent<ConstructionGridManager>();
         constructionGridManager.InitializeValues();
@@ -46,7 +52,8 @@ public class ConstructionCanvasManager : MonoBehaviour
         if (Input.GetKey(KeyCode.Tab)) matricesPanel.SetActive(true);
         else matricesPanel.SetActive(false);
         */
-        
+        timer += Time.deltaTime;
+
     }
 
     public void ResetConstruction()
@@ -105,6 +112,7 @@ public class ConstructionCanvasManager : MonoBehaviour
 
         if (boundaryBoxController.CheckCubePositions())
         {
+            finalSeconds = (int)(timer % 60);
             constructionCorrectCanvas.enabled = true;
             StartCoroutine(IndicatorCorrectConstructionCoroutine());
         }
@@ -117,6 +125,26 @@ public class ConstructionCanvasManager : MonoBehaviour
 
     }
 
+    public void SetLike()
+    {
+        like = true;
+        SaveResult();
+    }
+
+    public void SetDislike()
+    {
+        like = false;
+        SaveResult();
+    }
+
+    public void SaveResult()
+    {
+        MissionListController.Instance.GetCurrentChallengePlayer().SetLike(like);
+        MissionListController.Instance.GetCurrentChallengePlayer().SetTimeCompleted(finalSeconds);
+        MissionListController.Instance.UpdateChallengePlayer();
+        SceneManager.LoadScene("Player Mission List Screen");
+    }
+
     IEnumerator IndicatorInvalidPositionCubeCoroutine()
     {
         yield return new WaitForSeconds(0.85f);
@@ -127,7 +155,7 @@ public class ConstructionCanvasManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         constructionCorrectCanvas.enabled = false;
-        SceneManager.LoadScene("Player Mission List Screen");
+        likeAndDislikeCanvas.enabled = true;
 
     }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -58,6 +59,16 @@ public class ChallengeCreator
         return numberOfFigures;
     }
 
+    public Dictionary<string, ChallengePlayer> GetListOfPlayers()
+    {
+        return listOfPlayers;
+    }
+
+    public void SetListOfPlayers(Dictionary<string, ChallengePlayer> listOfPlayers)
+    {
+        this.listOfPlayers = listOfPlayers;
+    }
+
     public List<Vector3> GetCubePositions()
     {
         return cubePositions;
@@ -79,5 +90,26 @@ public class ChallengeCreator
     {
         SaveDataChallengeCreator challengeCreatorToDB = new SaveDataChallengeCreator(missionName, designerOfMission, numberOfFigures, cubePositions, listOfPlayers, likes, dislikes, GetRatioLikesDislikes(),averageTimeCompleted);
         return challengeCreatorToDB;
+    }
+
+    public void UpdateGeneralStats()
+    {
+        int sumLikes = 0, sumDislikes = 0, sumAverageTimeCompleted = 0;
+        int countPlayerFinished = 0;
+        foreach (ChallengePlayer missionPlayerData in listOfPlayers.Values)
+        {
+            if (missionPlayerData.IsCompleted())
+            {
+                countPlayerFinished += 1;
+                if (missionPlayerData.GetLike()) sumLikes += 1;
+                else sumDislikes += 1;
+                sumAverageTimeCompleted += (int)missionPlayerData.GetTimeCompleted();
+            }
+            
+        }
+        likes = sumLikes;
+        dislikes = sumDislikes;
+        ratioLikesDislikes = (float)likes / (float)(likes + dislikes);
+        if (countPlayerFinished != 0) averageTimeCompleted = (float)sumAverageTimeCompleted / (float)countPlayerFinished;
     }
 }

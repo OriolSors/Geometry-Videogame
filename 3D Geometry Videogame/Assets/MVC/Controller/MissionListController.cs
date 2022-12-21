@@ -76,10 +76,11 @@ public sealed class MissionListController
         userController.ReplaceDesignerMission(currentMissionPlayer);
     }
 
-    public void UpdateChallengePlayer()
+    public async void UpdateChallengePlayer()
     {
         (AuthController.Instance.GetCurrentUser() as Player).UpdateChallenge(currentChallengePlayer);
         UserController userController = new UserController();
+        await userController.GetAllPlayerObjects();
         userController.ReplaceCreatorChallenge(currentChallengePlayer);
     }
 

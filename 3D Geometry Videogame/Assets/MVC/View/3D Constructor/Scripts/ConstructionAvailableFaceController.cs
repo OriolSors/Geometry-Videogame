@@ -74,6 +74,7 @@ public class ConstructionAvailableFaceController : MonoBehaviour
                     }
                     else
                     {
+                        //LOG DE ERROR: INVALID POSITION -> SEVERE
                         Destroy(newCube);
                         canvasManager.ShowInvalidPositionIndicator();
                     }

@@ -54,7 +54,7 @@ public class Player : User
             if (challenge.IsCompleted())
             {
                 TimeSpan timeSpan = TimeSpan.FromSeconds(challenge.GetTimeCompleted());
-                string timeText = string.Format("{0:D2}:{1:D2}:{2:D2}", timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
+                string timeText = string.Format("{0:D2}:{1:D2}", timeSpan.Minutes, timeSpan.Seconds);
                 challengesList[challenge.GetMissionName()] = timeText;
             }
             else

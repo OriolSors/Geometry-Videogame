@@ -64,6 +64,22 @@ public class ChallengePlayer
         return completed;
     }
 
+    public void SetTimeCompleted(int seconds)
+    {
+        completed = true;
+        timeToComplete = seconds;
+    }
+
+    public void SetLike(bool like)
+    {
+        this.like = like;
+    }
+
+    public bool GetLike()
+    {
+        return like;
+    }
+
     public SaveDataChallengePlayer WriteToDB(string player)
     {
         SaveDataChallengePlayer challengePlayerToDB = new SaveDataChallengePlayer(player, missionName, designerOfMission, numberOfFigures, cubePositions, timeToComplete, completed, like);
