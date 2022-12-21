@@ -57,6 +57,12 @@ public sealed class MissionListController
     public void SaveCurrentChallengePlayer(string mission)
     {
         currentChallengePlayer = (AuthController.Instance.GetCurrentUser() as Player).GetChallengeByName(mission);
+
+        //LOG
+        Globals.logBuffer.Append("Current Challenge: " + currentChallengePlayer.GetMissionName() + "\n");
+        Globals.logBuffer.Append("Designer of the Challenge: " + currentChallengePlayer.GetDesigner() + "\n");
+        Globals.logBuffer.Append("Number of figures: " + currentChallengePlayer.GetNumberOfFigures() + "\n");
+        Globals.logBuffer.Append("\n");
     }
 
     public MissionPlayer GetCurrentMissionPlayer()

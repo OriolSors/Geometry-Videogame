@@ -43,6 +43,12 @@ public class ConstructionCanvasManager : MonoBehaviour
 
         boundaryBoxController = GameObject.Find("Boundary Box").GetComponent<ConstructionBoundaryBoxController>();
         objectsLeft.text = boundaryBoxController.GetCubesLeft().ToString();
+
+        //LOG
+        Globals.Reset();
+        Globals.cubeCount = boundaryBoxController.GetCubesLeft();
+        Globals.logBuffer.Append("Challenge started. Cubes left: " + Globals.cubeCount + "\n");
+        Globals.logBuffer.Append("\n");
     }
 
     // Update is called once per frame
@@ -59,11 +65,21 @@ public class ConstructionCanvasManager : MonoBehaviour
     public void ResetConstruction()
     {
         SceneManager.LoadScene("3D Constructor");
+
+        //LOG
+        Globals.logIntents += 1;
+        Globals.logBuffer.Append("Challenge restarted. Intents: " + Globals.logIntents + "\n");
+        Globals.logBuffer.Append("\n");
+        
     }
 
     public void ExitConstruction()
     {
         SceneManager.LoadScene("Player Mission List Screen");
+
+        //LOG
+        Globals.logBuffer.Append("Challenge quit" + "\n");
+        Globals.logBuffer.Append("\n");
     }
 
 
@@ -73,6 +89,11 @@ public class ConstructionCanvasManager : MonoBehaviour
         constructionGridManager.UpdateUserTiles();
         objectsLeft.text = boundaryBoxController.GetCubesLeft().ToString();
         SetColor();
+
+        //LOG
+        Globals.cubeCount = boundaryBoxController.GetCubesLeft();
+        Globals.logBuffer.Append("Cube added. Cubes left: " + Globals.cubeCount + "\n");
+        Globals.logBuffer.Append("\n");
     }
 
 
@@ -81,6 +102,11 @@ public class ConstructionCanvasManager : MonoBehaviour
         constructionGridManager.UpdateUserTiles();
         objectsLeft.text = boundaryBoxController.GetCubesLeft().ToString();
         SetColor();
+
+        //LOG
+        Globals.cubeCount = boundaryBoxController.GetCubesLeft();
+        Globals.logBuffer.Append("Cube removed. Cubes left: " + Globals.cubeCount + "\n");
+        Globals.logBuffer.Append("\n");
     }
 
     public void ShowInvalidPositionIndicator()
@@ -99,6 +125,10 @@ public class ConstructionCanvasManager : MonoBehaviour
         if (boundaryBoxController.GetCubesLeft() == 0)
         {
             objectsLeft.color = Color.red;
+
+            //LOG
+            Globals.logBuffer.Append("No cubes left: " + "\n");
+            Globals.logBuffer.Append("\n");
         }
         else
         {
@@ -115,11 +145,28 @@ public class ConstructionCanvasManager : MonoBehaviour
             finalSeconds = (int)(timer % 60);
             constructionCorrectCanvas.enabled = true;
             StartCoroutine(IndicatorCorrectConstructionCoroutine());
+
+            //LOG
+            Globals.logBuffer.Append("\n");
+            Globals.logBuffer.Append("Construction completed check: " + "\n");
+            Globals.logBuffer.Append("Time spent: " + finalSeconds + "\n");
+            Globals.logBuffer.Append("Wrong positions: " + Globals.wrongPositionCount + "\n");
+            Globals.logBuffer.Append("Invalid positions: " + Globals.invalidPositionCount + "\n");
+            Globals.logBuffer.Append("Overflow positions: " + Globals.overflowPositionCount + "\n");
+            Globals.logBuffer.Append("Restarting intents: " + Globals.logIntents + "\n");
+            Globals.logBuffer.Append("\n");
+
+            File.AppendAllText("C:/Users/oriol/source/repos/" + "log.txt", Globals.logBuffer.ToString());
+            Globals.logBuffer.Clear();
         }
         else
         {
             constructionIncorrectCanvas.enabled = true;
             StartCoroutine(IndicatorIncorrectConstructionCoroutine());
+
+            //LOG
+            Globals.logBuffer.Append("Wrong check: " + "\n");
+            Globals.logBuffer.Append("\n");
         }
         
 
@@ -155,7 +202,8 @@ public class ConstructionCanvasManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         constructionCorrectCanvas.enabled = false;
-        likeAndDislikeCanvas.enabled = true;
+        if(MissionListController.Instance.GetCurrentChallengePlayer() != null) likeAndDislikeCanvas.enabled = true;
+        else SceneManager.LoadScene("Player Mission List Screen");
 
     }
 

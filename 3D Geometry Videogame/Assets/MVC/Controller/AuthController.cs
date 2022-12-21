@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Firebase.Database;
 using Firebase.Extensions;
@@ -150,6 +151,11 @@ public sealed class AuthController
                             json = snapshot.GetRawJsonValue();
                             SaveDataPlayer playerData = JsonUtility.FromJson<SaveDataPlayer>(json);
                             currentUser = new Player(playerData);
+
+                            //LOG
+                            Globals.logBuffer.Append("User: " + currentUser.GetUserName() + "\n");
+                            Globals.logBuffer.Append("Email: " + currentUser.GetEmail());
+                            Globals.logBuffer.Append("\n");
                             break;
                     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class ConstructionAvailableFaceController : MonoBehaviour
@@ -74,13 +75,23 @@ public class ConstructionAvailableFaceController : MonoBehaviour
                     }
                     else
                     {
-                        //LOG DE ERROR: INVALID POSITION -> SEVERE
+                        
                         Destroy(newCube);
                         canvasManager.ShowInvalidPositionIndicator();
+
+                        //LOG
+                        Globals.invalidPositionCount += 1;
+                        Globals.logBuffer.Append("\n");
+                        Globals.logBuffer.Append("[INVALID] cube position. Count: " + Globals.invalidPositionCount + "\n");
+                        Globals.logBuffer.Append("\n");
                     }
                     
                 }
             }
+
+            //LOG
+            File.AppendAllText("C:/Users/oriol/source/repos/" + "log.txt", Globals.logBuffer.ToString());
+            Globals.logBuffer.Clear();
 
         }
 
@@ -100,6 +111,9 @@ public class ConstructionAvailableFaceController : MonoBehaviour
 
             boundaryBoxController.SendBounds();
 
+            //LOG
+            File.AppendAllText("C:/Users/oriol/source/repos/" + "log.txt", Globals.logBuffer.ToString());
+            Globals.logBuffer.Clear();
         }
         
 

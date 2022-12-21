@@ -102,14 +102,26 @@ public class ConstructionGridManager : MonoBehaviour
             case "u_xy":
                 currentMatrix = uMatrixGridXY;
                 go = ChooseTileStyle(i, j, sum_k, M_x_y, go);
+
+                //LOG
+                Globals.logBuffer.Append("Computing position M_" + i + "_" + j + " at projection XY" + "\n");
+                Globals.logBuffer.Append("\n");
                 break;
             case "u_zy":
                 currentMatrix = uMatrixGridZY;
                 go = ChooseTileStyle(i, j, sum_k, M_z_y, go);
+
+                //LOG
+                Globals.logBuffer.Append("Computing position M_" + i + "_" + j + " at projection ZY" + "\n");
+                Globals.logBuffer.Append("\n");
                 break;
             case "u_xz":
                 currentMatrix = uMatrixGridXZ;
                 go = ChooseTileStyle(i, j, sum_k, M_x_z, go);
+
+                //LOG
+                Globals.logBuffer.Append("Computing position M_" + i + "_" + j + " at projection XZ" + "\n");
+                Globals.logBuffer.Append("\n");
                 break;
         }
 
@@ -129,6 +141,12 @@ public class ConstructionGridManager : MonoBehaviour
         if (m[i, j] == 0 && sum_k != 0)
         {
             go = Instantiate(wrongMatrixTile);
+
+            //LOG
+            Globals.wrongPositionCount += 1;
+            Globals.logBuffer.Append("\n");
+            Globals.logBuffer.Append("[WRONG] cube position. Count: " + Globals.wrongPositionCount + "\n");
+            Globals.logBuffer.Append("\n");
         }
         else if (sum_k == 0)
         {
@@ -145,6 +163,12 @@ public class ConstructionGridManager : MonoBehaviour
         else if (m[i, j] < sum_k)
         {
             go = Instantiate(overflowMatrixTile);
+
+            //LOG
+            Globals.overflowPositionCount += 1;
+            Globals.logBuffer.Append("\n");
+            Globals.logBuffer.Append("[OVERFLOW] cube position. Count: " + Globals.overflowPositionCount + "\n");
+            Globals.logBuffer.Append("\n");
         }
 
         return go;
