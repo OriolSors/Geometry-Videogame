@@ -25,6 +25,8 @@ public class ConstructionCanvasManager : MonoBehaviour
 
     private float timer = 0.0f;
     private int finalSeconds = 0;
+    private int lastTime = 0;
+    private int addRemoveCount = 0;
     private bool like = false;
 
     void Start()
@@ -64,49 +66,68 @@ public class ConstructionCanvasManager : MonoBehaviour
 
     public void ResetConstruction()
     {
-        SceneManager.LoadScene("3D Constructor");
-
         //LOG
         Globals.logIntents += 1;
         Globals.logBuffer.Append("Challenge restarted.\nIntents: " + Globals.logIntents + "\n");
         Globals.logBuffer.Append("\n");
+
+        SceneManager.LoadScene("3D Constructor");
         
     }
 
     public void ExitConstruction()
     {
-        SceneManager.LoadScene("Player Mission List Screen");
-
         //LOG
         Globals.logBuffer.Append("Challenge quit" + "\n");
         Globals.logBuffer.Append("\n");
+
+        SceneManager.LoadScene("Player Mission List Screen");
+
     }
 
 
 
     public void AddNewObject()
     {
-        constructionGridManager.UpdateUserTiles();
-        objectsLeft.text = boundaryBoxController.GetCubesLeft().ToString();
-        SetColor();
+        int currentTime = (int)(timer % 60);
+        int stepTime = currentTime - lastTime;
+        lastTime = currentTime;
+        addRemoveCount++;
 
         //LOG
         Globals.cubeCount = boundaryBoxController.GetCubesLeft();
         Globals.logBuffer.Append("Cube added.\nCubes left: " + Globals.cubeCount + "\n");
         Globals.logBuffer.Append("\n");
+        Globals.logBuffer.Append("Time spent from last move: " + stepTime + "\n");
+        Globals.logBuffer.Append("\n");
+
+        constructionGridManager.UpdateUserTiles();
+        objectsLeft.text = boundaryBoxController.GetCubesLeft().ToString();
+        SetColor();
+
+        
     }
 
 
     public void RemoveObject()
     {
-        constructionGridManager.UpdateUserTiles();
-        objectsLeft.text = boundaryBoxController.GetCubesLeft().ToString();
-        SetColor();
+        int currentTime = (int)(timer % 60);
+        int stepTime = currentTime - lastTime;
+        lastTime = currentTime;
+        addRemoveCount++;
 
         //LOG
         Globals.cubeCount = boundaryBoxController.GetCubesLeft();
         Globals.logBuffer.Append("Cube removed.\nCubes left: " + Globals.cubeCount + "\n");
         Globals.logBuffer.Append("\n");
+        Globals.logBuffer.Append("Time spent from last move: " + stepTime + "\n");
+        Globals.logBuffer.Append("\n");
+
+        constructionGridManager.UpdateUserTiles();
+        objectsLeft.text = boundaryBoxController.GetCubesLeft().ToString();
+        SetColor();
+
+        
     }
 
     public void ShowInvalidPositionIndicator()
@@ -127,7 +148,7 @@ public class ConstructionCanvasManager : MonoBehaviour
             objectsLeft.color = Color.red;
 
             //LOG
-            Globals.logBuffer.Append("No cubes left: " + "\n");
+            Globals.logBuffer.Append("No cubes left. " + "\n");
             Globals.logBuffer.Append("\n");
         }
         else
@@ -150,6 +171,7 @@ public class ConstructionCanvasManager : MonoBehaviour
             Globals.logBuffer.Append("\n");
             Globals.logBuffer.Append("Construction completed check." + "\n");
             Globals.logBuffer.Append("Time spent: " + finalSeconds +" seconds" +"\n");
+            Globals.logBuffer.Append("Average Time steps: " + finalSeconds/addRemoveCount +" seconds" +"\n");
             Globals.logBuffer.Append("Wrong positions: " + Globals.wrongPositionCount + "\n");
             Globals.logBuffer.Append("Invalid positions: " + Globals.invalidPositionCount + "\n");
             Globals.logBuffer.Append("Overflow positions: " + Globals.overflowPositionCount + "\n");
