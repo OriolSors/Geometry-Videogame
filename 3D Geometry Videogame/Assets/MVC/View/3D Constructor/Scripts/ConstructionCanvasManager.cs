@@ -178,7 +178,7 @@ public class ConstructionCanvasManager : MonoBehaviour
             Globals.logBuffer.Append("Restarting intents: " + Globals.logIntents + "\n");
             Globals.logBuffer.Append("\n");
 
-            File.AppendAllText("C:/UnityGames/logs/" + (AuthController.Instance.GetCurrentUser() as Player).GetUserName() +"_log.txt", Globals.logBuffer.ToString());
+            File.AppendAllText(Directory.GetCurrentDirectory()+ "/logs/" + (AuthController.Instance.GetCurrentUser() as Player).GetUserName() +"_log.txt", Globals.logBuffer.ToString());
             Globals.logBuffer.Clear();
         }
         else
