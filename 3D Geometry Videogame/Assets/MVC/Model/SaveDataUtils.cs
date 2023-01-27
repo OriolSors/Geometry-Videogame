@@ -225,8 +225,11 @@ public class SaveDataChallengePlayer
     [SerializeField]
     public bool isActive;
 
+    [SerializeField]
+    public int level;
 
-    public SaveDataChallengePlayer(string playerName, string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions, float timeToComplete, bool completed, bool like, bool isActive)
+
+    public SaveDataChallengePlayer(string playerName, string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions, float timeToComplete, bool completed, bool like, bool isActive, int level)
     {
         this.playerName = playerName;
         this.missionName = missionName;
@@ -237,6 +240,7 @@ public class SaveDataChallengePlayer
         this.completed = completed;
         this.like = like;
         this.isActive = isActive;
+        this.level = level;
     }
 }
 

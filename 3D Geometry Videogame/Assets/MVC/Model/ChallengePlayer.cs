@@ -12,17 +12,17 @@ public class ChallengePlayer
     private List<Vector3> cubePositions;
     private float timeToComplete;
     private bool completed = false;
-    private bool like;
-    private bool isActive;
-    private int level;
+    private bool like = false;
+    private bool isActive = true;
+    private int level = 0;
 
-    public ChallengePlayer(string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions)
+    public ChallengePlayer(string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions, int level)
     {
         this.missionName = missionName;
         this.designerOfMission = designerOfMission;
         this.numberOfFigures = numberOfFigures;
         this.cubePositions = cubePositions;
-        
+        this.level = level;
     }
 
     public ChallengePlayer(SaveDataChallengePlayer missionPlayerData)
@@ -35,6 +35,7 @@ public class ChallengePlayer
         this.completed = missionPlayerData.completed;
         this.like = missionPlayerData.like;
         this.isActive = missionPlayerData.isActive;
+        this.level = missionPlayerData.level;
     }
 
     public string GetMissionName()
@@ -66,6 +67,11 @@ public class ChallengePlayer
         return completed;
     }
 
+    public int GetLevel()
+    {
+        return level;
+    }
+
     public void SetTimeCompleted(int seconds)
     {
         completed = true;
@@ -89,7 +95,7 @@ public class ChallengePlayer
 
     public SaveDataChallengePlayer WriteToDB(string player)
     {
-        SaveDataChallengePlayer challengePlayerToDB = new SaveDataChallengePlayer(player, missionName, designerOfMission, numberOfFigures, cubePositions, timeToComplete, completed, like, isActive);
+        SaveDataChallengePlayer challengePlayerToDB = new SaveDataChallengePlayer(player, missionName, designerOfMission, numberOfFigures, cubePositions, timeToComplete, completed, like, isActive, level);
         return challengePlayerToDB;
     }
 

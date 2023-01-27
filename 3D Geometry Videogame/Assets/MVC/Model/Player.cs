@@ -39,6 +39,12 @@ public class Player : User
         }
     }
 
+
+    public int GetLevel()
+    {
+        return level;
+    }
+
     public Dictionary<string, int[]> GetAllMissionPlayer()
     {
         Dictionary<string, int[]> dictMission = new Dictionary<string, int[]>();
@@ -55,7 +61,7 @@ public class Player : User
         Dictionary<string,string> challengesList = new Dictionary<string,string>();
         foreach (ChallengePlayer challenge in listOfChallenges)
         {
-            if (challenge.IsActive())
+            if (challenge.IsActive() && challenge.GetLevel() == level)
             {
                 if (challenge.IsCompleted())
                 {
@@ -168,6 +174,5 @@ public class Player : User
         reference.Child("Challenges").Child(challengeCreatorDataToDB.missionName).SetRawJsonValueAsync(JsonUtility.ToJson(challengeCreatorDataToDB));
     }
 
-    
 
 }

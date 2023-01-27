@@ -45,7 +45,7 @@ public class Mission
         userController.AddNewMissionDesigner(missionDesigner, AuthController.Instance.GetCurrentUser());
     }
 
-    public Dictionary<string, ChallengePlayer> CreateChallengePlayer(Dictionary<string, Player> playersDict)
+    public Dictionary<string, ChallengePlayer> CreateChallengePlayer(Dictionary<string, Player> playersDict, int playerCreatorLevel)
     {
         Dictionary<string, ChallengePlayer> listOfPlayers = new Dictionary<string, ChallengePlayer>();
         foreach (string playerId in playersDict.Keys)
@@ -53,7 +53,7 @@ public class Mission
             string player = playersDict[playerId].GetEmail();
             if(designerOfMission != player)
             {
-                ChallengePlayer challengePlayer = new ChallengePlayer(missionName, designerOfMission, numberOfFigures, cubePositions);
+                ChallengePlayer challengePlayer = new ChallengePlayer(missionName, designerOfMission, numberOfFigures, cubePositions, playerCreatorLevel);
 
                 listOfPlayers[playersDict[playerId].GetUserName()] = challengePlayer;
 
@@ -66,13 +66,13 @@ public class Mission
         return listOfPlayers;
     }
 
-    public async void CreateChallengeByPlayer()
+    public async void CreateChallengeByPlayer(int playerCreatorLevel)
     {
 
         //TODO: Decidir a quins alumnes s'assignaràn aquestes missions (??)
         UserController userController = new UserController();
         await userController.GetAllPlayerObjects();
-        ChallengeCreator challengeCreator = new ChallengeCreator(missionName, designerOfMission, numberOfFigures, cubePositions, CreateChallengePlayer(userController.GetPlayers())); // PASSAR LA LLISTA DE TOTS ELS USERS DESTINATS AL CHALLENGE
+        ChallengeCreator challengeCreator = new ChallengeCreator(missionName, designerOfMission, numberOfFigures, cubePositions, CreateChallengePlayer(userController.GetPlayers(), playerCreatorLevel)); // PASSAR LA LLISTA DE TOTS ELS USERS DESTINATS AL CHALLENGE
         
         userController.AddNewChallengeCreator(challengeCreator, AuthController.Instance.GetCurrentUser());
     }

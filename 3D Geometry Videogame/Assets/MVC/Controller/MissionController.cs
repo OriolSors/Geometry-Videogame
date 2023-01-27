@@ -27,7 +27,9 @@ public class MissionController
     {
         int numberOfFigures = cubePositions.Count;
         Mission mission = new Mission(missionName, designerOfMission.GetEmail(), numberOfFigures, cubePositions, false);
-        mission.CreateChallengeByPlayer();
+
+        Player player = designerOfMission as Player;
+        mission.CreateChallengeByPlayer(player.GetLevel());
     }
 
     public void GetAllPlayerNames(Action<List<string>> callbackListOfPlayerNames)
