@@ -21,6 +21,12 @@ public class AuthManager : MonoBehaviour
         return;
     }
 
+    public async Task GetRegisterEnabled(Action<bool> SetRegisterEnabled)
+    {
+        await authController.GetRegisterEnabled(SetRegisterEnabled);
+        return;
+    }
+
     public async Task LoginUser(string email, string password, Action<string> GetNegativeResultOfUserLogged)
     {
         await authController.LoginUser(email, password, GetNegativeResultOfUserLogged);

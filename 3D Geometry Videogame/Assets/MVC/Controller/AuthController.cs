@@ -32,6 +32,31 @@ public sealed class AuthController
         }
     }
 
+    public async Task GetRegisterEnabled(Action<bool> SetRegisterEnabled)
+    {
+        bool registerAvailable;
+        await reference.Child("Register").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.Result.Value == null)
+            {
+                Debug.Log("Variable not exist");
+
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                registerAvailable = (bool)snapshot.Value;
+                SetRegisterEnabled(registerAvailable);
+            }
+
+        });
+        return;
+    }
+
     public async Task RegisterNewUser(string username, string email, string password, string accountType, Action<string> GetNegativeResultOfUserCreation)
     {
         await auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {

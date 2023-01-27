@@ -89,7 +89,7 @@ public class ConstructionCanvasManager : MonoBehaviour
 
     public void AddNewObject()
     {
-        int currentTime = (int)(timer % 60);
+        int currentTime = (int)(timer);
         int stepTime = currentTime - lastTime;
         lastTime = currentTime;
         addRemoveCount++;
@@ -111,7 +111,7 @@ public class ConstructionCanvasManager : MonoBehaviour
 
     public void RemoveObject()
     {
-        int currentTime = (int)(timer % 60);
+        int currentTime = (int)(timer);
         int stepTime = currentTime - lastTime;
         lastTime = currentTime;
         addRemoveCount++;
@@ -163,7 +163,7 @@ public class ConstructionCanvasManager : MonoBehaviour
 
         if (boundaryBoxController.CheckCubePositions())
         {
-            finalSeconds = (int)(timer % 60);
+            finalSeconds = (int)(timer);
             constructionCorrectCanvas.enabled = true;
             StartCoroutine(IndicatorCorrectConstructionCoroutine());
 

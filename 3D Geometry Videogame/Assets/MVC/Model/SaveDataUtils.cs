@@ -17,15 +17,19 @@ public class SaveDataPlayer
     public string email;
 
     [SerializeField]
+    public int level;
+
+    [SerializeField]
     public List<SaveDataMissionPlayer> listOfMissions = new List<SaveDataMissionPlayer>();
     [SerializeField]
     public List<SaveDataChallengePlayer> listOfChallenges = new List<SaveDataChallengePlayer>();
 
-    public SaveDataPlayer(string username, string email, List<MissionPlayer> listOfMissions, List<ChallengePlayer> listOfChallenges)
+    public SaveDataPlayer(string username, string email, int level, List<MissionPlayer> listOfMissions, List<ChallengePlayer> listOfChallenges)
     {
         this.username = username;
         account = "Player";
         this.email = email;
+        this.level = level;
         foreach (MissionPlayer mission in listOfMissions)
         {
             this.listOfMissions.Add(mission.WriteToDB(username));
@@ -218,8 +222,11 @@ public class SaveDataChallengePlayer
     [SerializeField]
     public bool like;
 
+    [SerializeField]
+    public bool isActive;
 
-    public SaveDataChallengePlayer(string playerName, string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions, float timeToComplete, bool completed, bool like)
+
+    public SaveDataChallengePlayer(string playerName, string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions, float timeToComplete, bool completed, bool like, bool isActive)
     {
         this.playerName = playerName;
         this.missionName = missionName;
@@ -229,6 +236,7 @@ public class SaveDataChallengePlayer
         this.timeToComplete = timeToComplete;
         this.completed = completed;
         this.like = like;
+        this.isActive = isActive;
     }
 }
 

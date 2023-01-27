@@ -53,7 +53,7 @@ public class ConstructionCameraController : MonoBehaviour
         if (Input.GetKey(KeyCode.Q)) translation += Vector3.up;
         if (Input.GetKey(KeyCode.E)) translation -= Vector3.up;
 
-        transform.Translate(translation * Time.fixedDeltaTime * 0.80f, Space.World);
+        transform.Translate(translation * Time.fixedDeltaTime * 0.60f, Space.World);
 
         //---- ZOOM ----
 

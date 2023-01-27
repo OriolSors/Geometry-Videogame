@@ -13,7 +13,8 @@ public class ChallengePlayer
     private float timeToComplete;
     private bool completed = false;
     private bool like;
-
+    private bool isActive;
+    private int level;
 
     public ChallengePlayer(string missionName, string designerOfMission, int numberOfFigures, List<Vector3> cubePositions)
     {
@@ -21,7 +22,7 @@ public class ChallengePlayer
         this.designerOfMission = designerOfMission;
         this.numberOfFigures = numberOfFigures;
         this.cubePositions = cubePositions;
-
+        
     }
 
     public ChallengePlayer(SaveDataChallengePlayer missionPlayerData)
@@ -33,6 +34,7 @@ public class ChallengePlayer
         this.timeToComplete = missionPlayerData.timeToComplete;
         this.completed = missionPlayerData.completed;
         this.like = missionPlayerData.like;
+        this.isActive = missionPlayerData.isActive;
     }
 
     public string GetMissionName()
@@ -80,9 +82,14 @@ public class ChallengePlayer
         return like;
     }
 
+    public bool IsActive()
+    {
+        return isActive;
+    }
+
     public SaveDataChallengePlayer WriteToDB(string player)
     {
-        SaveDataChallengePlayer challengePlayerToDB = new SaveDataChallengePlayer(player, missionName, designerOfMission, numberOfFigures, cubePositions, timeToComplete, completed, like);
+        SaveDataChallengePlayer challengePlayerToDB = new SaveDataChallengePlayer(player, missionName, designerOfMission, numberOfFigures, cubePositions, timeToComplete, completed, like, isActive);
         return challengePlayerToDB;
     }
 

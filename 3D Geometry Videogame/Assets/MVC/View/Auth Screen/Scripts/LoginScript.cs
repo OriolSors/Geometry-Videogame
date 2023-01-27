@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LoginScript : MonoBehaviour
 {
@@ -14,10 +15,18 @@ public class LoginScript : MonoBehaviour
 
     public Canvas errorCanvas;
 
-    void Start()
+    public Button registerButton;
+
+    async void Start()
     {
         errorCanvas.enabled = false;
         authManager = GameObject.Find("Scene Controller").GetComponent<AuthManager>();
+        await authManager.GetRegisterEnabled(SetRegisterEnabled);
+    }
+
+    public void SetRegisterEnabled(bool isRegisterEnabled)
+    {
+        registerButton.enabled = isRegisterEnabled;
     }
 
     public async void LoginUser()
