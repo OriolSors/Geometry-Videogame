@@ -26,38 +26,35 @@ public class AxisXYZ : MonoBehaviour
     // Will be called after all regular rendering is done
     public void OnRenderObject()
     {
-        if (Camera.current.name == "Aux Camera")
-        {
-            CreateLineMaterial();
-            // Apply the line material
-            lineMaterial.SetPass(0);
+        CreateLineMaterial();
+        // Apply the line material
+        lineMaterial.SetPass(0);
 
-            GL.PushMatrix();
-            // Set transformation matrix for drawing to
-            // match our transform
-            GL.MultMatrix(transform.localToWorldMatrix);
+        GL.PushMatrix();
+        // Set transformation matrix for drawing to
+        // match our transform
+        GL.MultMatrix(transform.localToWorldMatrix);
 
-            // Draw lines
-            GL.Begin(GL.LINES);
-            //Draw X axis
-            GL.Color(Color.red);
-            GL.Vertex3(0, 0, 0);
-            GL.Vertex3(10.0f, 0.0f, 0.0f);
-            
-            //Draw Y axis
-            GL.Color(Color.green);
-            GL.Vertex3(0, 0, 0);
-            GL.Vertex3(0.0f, 10.0f, 0.0f);
-           
-            //Draw Z axis
-            GL.Color(Color.blue);
-            GL.Vertex3(0, 0, 0);
-            GL.Vertex3(0.0f, 0.0f, 10.0f);
-            
-            GL.End();
-            GL.PopMatrix();
-        }
-        
+        // Draw lines
+        GL.Begin(GL.LINES);
+        //Draw X axis
+        GL.Color(Color.red);
+        GL.Vertex3(0, 0, 0);
+        GL.Vertex3(10.0f, 0.0f, 0.0f);
+
+        //Draw Y axis
+        GL.Color(Color.green);
+        GL.Vertex3(0, 0, 0);
+        GL.Vertex3(0.0f, 10.0f, 0.0f);
+
+        //Draw Z axis
+        GL.Color(Color.blue);
+        GL.Vertex3(0, 0, 0);
+        GL.Vertex3(0.0f, 0.0f, 10.0f);
+
+        GL.End();
+        GL.PopMatrix();
+
     }
 
 }
